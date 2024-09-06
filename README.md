@@ -1,7 +1,7 @@
 # icd0008-24f
 
-hi!
-full name: Stella Tukia
-student code: 233202IADB
-school email: sttuki@taltech.ee
+hi! <br />
+full name: Stella Tukia <br />
+student code: 233202IADB <br />
+school email: sttuki@taltech.ee <br />
 uni id: sttuki
