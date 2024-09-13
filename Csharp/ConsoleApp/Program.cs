@@ -3,6 +3,8 @@
 using BLL;
 
 Console.WriteLine("Hello, Dinosaur!"); 
+Console.WriteLine("Hello, Bulbasaur!"); 
+
 
 var calc = new CalculatorBrain();
 
@@ -14,4 +16,4 @@ var res2 = calc.Subtract();
 
 Console.WriteLine($"{calc.Number1} + {calc.Number2} = {res}");
 Console.WriteLine($"{calc.Number1} - {calc.Number2} = {res2}");
-
+Console.WriteLine("help me please");
