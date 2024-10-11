@@ -13,7 +13,7 @@ namespace UI
             InitializeConfigMenu();
         }
 
-        // TODO: 
+        // TODO: easier UI in terms of going back
         
         private void InitializeConfigMenu()
         {
