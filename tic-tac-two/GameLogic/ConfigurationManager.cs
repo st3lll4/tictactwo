@@ -5,7 +5,7 @@ namespace GameLogic
     public class ConfigurationManager
     {
         private const string ConfigFilePath = "configurations.json";
-        private List<ConfigurationEntry> _configurations = new();
+        private List<ConfigurationEntry> _configurations = [];
 
         public GameConfiguration CurrentConfiguration { get; private set; }
         
@@ -18,7 +18,7 @@ namespace GameLogic
             StartingPlayer = "Player 1",
             MovableGridSize = 3,
             WinningCondition = 3,
-            InitalMoves = 2,
+            InitialMoves = 2,
             MaxPieces = 3
         };
 
@@ -69,7 +69,7 @@ namespace GameLogic
                 Player1Symbol = 'X',
                 Player2Symbol = 'O',
                 StartingPlayer = "Player 1",
-                InitalMoves = 5,
+                InitialMoves = 5,
                 MaxPieces = 7, // idk
                 MovableGridSize = 5,
                 WinningCondition = 5
@@ -87,7 +87,7 @@ namespace GameLogic
                 Player1Symbol = 'X',
                 Player2Symbol = 'O',
                 StartingPlayer = "Player 1",
-                InitalMoves = 5, // normal tic-tac-toe so no grid moving is allowed
+                InitialMoves = 5, // normal tic-tac-toe so no grid moving is allowed
                 MaxPieces = 5,
                 MovableGridSize = 3,
                 WinningCondition = 3
@@ -118,7 +118,7 @@ namespace GameLogic
             }
         }
 
-        public GameConfiguration GetConfigurationByName(string configName)
+        private GameConfiguration GetConfigurationByName(string configName)
         {
             var configEntry = _configurations.Find(c => c.ConfigName == configName);
             if (configEntry == null)
@@ -157,8 +157,8 @@ namespace GameLogic
             var name = Console.ReadLine() ?? $"Config nr {_configurations.Count + 1}";
             config.GameName = name;
 
-            config.Width = GetValidInput("Enter the width of the board (at least 3):");
-            config.Height = GetValidInput("Enter the height of the board (at least 3):");
+            config.Width = GetValidInput("Enter the width of the board (at least 3):", 3, 100);
+            config.Height = GetValidInput("Enter the height of the board (at least 3):", 3, 100);
 
             Console.WriteLine("Enter the symbol for Player 1 (default is X):");
             config.Player1Symbol = GetValidSymbol();
@@ -169,23 +169,33 @@ namespace GameLogic
             Console.WriteLine("Who should start? Enter '1' for Player 1 or '2' for Player 2:");
             while (true)
             {
+                Console.WriteLine("Enter '1' for Player 1 or '2' for Player 2:");
                 var startingPlayerChoice = Console.ReadLine();
-                if (startingPlayerChoice == "1")
-                {
-                    config.StartingPlayer = "Player 1";
-                    break;
-                }
-                else if (startingPlayerChoice == "2")
-                {
-                    config.StartingPlayer = "Player 2";
-                    break;
-                }
-                else
-                {
-                    Console.WriteLine("Invalid input. Enter '1' for Player 1 or '2' for Player 2:");
-                }
-            }
 
+                if (startingPlayerChoice is "1" or "2")
+                {
+                    config.StartingPlayer = startingPlayerChoice == "1" ? "Player 1" : "Player 2";
+                    break;
+                }
+
+                Console.WriteLine("Invalid input. Please try again.");
+            }
+            if (config is { Height: > 3, Width: > 3 })
+            {
+                var boardCapacity = config.Width * config.Height;
+                config.MovableGridSize = GetValidInput("Enter the size of the movable grid (always square)", 3, boardCapacity);
+                config.WinningCondition = GetValidInput("Enter the winning condition of the game (more than 3)", 3, boardCapacity);
+                config.InitialMoves =
+                    GetValidInput("Enter the number of moves have to made before moving the pieces or the grid", 0, boardCapacity);
+                config.MaxPieces = GetValidInput("Enter the number of pieces every player has", 0, boardCapacity);
+            }
+            else
+            {
+                config.MovableGridSize = _defaultConfiguration.MovableGridSize;
+                config.WinningCondition = _defaultConfiguration.WinningCondition;
+                config.InitialMoves = _defaultConfiguration.InitialMoves;
+                config.MaxPieces = _defaultConfiguration.MaxPieces;
+            }
             SaveConfiguration(config, name);
         }
 
@@ -207,9 +217,9 @@ namespace GameLogic
             }
 
             Console.Write("Enter the number of the configuration to delete: ");
-            if (int.TryParse(Console.ReadLine(), out int configIndex) && configIndex >= 1 && configIndex <= configNames.Count)
+            if (int.TryParse(Console.ReadLine(), out var configIndex) && configIndex >= 1 && configIndex <= configNames.Count)
             {
-                string selectedConfig = configNames[configIndex - 1];
+                var selectedConfig = configNames[configIndex - 1];
                 _configurations.RemoveAt(configIndex - 1);
                 Console.WriteLine($"Configuration '{selectedConfig}' deleted successfully.");
 
@@ -223,20 +233,22 @@ namespace GameLogic
             Console.ReadLine();
         }
 
-        private int GetValidInput(string prompt)
+        private int GetValidInput(string prompt, int minValue, int maxValue)
         {
             int result;
             Console.WriteLine(prompt);
 
-            while (!int.TryParse(Console.ReadLine(), out result) || result < 3)
+            // Keep asking until a valid integer between minValue and maxValue is entered
+            while (!int.TryParse(Console.ReadLine(), out result) || result <= minValue || result > maxValue)
             {
-                Console.WriteLine("Invalid input! Please enter an integer of at least 3:");
+                Console.WriteLine($"Invalid input! Please enter a number between {minValue + 1} and {maxValue}:");
             }
 
             return result;
         }
 
-        private char GetValidSymbol()
+
+        private static char GetValidSymbol()
         {
             char symbol;
             while (!char.TryParse(Console.ReadLine(), out symbol) || char.IsWhiteSpace(symbol))
