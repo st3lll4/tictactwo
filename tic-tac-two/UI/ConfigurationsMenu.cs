@@ -4,16 +4,17 @@ namespace UI
 {
     public class ConfigurationsMenu
     {
-        private List<MenuItem> _configMenuItems = new();
-        private ConfigurationManager? _configManager;
+        private List<MenuItem> _configMenuItems = new List<MenuItem>();
+        private ConfigurationManager _configManager;
 
-        // Constructor to inject dependencies
-        public ConfigurationsMenu(ConfigurationManager? configManager)
+        public ConfigurationsMenu(ConfigurationManager configManager)
         {
             _configManager = configManager;
             InitializeConfigMenu();
         }
 
+        // TODO: 
+        
         private void InitializeConfigMenu()
         {
             if (_configMenuItems.Count == 0)
@@ -26,14 +27,12 @@ namespace UI
             }
         }
 
-        
-
         public void Show()
         {
             while (true)
             {
                 Console.Clear();
-                Console.WriteLine("Your configurations");
+                Console.WriteLine("Configurations Menu");
                 foreach (var item in _configMenuItems)
                 {
                     Console.WriteLine($"{item.Number}. {item.Name}");
@@ -47,6 +46,10 @@ namespace UI
                     var selectedItem = _configMenuItems.Find(item => item.Number == choiceNumber);
                     if (selectedItem != null)
                     {
+                        if (selectedItem.Name == "Back to Main Menu")
+                        {
+                            break;
+                        }
                         selectedItem.Action.Invoke();
                     }
                     else
@@ -60,7 +63,6 @@ namespace UI
                 }
             }
         }
-        
 
         private void SelectConfiguration()
         {
@@ -68,16 +70,15 @@ namespace UI
 
             if (savedConfigs.Count == 0)
             {
-                Console.WriteLine("No saved configurations found. Press 1 to add a configuration, 0 to exit:");
-    
-                if (int.TryParse(Console.ReadLine(), out int choice) && choice == 1)
-                {
-                   _configManager.CreateConfiguration();  
-                }
-    
-                return;  // Exit the method if no valid selection or user chose to exit
-            }
+                Console.WriteLine("No saved configurations found. Press 1 to add a configuration, any other key to return:");
 
+                if (Console.ReadLine() == "1")
+                {
+                    _configManager.CreateConfiguration();
+                }
+
+                return;
+            }
 
             Console.WriteLine("Enter the number of the configuration you want to play with:");
             for (int i = 0; i < savedConfigs.Count; i++)
@@ -88,7 +89,7 @@ namespace UI
             if (int.TryParse(Console.ReadLine(), out int configIndex) && configIndex >= 1 && configIndex <= savedConfigs.Count)
             {
                 string selectedConfig = savedConfigs[configIndex - 1];
-                _configManager.LoadConfiguration(selectedConfig);
+                _configManager.SetCurrentConfiguration(selectedConfig);
                 ShowMessage($"Configuration '{selectedConfig}' selected for future games.");
             }
             else
@@ -103,7 +104,7 @@ namespace UI
 
             if (savedConfigs.Count == 0)
             {
-                ShowMessage("No saved configurations found. Press enter to exit to configurations menu.");
+                ShowMessage("No saved configurations found. Press Enter to return.");
                 return;
             }
 
@@ -118,6 +119,7 @@ namespace UI
 
         private void BackToMainMenu()
         {
+            //  intentionally left blank to allow breaking out of the menu loop.
         }
 
         private void ShowMessage(string message)

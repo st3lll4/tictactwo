@@ -1,16 +1,14 @@
-namespace UI
+namespace UI;
+public class MenuItem
 {
-    public class MenuItem
-    {
-        public int Number { get; private set; }
-        public string Name { get; private set; }
-        public Action Action { get; private set; }
+    public int Number { get; }
+    public string Name { get; }
+    public Action Action { get; }
 
-        public MenuItem(int number, string name, Action action)
-        {
-            Number = number;
-            Name = name;
-            Action = action;
-        }
+    public MenuItem(int number, string name, Action action)
+    {
+        Number = number;
+        Name = name;
+        Action = action;
     }
 }

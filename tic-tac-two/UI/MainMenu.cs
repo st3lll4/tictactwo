@@ -4,8 +4,7 @@ namespace UI
 {
     public class MainMenu
     {
-        private static List<MenuItem> _mainMenuItems = new List<MenuItem>();
-        private GameConfiguration _gameConfiguration; // Reference to the current game configuration
+        private List<MenuItem> _mainMenuItems = new List<MenuItem>();
         private ConfigurationManager _configManager;
 
         public MainMenu()
@@ -14,7 +13,6 @@ namespace UI
             InitializeTopLevelMenu();
             InitializeGameConfiguration();
         }
-
 
         private void InitializeTopLevelMenu()
         {
@@ -26,7 +24,7 @@ namespace UI
             }
         }
 
-        public static void Show()
+        public void Show()
         {
             while (true)
             {
@@ -58,28 +56,33 @@ namespace UI
                 }
             }
         }
-        
+
         private void InitializeGameConfiguration()
         {
             var configNames = _configManager.GetSavedConfigurations();
 
             if (configNames.Count > 0)
             {
-                _gameConfiguration = _configManager.LoadConfiguration(configNames[0]);
+                var defaultConfigName = configNames[0];
+                _configManager.SetCurrentConfiguration(defaultConfigName);
             }
             else
             {
-                _gameConfiguration = new GameConfiguration();
-                Console.WriteLine("No configurations available.");
-                // Optionally, you can prompt the user to create a new configuration or handle this scenario accordingly
+                Console.WriteLine("No configurations available. Please create a configuration first.");
+                Console.ReadLine();
             }
         }
 
-
-
         private void StartNewGame()
         {
-            Game game = new Game(_gameConfiguration);
+            if (_configManager.CurrentConfiguration == null)
+            {
+                Console.WriteLine("No game configuration selected. Please select a configuration first.");
+                Console.ReadLine();
+                return;
+            }
+
+            Game game = new Game(_configManager.CurrentConfiguration);
             game.Start();
         }
 
@@ -95,7 +98,7 @@ namespace UI
             Environment.Exit(0);
         }
 
-        private static void ShowMessage(string message)
+        private void ShowMessage(string message)
         {
             Console.WriteLine(message);
             Console.ReadLine();
