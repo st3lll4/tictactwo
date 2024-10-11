@@ -4,6 +4,9 @@ namespace GameLogic
 {
     public class ConfigurationManager
     {
+        
+        //TODO: CHANGE ALL FIELDS TO PROPERTIES
+        
         private const string ConfigFilePath = "configurations.json";
         private List<ConfigurationEntry> _configurations = [];
 
@@ -138,12 +141,7 @@ namespace GameLogic
 
         public List<string> GetSavedConfigurations()
         {
-            List<string> configNames = new List<string>();
-            foreach (var configEntry in _configurations)
-            {
-                configNames.Add(configEntry.ConfigName);
-            }
-            return configNames;
+            return _configurations.Select(configEntry => configEntry.ConfigName).ToList();
         }
 
         public void CreateConfiguration()
@@ -157,8 +155,11 @@ namespace GameLogic
             var name = Console.ReadLine() ?? $"Config nr {_configurations.Count + 1}";
             config.GameName = name;
 
-            config.Width = GetValidInput("Enter the width of the board (at least 3):", 3, 100);
-            config.Height = GetValidInput("Enter the height of the board (at least 3):", 3, 100);
+            const int min = 3;
+            const int max = 54; // max that console to display normally
+            
+            config.Width = GetValidInput("Enter the width of the board (at least 3):", min, max);
+            config.Height = GetValidInput("Enter the height of the board (at least 3):", min, max);
 
             Console.WriteLine("Enter the symbol for Player 1 (default is X):");
             config.Player1Symbol = GetValidSymbol();
@@ -183,11 +184,11 @@ namespace GameLogic
             if (config is { Height: > 3, Width: > 3 })
             {
                 var boardCapacity = config.Width * config.Height;
-                config.MovableGridSize = GetValidInput("Enter the size of the movable grid (always square)", 3, boardCapacity);
-                config.WinningCondition = GetValidInput("Enter the winning condition of the game (more than 3)", 3, boardCapacity);
+                config.MovableGridSize = GetValidInput("Enter the size of the movable grid (always square):", 3, boardCapacity);
+                config.WinningCondition = GetValidInput("Enter the winning condition of the game (more than 3):", 3, boardCapacity);
                 config.InitialMoves =
-                    GetValidInput("Enter the number of moves have to made before moving the pieces or the grid", 0, boardCapacity);
-                config.MaxPieces = GetValidInput("Enter the number of pieces every player has", 0, boardCapacity);
+                    GetValidInput("Enter the number of moves have to made before moving the pieces or the grid:", 0, boardCapacity);
+                config.MaxPieces = GetValidInput("Enter the number of pieces every player has:", 0, boardCapacity);
             }
             else
             {

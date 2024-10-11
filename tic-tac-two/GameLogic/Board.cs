@@ -8,6 +8,9 @@ namespace GameLogic
         private int _gridCenterRow;
         private int _gridCenterCol;
 
+        //TODO: CHANGE ALL FIELDS TO PROPERTIES
+
+        
         public Board(int width, int height)
         {
             _width = width;

@@ -8,6 +8,9 @@
         private Player _currentPlayer;
         private int _player1PiecesPlaced = 0;
         private int _player2PiecesPlaced = 0;
+        
+        //TODO: CHANGE ALL FIELDS TO PROPERTIES
+
 
         public Game(GameConfiguration config)
         {

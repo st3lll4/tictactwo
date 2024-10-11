@@ -4,12 +4,12 @@ namespace UI
 {
     public class ConfigurationsMenu
     {
-        private List<MenuItem> _configMenuItems = [];
-        private ConfigurationManager _configManager;
+        private List<MenuItem> ConfigMenuItems { get; set; }
+        private ConfigurationManager ConfigManager { get; set; }
 
         public ConfigurationsMenu(ConfigurationManager configManager)
         {
-            _configManager = configManager;
+            ConfigManager = configManager;
             InitializeConfigMenu();
         }
 
@@ -17,13 +17,13 @@ namespace UI
         
         private void InitializeConfigMenu()
         {
-            if (_configMenuItems.Count == 0)
+            if (ConfigMenuItems.Count == 0)
             {
-                _configMenuItems.Add(new MenuItem(1, "Select a configuration to play", SelectConfiguration));
-                _configMenuItems.Add(new MenuItem(2, "Create a configuration", _configManager.CreateConfiguration));
-                _configMenuItems.Add(new MenuItem(3, "Delete a configuration", _configManager.DeleteConfiguration));
-                _configMenuItems.Add(new MenuItem(4, "View your configurations", SeeConfigurations));
-                _configMenuItems.Add(new MenuItem(5, "Back to Main Menu", BackToMainMenu));
+                ConfigMenuItems.Add(new MenuItem(1, "Select a configuration to play", SelectConfiguration));
+                ConfigMenuItems.Add(new MenuItem(2, "Create a configuration", ConfigManager.CreateConfiguration));
+                ConfigMenuItems.Add(new MenuItem(3, "Delete a configuration", ConfigManager.DeleteConfiguration));
+                ConfigMenuItems.Add(new MenuItem(4, "View your configurations", SeeConfigurations));
+                ConfigMenuItems.Add(new MenuItem(5, "Back to Main Menu", BackToMainMenu));
             }
         }
 
@@ -33,7 +33,7 @@ namespace UI
             {
                 Console.Clear();
                 Console.WriteLine("Configurations Menu");
-                foreach (var item in _configMenuItems)
+                foreach (var item in ConfigMenuItems)
                 {
                     Console.WriteLine($"{item.Number}. {item.Name}");
                 }
@@ -43,7 +43,7 @@ namespace UI
 
                 if (int.TryParse(choice, out int choiceNumber))
                 {
-                    var selectedItem = _configMenuItems.Find(item => item.Number == choiceNumber);
+                    var selectedItem = ConfigMenuItems.Find(item => item.Number == choiceNumber);
                     if (selectedItem != null)
                     {
                         if (selectedItem.Name == "Back to Main Menu")
@@ -66,7 +66,7 @@ namespace UI
 
         private void SelectConfiguration()
         {
-            var savedConfigs = _configManager.GetSavedConfigurations();
+            var savedConfigs = ConfigManager.GetSavedConfigurations();
 
       //      if (savedConfigs.Count == 0)
     //        {
@@ -89,7 +89,7 @@ namespace UI
             if (int.TryParse(Console.ReadLine(), out int configIndex) && configIndex >= 1 && configIndex <= savedConfigs.Count)
             {
                 var selectedConfig = savedConfigs[configIndex - 1];
-                _configManager.SetCurrentConfiguration(selectedConfig);
+                ConfigManager.SetCurrentConfiguration(selectedConfig);
                 ShowMessage($"Configuration '{selectedConfig}' selected for future games.");
             }
             else
@@ -100,7 +100,7 @@ namespace UI
 
         private void SeeConfigurations()
         {
-            var savedConfigs = _configManager.GetSavedConfigurations();
+            var savedConfigs = ConfigManager.GetSavedConfigurations();
 
             if (savedConfigs.Count == 0)
             {

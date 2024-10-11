@@ -5,7 +5,8 @@ namespace UI
     public class MainMenu
     {
         private List<MenuItem> _mainMenuItems = new List<MenuItem>();
-        private ConfigurationManager _configManager;
+        private ConfigurationManager _configManager;        //TODO: CHANGE ALL FIELDS TO PROPERTIES
+
 
         public MainMenu()
         {
