@@ -8,9 +8,24 @@ namespace GameLogic
         private List<ConfigurationEntry> _configurations = new();
 
         public GameConfiguration CurrentConfiguration { get; private set; }
+        
+        private readonly GameConfiguration _defaultConfiguration = new() {
+            GameName = "Default",
+            Width = 5,
+            Height = 5,
+            Player1Symbol = 'X',
+            Player2Symbol = 'O',
+            StartingPlayer = "Player 1",
+            MovableGridSize = 3,
+            WinningCondition = 3,
+            InitalMoves = 2,
+            MaxPieces = 3
+        };
+
 
         public ConfigurationManager()
         {
+            CurrentConfiguration = _defaultConfiguration;
             LoadConfigurationsFromFile();
             InitializeDefaultConfigurations();
         }
@@ -34,7 +49,7 @@ namespace GameLogic
                     Console.WriteLine($"Error loading configurations: {ex.Message}");
                 }
             }
-            else
+            else // mostly will never get here on my PC
             {
                 Console.WriteLine("No previous configurations found.");
             }
@@ -44,16 +59,7 @@ namespace GameLogic
         {
             if (_configurations.Count != 0) return;
 
-            var defaultConfig1 = new GameConfiguration()
-            {
-                GameName = "Tic-Tac-Toe",
-                Width = 3,
-                Height = 3,
-                Player1Symbol = 'X',
-                Player2Symbol = 'O',
-                StartingPlayer = "Player 1"
-            };
-            _configurations.Add(new ConfigurationEntry { ConfigName = defaultConfig1.GameName, Config = defaultConfig1 });
+            _configurations.Add(new ConfigurationEntry { ConfigName = _defaultConfiguration.GameName, Config = _defaultConfiguration });
 
             var defaultConfig2 = new GameConfiguration()
             {
@@ -62,10 +68,32 @@ namespace GameLogic
                 Height = 10,
                 Player1Symbol = 'X',
                 Player2Symbol = 'O',
-                StartingPlayer = "Player 1"
+                StartingPlayer = "Player 1",
+                InitalMoves = 5,
+                MaxPieces = 7, // idk
+                MovableGridSize = 5,
+                WinningCondition = 5
             };
             _configurations.Add(new ConfigurationEntry { ConfigName = defaultConfig2.GameName, Config = defaultConfig2 });
-
+                
+            
+            // TODO: if this conf is chosen, dont offer options, only offer moves
+            
+            var defaultConfig3 = new GameConfiguration()
+            {
+                GameName = "Tic-Tac-Toe",
+                Width = 3,
+                Height = 3,
+                Player1Symbol = 'X',
+                Player2Symbol = 'O',
+                StartingPlayer = "Player 1",
+                InitalMoves = 5, // normal tic-tac-toe so no grid moving is allowed
+                MaxPieces = 5,
+                MovableGridSize = 3,
+                WinningCondition = 3
+            };
+            _configurations.Add(new ConfigurationEntry { ConfigName = defaultConfig3.GameName, Config = defaultConfig3 });
+            
             SaveConfigurationsToFile();
         }
 
@@ -90,7 +118,7 @@ namespace GameLogic
             }
         }
 
-        public GameConfiguration LoadConfiguration(string configName)
+        public GameConfiguration GetConfigurationByName(string configName)
         {
             var configEntry = _configurations.Find(c => c.ConfigName == configName);
             if (configEntry == null)
@@ -104,15 +132,8 @@ namespace GameLogic
 
         public void SetCurrentConfiguration(string configName)
         {
-            var config = LoadConfiguration(configName);
-            if (config != null)
-            {
-                CurrentConfiguration = config; 
-            }
-            else
-            {
-                Console.WriteLine($"Configuration '{configName}' not found.");
-            }
+            var config = GetConfigurationByName(configName);
+            CurrentConfiguration = config; 
         }
 
         public List<string> GetSavedConfigurations()

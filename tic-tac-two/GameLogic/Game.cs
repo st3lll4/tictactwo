@@ -11,8 +11,6 @@
 
         public Game(GameConfiguration config)
         {
-            if (config == null)
-                throw new ArgumentNullException(nameof(config), "Game configuration cannot be null.");
 
             _board = new Board(config.Width, config.Height);
 
@@ -24,7 +22,7 @@
         }
 
         public void Start()
-        {
+        { // todo: dont clear console all the time
             while (true)
             {
                 Console.Clear();
@@ -44,7 +42,7 @@
                     Console.WriteLine("1. Place a piece within the grid.");
                     Console.WriteLine("2. Move the grid.");
                     Console.WriteLine("3. Move one of your pieces into the grid.");
-                    string choice = Console.ReadLine();
+                    var choice = Console.ReadLine();
 
                     switch (choice)
                     {
@@ -91,7 +89,7 @@
         private void MoveGrid()
         {
             Console.WriteLine("Enter direction to move the grid (up, down, left, right, up-left, up-right, down-left, down-right):");
-            string direction = Console.ReadLine();
+            var direction = Console.ReadLine();
             int dRow = 0, dCol = 0;
             switch (direction.ToLower())
             {

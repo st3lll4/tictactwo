@@ -101,6 +101,7 @@ namespace GameLogic
             }
         }
         
+        //TODO: indexes are wrong, if i say 2,2 it puts into 1,1
         public bool PlacePiece(int row, int col, char piece)
         {
             row -= 1;

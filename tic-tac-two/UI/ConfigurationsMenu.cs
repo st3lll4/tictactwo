@@ -4,7 +4,7 @@ namespace UI
 {
     public class ConfigurationsMenu
     {
-        private List<MenuItem> _configMenuItems = new List<MenuItem>();
+        private List<MenuItem> _configMenuItems = [];
         private ConfigurationManager _configManager;
 
         public ConfigurationsMenu(ConfigurationManager configManager)
@@ -68,17 +68,17 @@ namespace UI
         {
             var savedConfigs = _configManager.GetSavedConfigurations();
 
-            if (savedConfigs.Count == 0)
-            {
-                Console.WriteLine("No saved configurations found. Press 1 to add a configuration, any other key to return:");
-
-                if (Console.ReadLine() == "1")
-                {
-                    _configManager.CreateConfiguration();
-                }
-
-                return;
-            }
+      //      if (savedConfigs.Count == 0)
+    //        {
+  //              Console.WriteLine("No saved configurations found. Press 1 to add a configuration, any other key to return:");
+//
+        //        if (Console.ReadLine() == "1")
+      //          {
+    //                _configManager.CreateConfiguration();
+  //              }
+//
+            //    return;
+            //}
 
             Console.WriteLine("Enter the number of the configuration you want to play with:");
             for (int i = 0; i < savedConfigs.Count; i++)
@@ -88,7 +88,7 @@ namespace UI
 
             if (int.TryParse(Console.ReadLine(), out int configIndex) && configIndex >= 1 && configIndex <= savedConfigs.Count)
             {
-                string selectedConfig = savedConfigs[configIndex - 1];
+                var selectedConfig = savedConfigs[configIndex - 1];
                 _configManager.SetCurrentConfiguration(selectedConfig);
                 ShowMessage($"Configuration '{selectedConfig}' selected for future games.");
             }

@@ -11,7 +11,6 @@ namespace UI
         {
             _configManager = new ConfigurationManager();
             InitializeTopLevelMenu();
-            InitializeGameConfiguration();
         }
 
         private void InitializeTopLevelMenu()
@@ -57,32 +56,9 @@ namespace UI
             }
         }
 
-        private void InitializeGameConfiguration()
-        {
-            var configNames = _configManager.GetSavedConfigurations();
-
-            if (configNames.Count > 0)
-            {
-                var defaultConfigName = configNames[0];
-                _configManager.SetCurrentConfiguration(defaultConfigName);
-            }
-            else
-            {
-                Console.WriteLine("No configurations available. Please create a configuration first.");
-                Console.ReadLine();
-            }
-        }
-
         private void StartNewGame()
         {
-            if (_configManager.CurrentConfiguration == null)
-            {
-                Console.WriteLine("No game configuration selected. Please select a configuration first.");
-                Console.ReadLine();
-                return;
-            }
-
-            Game game = new Game(_configManager.CurrentConfiguration);
+            var game = new Game(_configManager.CurrentConfiguration);
             game.Start();
         }
 
