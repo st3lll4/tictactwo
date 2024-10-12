@@ -8,12 +8,12 @@ namespace GameLogic
         //TODO: CHANGE ALL FIELDS TO PROPERTIES
         
         private const string ConfigFilePath = "configurations.json";
-        private List<ConfigurationEntry> _configurations = [];
+        private List<ConfigurationEntry> Configurations { get; set; } = [];
 
         public GameConfiguration CurrentConfiguration { get; private set; }
         
         private readonly GameConfiguration _defaultConfiguration = new() {
-            GameName = "Default",
+            GameName = "Tic-Tac-Two",
             Width = 5,
             Height = 5,
             Player1Symbol = 'X',
@@ -44,7 +44,7 @@ namespace GameLogic
 
                     if (loadedConfigs != null)
                     {
-                        _configurations = loadedConfigs;
+                        Configurations = loadedConfigs;
                     }
                 }
                 catch (Exception ex)
@@ -60,9 +60,9 @@ namespace GameLogic
 
         private void InitializeDefaultConfigurations()
         {
-            if (_configurations.Count != 0) return;
+            if (Configurations.Count != 0) return;
 
-            _configurations.Add(new ConfigurationEntry { ConfigName = _defaultConfiguration.GameName, Config = _defaultConfiguration });
+            Configurations.Add(new ConfigurationEntry { ConfigName = _defaultConfiguration.GameName, Config = _defaultConfiguration });
 
             var defaultConfig2 = new GameConfiguration()
             {
@@ -77,10 +77,8 @@ namespace GameLogic
                 MovableGridSize = 5,
                 WinningCondition = 5
             };
-            _configurations.Add(new ConfigurationEntry { ConfigName = defaultConfig2.GameName, Config = defaultConfig2 });
+            Configurations.Add(new ConfigurationEntry { ConfigName = defaultConfig2.GameName, Config = defaultConfig2 });
                 
-            
-            // TODO: if this conf is chosen, dont offer options, only offer moves
             
             var defaultConfig3 = new GameConfiguration()
             {
@@ -90,20 +88,17 @@ namespace GameLogic
                 Player1Symbol = 'X',
                 Player2Symbol = 'O',
                 StartingPlayer = "Player 1",
-                InitialMoves = 5, // normal tic-tac-toe so no grid moving is allowed
-                MaxPieces = 5,
-                MovableGridSize = 3,
                 WinningCondition = 3
             };
-            _configurations.Add(new ConfigurationEntry { ConfigName = defaultConfig3.GameName, Config = defaultConfig3 });
+            Configurations.Add(new ConfigurationEntry { ConfigName = defaultConfig3.GameName, Config = defaultConfig3 });
             
             SaveConfigurationsToFile();
         }
 
         private void SaveConfiguration(GameConfiguration config, string configName) // adds to the list and to the file
         {
-            _configurations.RemoveAll(c => c.ConfigName == configName);
-            _configurations.Add(new ConfigurationEntry { ConfigName = configName, Config = config });
+            Configurations.RemoveAll(c => c.ConfigName == configName);
+            Configurations.Add(new ConfigurationEntry { ConfigName = configName, Config = config });
             SaveConfigurationsToFile();
         }
 
@@ -111,7 +106,7 @@ namespace GameLogic
         {
             try
             {
-                var json = JsonSerializer.Serialize(_configurations);
+                var json = JsonSerializer.Serialize(Configurations);
                 File.WriteAllText(ConfigFilePath, json);
             }
             catch (Exception ex)
@@ -122,14 +117,8 @@ namespace GameLogic
 
         public GameConfiguration GetConfigurationByName(string configName)
         {
-            var configEntry = _configurations.Find(c => c.ConfigName == configName);
-            if (configEntry == null)
-            {
-                Console.WriteLine($"Configuration '{configName}' not found.");
-                return null;
-            }
-
-            return configEntry.Config;
+            var configEntry = Configurations.Find(c => c.ConfigName == configName);
+            return configEntry!.Config; // only used when selecting config so it always exists
         }
 
         public void SetCurrentConfiguration(string configName)
@@ -140,7 +129,7 @@ namespace GameLogic
 
         public List<string> GetSavedConfigurations()
         {
-            return _configurations.Select(configEntry => configEntry.ConfigName).ToList();
+            return Configurations.Select(configEntry => configEntry.ConfigName).ToList();
         }
 
         public void CreateConfiguration()
@@ -151,7 +140,7 @@ namespace GameLogic
             var config = new GameConfiguration();
 
             Console.WriteLine("Name your configuration:");
-            var name = Console.ReadLine() ?? $"Config nr {_configurations.Count + 1}";
+            var name = Console.ReadLine() ?? $"Config nr {Configurations.Count + 1}";
             config.GameName = name;
 
             const int min = 2;
@@ -180,10 +169,10 @@ namespace GameLogic
 
                 Console.WriteLine("Invalid input. Please try again.");
             }
-            if (config is { Height: > 3, Width: > 3 })
+            if (config.Height != 3 && config.Width != 3) 
             {
                 var boardCapacity = config.Width * config.Height;
-                config.MovableGridSize = GetValidInput("Enter the size of the movable grid (always square):", min, max);
+                config.MovableGridSize = GetValidInput("Enter the size of the movable grid (always square):", min, Math.Min(config.Height, config.Width));
                 config.WinningCondition = GetValidInput("Enter the winning condition of the game (more than 3):", 3, boardCapacity);
                 config.InitialMoves =
                     GetValidInput("Enter the number of moves have to made before moving the pieces or the grid:", 0, boardCapacity);
@@ -222,7 +211,7 @@ namespace GameLogic
             if (int.TryParse(Console.ReadLine(), out var configIndex) && configIndex >= 1 && configIndex <= configNames.Count)
             {
                 var selectedConfig = configNames[configIndex - 1];
-                _configurations.RemoveAt(configIndex - 1);
+                Configurations.RemoveAt(configIndex - 1);
                 Console.WriteLine($"Configuration '{selectedConfig}' deleted successfully.");
 
                 SaveConfigurationsToFile();
@@ -240,7 +229,6 @@ namespace GameLogic
             int result;
             Console.WriteLine(prompt);
 
-            // Keep asking until a valid integer between minValue and maxValue is entered
             while (!int.TryParse(Console.ReadLine(), out result) || result <= minValue || result > maxValue)
             {
                 Console.WriteLine($"Invalid input! Please enter a number between {minValue + 1} and {maxValue}:");
@@ -250,7 +238,7 @@ namespace GameLogic
         }
 
 
-        private static char GetValidSymbol(char player1Symbol = '\0') // Optional parameter for Player 1's symbol
+        private static char GetValidSymbol(char player1Symbol = '\0')
         {
             while (true)
             {

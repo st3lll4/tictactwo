@@ -4,23 +4,24 @@ namespace UI
 {
     public class MainMenu
     {
-        private List<MenuItem> _mainMenuItems = new List<MenuItem>();
-        private ConfigurationManager _configManager;        //TODO: CHANGE ALL FIELDS TO PROPERTIES
+        private List<MenuItem> MainMenuItems { get; } = [];
+
+        private ConfigurationManager ConfigManager { get; }
 
 
         public MainMenu()
         {
-            _configManager = new ConfigurationManager();
+            ConfigManager = new ConfigurationManager();
             InitializeTopLevelMenu();
         }
 
         private void InitializeTopLevelMenu()
         {
-            if (_mainMenuItems.Count == 0)
+            if (MainMenuItems.Count == 0)
             {
-                _mainMenuItems.Add(new MenuItem(1, "Start New Game", StartNewGame));
-                _mainMenuItems.Add(new MenuItem(2, "Configurations", ShowConfigMenu));
-                _mainMenuItems.Add(new MenuItem(3, "Exit", ExitGame));
+                MainMenuItems.Add(new MenuItem(1, "Start New Game", StartNewGame));
+                MainMenuItems.Add(new MenuItem(2, "Configurations", ShowConfigMenu));
+                MainMenuItems.Add(new MenuItem(3, "Exit", ExitGame));
             }
         }
 
@@ -30,7 +31,7 @@ namespace UI
             {
                 Console.Clear();
                 Console.WriteLine("Main Menu");
-                foreach (var item in _mainMenuItems)
+                foreach (var item in MainMenuItems)
                 {
                     Console.WriteLine($"{item.Number}. {item.Name}");
                 }
@@ -40,7 +41,7 @@ namespace UI
 
                 if (int.TryParse(choice, out int choiceNumber))
                 {
-                    var selectedItem = _mainMenuItems.Find(item => item.Number == choiceNumber);
+                    var selectedItem = MainMenuItems.Find(item => item.Number == choiceNumber);
                     if (selectedItem != null)
                     {
                         selectedItem.Action.Invoke();
@@ -59,13 +60,13 @@ namespace UI
 
         private void StartNewGame()
         {
-            var game = new Game(_configManager.CurrentConfiguration);
+            var game = new Game(ConfigManager.CurrentConfiguration);
             game.Start();
         }
 
         private void ShowConfigMenu()
         {
-            var configMenu = new ConfigurationsMenu(_configManager);
+            var configMenu = new ConfigurationsMenu(ConfigManager);
             configMenu.Show();
         }
 

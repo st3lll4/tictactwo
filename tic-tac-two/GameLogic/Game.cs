@@ -3,25 +3,25 @@
     // the place where asked what you want to do cannot have a move grid option if board size is 3x3
     public class Game
     {
-        private Board _board;
-        private Player _player1;
-        private Player _player2;
-        private Player _currentPlayer;
-        private int _player1PiecesPlaced = 0;
-        private int _player2PiecesPlaced = 0;
-        
+        private Board Board {get; set;}
+        private Player Player1 { get; set; }
+        private Player Player2 { get; set; }
+        private Player CurrentPlayer { get; set; }
+        private int Player1PiecesPlaced { get; set; } = 0;
+        private int Player2PiecesPlaced { get; set; } = 0;
+
         //TODO: CHANGE ALL FIELDS TO PROPERTIES
 
 
         public Game(GameConfiguration config)
         {
 
-            _board = new Board(config.Width, config.Height);
+            Board = new Board(config.Width, config.Height);
 
-            _player1 = new Player(config.Player1Symbol);
-            _player2 = new Player(config.Player2Symbol);
+            Player1 = new Player(config.Player1Symbol);
+            Player2 = new Player(config.Player2Symbol);
 
-            _currentPlayer = config.StartingPlayer == "Player 1" ? _player1 : _player2;
+            CurrentPlayer = config.StartingPlayer == "Player 1" ? Player1 : Player2;
 
         }
 
@@ -30,19 +30,19 @@
             while (true)
             {
                 Console.Clear();
-                _board.Draw();
+                Board.Draw();
 
-                if ((_currentPlayer == _player1 && _player1PiecesPlaced < 2) ||
-                    (_currentPlayer == _player2 && _player2PiecesPlaced < 2))
+                if ((CurrentPlayer == Player1 && Player1PiecesPlaced < 2) ||
+                    (CurrentPlayer == Player2 && Player2PiecesPlaced < 2))
                 {
-                    Console.WriteLine($"{_currentPlayer.Symbol}'s turn: Place a piece within the grid.");
-                    _currentPlayer.PlacePiece(_board);
-                    if (_currentPlayer == _player1) _player1PiecesPlaced++;
-                    else _player2PiecesPlaced++;
+                    Console.WriteLine($"{CurrentPlayer.Symbol}'s turn: Place a piece within the grid.");
+                    CurrentPlayer.PlacePiece(Board);
+                    if (CurrentPlayer == Player1) Player1PiecesPlaced++;
+                    else Player2PiecesPlaced++;
                 }
                 else
                 {
-                    Console.WriteLine($"{_currentPlayer.Symbol}'s turn: Choose an action:");
+                    Console.WriteLine($"{CurrentPlayer.Symbol}'s turn: Choose an action:");
                     Console.WriteLine("1. Place a piece within the grid.");
                     Console.WriteLine("2. Move the grid.");
                     Console.WriteLine("3. Move one of your pieces into the grid.");
@@ -51,13 +51,13 @@
                     switch (choice)
                     {
                         case "1":
-                            _currentPlayer.PlacePiece(_board);
+                            CurrentPlayer.PlacePiece(Board);
                             break;
                         case "2":
                             MoveGrid();
                             break;
                         case "3":
-                            _currentPlayer.MoveOwnPiece(_board);
+                            CurrentPlayer.MoveOwnPiece(Board);
                             break;
                         default:
                             Console.WriteLine("Invalid choice. Press Enter to try again.");
@@ -70,8 +70,8 @@
                 if (CheckWin())
                 {
                     Console.Clear();
-                    _board.Draw();
-                    Console.WriteLine($"{_currentPlayer.Symbol} wins!");
+                    Board.Draw();
+                    Console.WriteLine($"{CurrentPlayer.Symbol} wins!");
                     Console.ReadLine();
                     break;
                 }
@@ -80,7 +80,7 @@
                 if (CheckTie())
                 {
                     Console.Clear();
-                    _board.Draw();
+                    Board.Draw();
                     Console.WriteLine("It's a tie!");
                     Console.ReadLine();
                     break;
@@ -127,7 +127,7 @@
                     return;
             }
 
-            if (_board.MoveGrid(dRow, dCol))
+            if (Board.MoveGrid(dRow, dCol))
             {
                 Console.WriteLine("Grid moved successfully. Press Enter to continue.");
             }
@@ -141,20 +141,20 @@
         
         private bool CheckWin()
         {
-            return _board.CheckWin(_currentPlayer.Symbol);
+            return Board.CheckWin(CurrentPlayer.Symbol);
         }
 
         private bool CheckTie()
         {
-            bool player1Wins = _board.CheckWin(_player1.Symbol);
-            bool player2Wins = _board.CheckWin(_player2.Symbol);
+            bool player1Wins = Board.CheckWin(Player1.Symbol);
+            bool player2Wins = Board.CheckWin(Player2.Symbol);
             return player1Wins && player2Wins;
         }
 
 
         private void SwitchPlayer()
         {
-            _currentPlayer = _currentPlayer == _player1 ? _player2 : _player1;
+            CurrentPlayer = CurrentPlayer == Player1 ? Player2 : Player1;
         }
 
     }

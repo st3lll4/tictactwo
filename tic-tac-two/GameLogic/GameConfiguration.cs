@@ -11,15 +11,15 @@ namespace GameLogic
         
         // TODO: 
         // movable grid size
-        public int MovableGridSize { get; set; } // always square
+        public int? MovableGridSize { get; set; } // always square
         
         // winning condition
         public int WinningCondition { get; set; }
         
         // move grid after n moves
-        public int InitialMoves { get; set; } 
+        public int? InitialMoves { get; set; } 
             
         // max pieces for a player
-        public int MaxPieces { get; set; }
+        public int? MaxPieces { get; set; }
     }
 }

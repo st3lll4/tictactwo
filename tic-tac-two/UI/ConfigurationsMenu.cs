@@ -4,8 +4,8 @@ namespace UI
 {
     public class ConfigurationsMenu
     {
-        private List<MenuItem> ConfigMenuItems { get; set; } = [];
-        private ConfigurationManager ConfigManager { get; set; }
+        private List<MenuItem> ConfigMenuItems { get; } = []; // Initialize the list
+        private ConfigurationManager ConfigManager { get; }
 
         public ConfigurationsMenu(ConfigurationManager configManager)
         {
@@ -13,8 +13,6 @@ namespace UI
             InitializeConfigMenu();
         }
 
-        // TODO: easier UI in terms of going back
-        
         private void InitializeConfigMenu()
         {
             if (ConfigMenuItems.Count != 0) return;
@@ -22,7 +20,6 @@ namespace UI
             ConfigMenuItems.Add(new MenuItem(2, "Create a configuration", ConfigManager.CreateConfiguration));
             ConfigMenuItems.Add(new MenuItem(3, "Delete a configuration", ConfigManager.DeleteConfiguration));
             ConfigMenuItems.Add(new MenuItem(4, "View your configurations", SeeConfigurations));
-            ConfigMenuItems.Add(new MenuItem(5, "Back to Main Menu", BackToMainMenu));
         }
 
         public void Show()
@@ -36,18 +33,20 @@ namespace UI
                     Console.WriteLine($"{item.Number}. {item.Name}");
                 }
 
-                Console.Write("Enter an option: ");
+                Console.Write("Enter an option (Press Enter to go back): ");
                 var choice = Console.ReadLine();
+
+                // If Enter is pressed without input, go back to the previous menu (break)
+                if (string.IsNullOrWhiteSpace(choice))
+                {
+                    break; // Return to the previous menu
+                }
 
                 if (int.TryParse(choice, out int choiceNumber))
                 {
                     var selectedItem = ConfigMenuItems.Find(item => item.Number == choiceNumber);
                     if (selectedItem != null)
                     {
-                        if (selectedItem.Name == "Back to Main Menu")
-                        {
-                            break;
-                        }
                         selectedItem.Action.Invoke();
                     }
                     else
@@ -66,14 +65,21 @@ namespace UI
         {
             var savedConfigs = ConfigManager.GetSavedConfigurations();
 
-
-            Console.WriteLine("Enter the number of the configuration you want to play with:");
+            Console.WriteLine("Enter the number of the configuration you want to play with (Press Enter to go back):");
             for (int i = 0; i < savedConfigs.Count; i++)
             {
                 Console.WriteLine($"{i + 1}. {savedConfigs[i]}");
             }
 
-            if (int.TryParse(Console.ReadLine(), out int configIndex) && configIndex >= 1 && configIndex <= savedConfigs.Count)
+            var input = Console.ReadLine();
+
+            // If Enter is pressed without input, go back
+            if (string.IsNullOrWhiteSpace(input))
+            {
+                return; // Go back to the previous menu
+            }
+
+            if (int.TryParse(input, out int configIndex) && configIndex >= 1 && configIndex <= savedConfigs.Count)
             {
                 var selectedConfig = savedConfigs[configIndex - 1];
                 ConfigManager.SetCurrentConfiguration(selectedConfig);
@@ -98,19 +104,23 @@ namespace UI
                     Console.WriteLine($"{i + 1}. {savedConfigs[i]}");
                 }
 
-                Console.WriteLine("Enter the number of the configuration you want to view in detail, or '0' to return to the menu:");
+                Console.WriteLine("Enter the number of the configuration you want to view in detail, or press Enter to go back:");
 
-                if (int.TryParse(Console.ReadLine(), out int choice) && choice >= 0 && choice <= savedConfigs.Count)
+                var input = Console.ReadLine();
+
+                // If Enter is pressed without input, go back
+                if (string.IsNullOrWhiteSpace(input))
                 {
-                    if (choice == 0) break; 
+                    return; // Go back to the previous menu
+                }
 
+                if (int.TryParse(input, out int choice) && choice >= 1 && choice <= savedConfigs.Count)
+                {
                     var selectedConfigName = savedConfigs[choice - 1];
                     var selectedConfig = ConfigManager.GetConfigurationByName(selectedConfigName);
 
-                    {
-                        DisplayConfigurationDetails(selectedConfig);
-                        if (Console.ReadLine() == "0") break; 
-                    }
+                    DisplayConfigurationDetails(selectedConfig);
+                    Console.ReadLine();
                 }
                 else
                 {
@@ -134,12 +144,7 @@ namespace UI
             Console.WriteLine($"Max pieces per Player: {config.MaxPieces}");
             Console.WriteLine("\nPress Enter to return.");
         }
-
-
-        private static void BackToMainMenu()
-        {
-            //  intentionally left blank to allow breaking out of the menu loop.
-        }
+        
 
         private static void ShowMessage(string message)
         {
