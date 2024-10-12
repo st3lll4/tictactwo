@@ -17,7 +17,7 @@ namespace GameLogic
         public int WinningCondition { get; set; }
         
         // move grid after n moves
-        public int InitialMoves { get; set; }
+        public int InitialMoves { get; set; } 
             
         // max pieces for a player
         public int MaxPieces { get; set; }

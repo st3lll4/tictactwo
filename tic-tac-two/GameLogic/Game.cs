@@ -1,5 +1,6 @@
 ﻿namespace GameLogic
 {
+    // the place where asked what you want to do cannot have a move grid option if board size is 3x3
     public class Game
     {
         private Board _board;

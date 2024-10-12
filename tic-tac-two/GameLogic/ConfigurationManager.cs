@@ -120,7 +120,7 @@ namespace GameLogic
             }
         }
 
-        private GameConfiguration GetConfigurationByName(string configName)
+        public GameConfiguration GetConfigurationByName(string configName)
         {
             var configEntry = _configurations.Find(c => c.ConfigName == configName);
             if (configEntry == null)
@@ -163,10 +163,9 @@ namespace GameLogic
             Console.WriteLine("Enter the symbol for Player 1 (default is X):");
             config.Player1Symbol = GetValidSymbol();
             
-            // TODO: if press enter, set default as X and 0
-
             Console.WriteLine("Enter the symbol for Player 2 (default is O):");
-            config.Player2Symbol = GetValidSymbol();
+            
+            config.Player2Symbol = GetValidSymbol(config.Player1Symbol);
 
             Console.WriteLine("Who should start? Enter '1' for Player 1 or '2' for Player 2:");
             while (true)
@@ -198,6 +197,8 @@ namespace GameLogic
                 config.MaxPieces = _defaultConfiguration.MaxPieces;
             }
             SaveConfiguration(config, name);
+            Console.WriteLine($"Configuration '{name}' created successfully.");
+            Console.ReadLine(); 
         }
 
         public void DeleteConfiguration()
@@ -249,14 +250,32 @@ namespace GameLogic
         }
 
 
-        private static char GetValidSymbol()
+        private static char GetValidSymbol(char player1Symbol = '\0') // Optional parameter for Player 1's symbol
         {
-            char symbol;
-            while (!char.TryParse(Console.ReadLine(), out symbol) || char.IsWhiteSpace(symbol))
+            while (true)
             {
-                Console.WriteLine("Invalid symbol! Please enter a valid non-space character:");
+                var input = Console.ReadLine();
+                if (string.IsNullOrWhiteSpace(input))
+                {
+                    return player1Symbol == '\0' ? 'X' : 'O';
+                }
+
+                if (char.TryParse(input, out var symbol) && !char.IsWhiteSpace(symbol))
+                {
+                    if (symbol == player1Symbol)
+                    {
+                        Console.WriteLine($"Player 2's symbol cannot be the same as Player 1's symbol ('{player1Symbol}'). Please try again:");
+                    }
+                    else
+                    {
+                        return symbol; 
+                    }
+                }
+                else
+                {
+                    Console.WriteLine("Invalid symbol! Please enter a valid non-space character:");
+                }
             }
-            return symbol;
         }
     }
 }
