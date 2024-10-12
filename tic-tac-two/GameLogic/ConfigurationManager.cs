@@ -100,15 +100,14 @@ namespace GameLogic
             SaveConfigurationsToFile();
         }
 
-        private void SaveConfiguration(GameConfiguration config, string configName)
+        private void SaveConfiguration(GameConfiguration config, string configName) // adds to the list and to the file
         {
             _configurations.RemoveAll(c => c.ConfigName == configName);
             _configurations.Add(new ConfigurationEntry { ConfigName = configName, Config = config });
-            Console.WriteLine($"Configuration '{configName}' saved successfully.");
             SaveConfigurationsToFile();
         }
 
-        private void SaveConfigurationsToFile()
+        private void SaveConfigurationsToFile() // around the list and the file
         {
             try
             {
@@ -155,7 +154,7 @@ namespace GameLogic
             var name = Console.ReadLine() ?? $"Config nr {_configurations.Count + 1}";
             config.GameName = name;
 
-            const int min = 3;
+            const int min = 2;
             const int max = 54; // max that console to display normally
             
             config.Width = GetValidInput("Enter the width of the board (at least 3):", min, max);
@@ -163,6 +162,8 @@ namespace GameLogic
 
             Console.WriteLine("Enter the symbol for Player 1 (default is X):");
             config.Player1Symbol = GetValidSymbol();
+            
+            // TODO: if press enter, set default as X and 0
 
             Console.WriteLine("Enter the symbol for Player 2 (default is O):");
             config.Player2Symbol = GetValidSymbol();
@@ -170,7 +171,6 @@ namespace GameLogic
             Console.WriteLine("Who should start? Enter '1' for Player 1 or '2' for Player 2:");
             while (true)
             {
-                Console.WriteLine("Enter '1' for Player 1 or '2' for Player 2:");
                 var startingPlayerChoice = Console.ReadLine();
 
                 if (startingPlayerChoice is "1" or "2")
@@ -184,7 +184,7 @@ namespace GameLogic
             if (config is { Height: > 3, Width: > 3 })
             {
                 var boardCapacity = config.Width * config.Height;
-                config.MovableGridSize = GetValidInput("Enter the size of the movable grid (always square):", 3, boardCapacity);
+                config.MovableGridSize = GetValidInput("Enter the size of the movable grid (always square):", min, max);
                 config.WinningCondition = GetValidInput("Enter the winning condition of the game (more than 3):", 3, boardCapacity);
                 config.InitialMoves =
                     GetValidInput("Enter the number of moves have to made before moving the pieces or the grid:", 0, boardCapacity);
@@ -234,7 +234,7 @@ namespace GameLogic
             Console.ReadLine();
         }
 
-        private int GetValidInput(string prompt, int minValue, int maxValue)
+        private static int GetValidInput(string prompt, int minValue, int maxValue)
         {
             int result;
             Console.WriteLine(prompt);

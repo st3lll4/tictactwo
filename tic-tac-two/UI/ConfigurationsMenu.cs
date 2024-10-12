@@ -4,7 +4,7 @@ namespace UI
 {
     public class ConfigurationsMenu
     {
-        private List<MenuItem> ConfigMenuItems { get; set; }
+        private List<MenuItem> _configMenuItems = [];
         private ConfigurationManager ConfigManager { get; set; }
 
         public ConfigurationsMenu(ConfigurationManager configManager)
@@ -17,14 +17,21 @@ namespace UI
         
         private void InitializeConfigMenu()
         {
-            if (ConfigMenuItems.Count == 0)
+            if (_configMenuItems.Count == 0)
             {
-                ConfigMenuItems.Add(new MenuItem(1, "Select a configuration to play", SelectConfiguration));
-                ConfigMenuItems.Add(new MenuItem(2, "Create a configuration", ConfigManager.CreateConfiguration));
-                ConfigMenuItems.Add(new MenuItem(3, "Delete a configuration", ConfigManager.DeleteConfiguration));
-                ConfigMenuItems.Add(new MenuItem(4, "View your configurations", SeeConfigurations));
-                ConfigMenuItems.Add(new MenuItem(5, "Back to Main Menu", BackToMainMenu));
+                _configMenuItems.Add(new MenuItem(1, "Select a configuration to play", SelectConfiguration));
+                _configMenuItems.Add(new MenuItem(2, "Create a configuration", CreateConfiguration));
+                _configMenuItems.Add(new MenuItem(3, "Delete a configuration", ConfigManager.DeleteConfiguration));
+                _configMenuItems.Add(new MenuItem(4, "View your configurations", SeeConfigurations));
+                _configMenuItems.Add(new MenuItem(5, "Back to Main Menu", BackToMainMenu));
             }
+        }
+
+        private void CreateConfiguration()
+        {
+            ConfigManager.CreateConfiguration();
+            Console.WriteLine("Configuration created");
+            //TODO: DOESNT FUCKING WORK
         }
 
         public void Show()
@@ -33,7 +40,7 @@ namespace UI
             {
                 Console.Clear();
                 Console.WriteLine("Configurations Menu");
-                foreach (var item in ConfigMenuItems)
+                foreach (var item in _configMenuItems)
                 {
                     Console.WriteLine($"{item.Number}. {item.Name}");
                 }
@@ -43,7 +50,7 @@ namespace UI
 
                 if (int.TryParse(choice, out int choiceNumber))
                 {
-                    var selectedItem = ConfigMenuItems.Find(item => item.Number == choiceNumber);
+                    var selectedItem = _configMenuItems.Find(item => item.Number == choiceNumber);
                     if (selectedItem != null)
                     {
                         if (selectedItem.Name == "Back to Main Menu")
