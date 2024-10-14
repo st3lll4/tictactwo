@@ -1,14 +1,16 @@
-﻿namespace GameLogic
+﻿using Configs; 
+
+namespace GameLogic
 {
     // the place where asked what you want to do cannot have a move grid option if board size is 3x3
     public class Game
     {
-        private Board Board {get; set;}
+        private Board Board {get; set;} 
         private Player Player1 { get; set; }
         private Player Player2 { get; set; }
         private Player CurrentPlayer { get; set; }
-        private int Player1PiecesPlaced { get; set; } = 0;
-        private int Player2PiecesPlaced { get; set; } = 0;
+        private int Player1PiecesPlaced { get; set; }
+        private int Player2PiecesPlaced { get; set; }
 
         //TODO: CHANGE ALL FIELDS TO PROPERTIES
 

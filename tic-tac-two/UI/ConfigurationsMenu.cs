@@ -1,3 +1,4 @@
+using Configs;
 using GameLogic;
 
 namespace UI

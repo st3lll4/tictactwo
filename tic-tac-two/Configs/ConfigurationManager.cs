@@ -1,6 +1,6 @@
 using System.Text.Json;
 
-namespace GameLogic
+namespace Configs
 {
     public class ConfigurationManager
     {
@@ -62,7 +62,7 @@ namespace GameLogic
         {
             if (Configurations.Count != 0) return;
 
-            Configurations.Add(new ConfigurationEntry { ConfigName = _defaultConfiguration.GameName, Config = _defaultConfiguration });
+            Configurations.Add(new ConfigurationEntry(_defaultConfiguration.GameName, _defaultConfiguration));
 
             var defaultConfig2 = new GameConfiguration()
             {
@@ -77,7 +77,7 @@ namespace GameLogic
                 MovableGridSize = 5,
                 WinningCondition = 5
             };
-            Configurations.Add(new ConfigurationEntry { ConfigName = defaultConfig2.GameName, Config = defaultConfig2 });
+            Configurations.Add(new ConfigurationEntry(defaultConfig2.GameName, defaultConfig2));
                 
             
             var defaultConfig3 = new GameConfiguration()
@@ -90,7 +90,7 @@ namespace GameLogic
                 StartingPlayer = "Player 1",
                 WinningCondition = 3
             };
-            Configurations.Add(new ConfigurationEntry { ConfigName = defaultConfig3.GameName, Config = defaultConfig3 });
+            Configurations.Add(new ConfigurationEntry(defaultConfig3.GameName,defaultConfig3));
             
             SaveConfigurationsToFile();
         }
@@ -98,7 +98,7 @@ namespace GameLogic
         private void SaveConfiguration(GameConfiguration config, string configName) // adds to the list and to the file
         {
             Configurations.RemoveAll(c => c.ConfigName == configName);
-            Configurations.Add(new ConfigurationEntry { ConfigName = configName, Config = config });
+            Configurations.Add(new ConfigurationEntry(configName, config));
             SaveConfigurationsToFile();
         }
 

@@ -1,4 +1,5 @@
 using GameLogic;
+using Configs;
 
 namespace UI
 {

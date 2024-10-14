@@ -1,4 +1,4 @@
-namespace GameLogic
+namespace Configs
 {
     public record GameConfiguration
     {
@@ -9,17 +9,12 @@ namespace GameLogic
         public char Player2Symbol { get; set; }
         public string StartingPlayer { get; set; }
         
-        // TODO: 
-        // movable grid size
         public int? MovableGridSize { get; set; } // always square
         
-        // winning condition
         public int WinningCondition { get; set; }
         
-        // move grid after n moves
         public int? InitialMoves { get; set; } 
             
-        // max pieces for a player
         public int? MaxPieces { get; set; }
     }
 }
