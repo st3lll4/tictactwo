@@ -1,23 +1,25 @@
-﻿using Configs; 
+﻿using Configs;
 
 namespace GameLogic
 {
-    // the place where asked what you want to do cannot have a move grid option if board size is 3x3
     public class Game
     {
-        private Board Board {get; set;} 
+        private Board Board { get; set; }
         private Player Player1 { get; set; }
         private Player Player2 { get; set; }
         private Player CurrentPlayer { get; set; }
         private int Player1PiecesPlaced { get; set; }
-        private int Player2PiecesPlaced { get; set; }
+        private int Player2PiecesPlaced { get; set; } 
 
-        //TODO: CHANGE ALL FIELDS TO PROPERTIES
-
+        private int MovableGridSize { get; set; }
+        private int WinningCondition { get; set; }
+        private int InitialMoves { get; set; }
+        private int MaxPieces { get; set; }
+        
+        private bool IsStandardTicTacToe { get; } 
 
         public Game(GameConfiguration config)
         {
-
             Board = new Board(config.Width, config.Height);
 
             Player1 = new Player(config.Player1Symbol);
@@ -25,17 +27,23 @@ namespace GameLogic
 
             CurrentPlayer = config.StartingPlayer == "Player 1" ? Player1 : Player2;
 
+            IsStandardTicTacToe = config.MovableGridSize == null || config.InitialMoves == null || config.MaxPieces == null;
+
+            MovableGridSize = config.MovableGridSize ?? 3;
+            WinningCondition = config.WinningCondition;
+            InitialMoves = config.InitialMoves ?? 5;
+            MaxPieces = config.MaxPieces ?? 5;
         }
 
         public void Start()
-        { // todo: dont clear console all the time
+        {
             while (true)
             {
                 Console.Clear();
                 Board.Draw();
 
-                if ((CurrentPlayer == Player1 && Player1PiecesPlaced < 2) ||
-                    (CurrentPlayer == Player2 && Player2PiecesPlaced < 2))
+                // If playing regular Tic-Tac-Toe, players place pieces and no piece or grid movement is allowed
+                if (IsStandardTicTacToe || (CurrentPlayer == Player1 && Player1PiecesPlaced < InitialMoves) || (CurrentPlayer == Player2 && Player2PiecesPlaced < InitialMoves))
                 {
                     Console.WriteLine($"{CurrentPlayer.Symbol}'s turn: Place a piece within the grid.");
                     CurrentPlayer.PlacePiece(Board);
@@ -44,10 +52,14 @@ namespace GameLogic
                 }
                 else
                 {
+                    // Extended rules: allow the player to move grid or pieces
                     Console.WriteLine($"{CurrentPlayer.Symbol}'s turn: Choose an action:");
                     Console.WriteLine("1. Place a piece within the grid.");
-                    Console.WriteLine("2. Move the grid.");
-                    Console.WriteLine("3. Move one of your pieces into the grid.");
+                    if (!IsStandardTicTacToe)
+                    {
+                        Console.WriteLine("2. Move the grid.");
+                        Console.WriteLine("3. Move one of your pieces within the grid.");
+                    }
                     var choice = Console.ReadLine();
 
                     switch (choice)
@@ -55,10 +67,10 @@ namespace GameLogic
                         case "1":
                             CurrentPlayer.PlacePiece(Board);
                             break;
-                        case "2":
+                        case "2" when !IsStandardTicTacToe:
                             MoveGrid();
                             break;
-                        case "3":
+                        case "3" when !IsStandardTicTacToe:
                             CurrentPlayer.MoveOwnPiece(Board);
                             break;
                         default:
@@ -78,7 +90,6 @@ namespace GameLogic
                     break;
                 }
 
-
                 if (CheckTie())
                 {
                     Console.Clear();
@@ -91,7 +102,7 @@ namespace GameLogic
                 SwitchPlayer();
             }
         }
-        
+
         private void MoveGrid()
         {
             Console.WriteLine("Enter direction to move the grid (up, down, left, right, up-left, up-right, down-left, down-right):");
@@ -99,30 +110,14 @@ namespace GameLogic
             int dRow = 0, dCol = 0;
             switch (direction.ToLower())
             {
-                case "up":
-                    dRow = -1;
-                    break;
-                case "down":
-                    dRow = 1;
-                    break;
-                case "left":
-                    dCol = -1;
-                    break;
-                case "right":
-                    dCol = 1;
-                    break;
-                case "up-left":
-                    dRow = -1; dCol = -1;
-                    break;
-                case "up-right":
-                    dRow = -1; dCol = 1;
-                    break;
-                case "down-left":
-                    dRow = 1; dCol = -1;
-                    break;
-                case "down-right":
-                    dRow = 1; dCol = 1;
-                    break;
+                case "up": dRow = -1; break;
+                case "down": dRow = 1; break;
+                case "left": dCol = -1; break;
+                case "right": dCol = 1; break;
+                case "up-left": dRow = -1; dCol = -1; break;
+                case "up-right": dRow = -1; dCol = 1; break;
+                case "down-left": dRow = 1; dCol = -1; break;
+                case "down-right": dRow = 1; dCol = 1; break;
                 default:
                     Console.WriteLine("Invalid direction. Press Enter to continue.");
                     Console.ReadLine();
@@ -139,8 +134,7 @@ namespace GameLogic
             }
             Console.ReadLine();
         }
-        
-        
+
         private bool CheckWin()
         {
             return Board.CheckWin(CurrentPlayer.Symbol);
@@ -153,11 +147,9 @@ namespace GameLogic
             return player1Wins && player2Wins;
         }
 
-
         private void SwitchPlayer()
         {
             CurrentPlayer = CurrentPlayer == Player1 ? Player2 : Player1;
         }
-
     }
 }
