@@ -82,29 +82,44 @@ namespace GameLogic
 
         public void Draw()
         {
-            Console.Write("   ");
-            for (int i = 0; i < Width; i++)
-            {
-                Console.Write($"{i + 1,3}");
-            }
-            Console.WriteLine();
+            // Print the column headers (numbers at the top)
+            PrintRowHeader(Width);
 
-            for (int i = 0; i < Height; i++)
+            // Print the grid with row numbers on the left
+            for (var i = 0; i < Height; i++)
             {
-                Console.Write($"{i + 1,3}");
-                for (int j = 0; j < Width; j++)
-                {
-                    if (IsInGrid(i, j))
-                    {
-                        Console.BackgroundColor = ConsoleColor.DarkGray;
-                    }
-
-                    Console.Write($" {Cells[i, j]} ");
-                    Console.ResetColor();
-                }
-                Console.WriteLine();
+                PrintGridRow(i);  // Print each grid row with row numbers
             }
         }
+
+        private static void PrintRowHeader(int width)
+        {
+            Console.Write("  ");  // Adjusted space for column headers
+            for (var i = 1; i <= width; i++)
+            {
+                Console.Write(i < 10 ? $"  {i} " : $" 1{i} "); // not sure if works
+                // Adjusted the spacing for the column headers
+            }
+            Console.WriteLine();
+        }
+
+        private void PrintGridRow(int rowIndex)
+        {
+            Console.Write($"{rowIndex + 1,2} ");  // Row number on the left
+
+            for (var j = 0; j < Width; j++)
+            {
+                Console.BackgroundColor = IsInGrid(rowIndex, j) ? ConsoleColor.Gray : ConsoleColor.DarkGray;
+                Console.Write($" {Cells[rowIndex, j]} ");  // Print cell content
+                Console.ResetColor();
+
+                if (j < Width - 1) Console.Write(" ");  // Add space between columns
+            }
+
+            Console.WriteLine();
+        }
+
+
 
         public bool CheckWin(char symbol)
         {
