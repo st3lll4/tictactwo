@@ -108,7 +108,7 @@ namespace GameLogic
             Console.WriteLine("Enter direction to move the grid (up, down, left, right, up-left, up-right, down-left, down-right):");
             var direction = Console.ReadLine();
             int dRow = 0, dCol = 0;
-            switch (direction.ToLower())
+            switch (direction?.ToLower())
             {
                 case "up": dRow = -1; break;
                 case "down": dRow = 1; break;
@@ -123,15 +123,9 @@ namespace GameLogic
                     Console.ReadLine();
                     return;
             }
-
-            if (Board.MoveGrid(dRow, dCol))
-            {
-                Console.WriteLine("Grid moved successfully. Press Enter to continue.");
-            }
-            else
-            {
-                Console.WriteLine("Cannot move grid in that direction. Press Enter to continue.");
-            }
+            Console.WriteLine(Board.MoveGrid(dRow, dCol)
+                ? "Grid moved successfully. Press Enter to continue."
+                : "Cannot move grid in that direction. Press Enter to continue.");
             Console.ReadLine();
         }
 

@@ -5,8 +5,6 @@ namespace Configs
     public class ConfigurationManager
     {
         
-        //TODO: CHANGE ALL FIELDS TO PROPERTIES
-        
         private const string ConfigFilePath = "configurations.json";
         private List<ConfigurationEntry> Configurations { get; set; } = [];
 

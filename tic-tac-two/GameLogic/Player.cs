@@ -9,7 +9,6 @@ namespace GameLogic
         {
             while (true)
             {
-                Console.WriteLine($"{Symbol}'s turn. Enter row and column to place your piece within the grid:");
                 if (int.TryParse(Console.ReadLine(), out var row) && int.TryParse(Console.ReadLine(), out var col))
                 {
                     if (board.IsInGrid(row - 1, col - 1))
