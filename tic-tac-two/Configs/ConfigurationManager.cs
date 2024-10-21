@@ -61,14 +61,20 @@ namespace Configs
             };
             Configurations.Add(new ConfigurationEntry(defaultConfig3.GameName,defaultConfig3));
             
+            SaveAndUpdate();
+        }
+
+        private void SaveAndUpdate()
+        {
             ConfigRepositoryJson.SaveConfigurationsToFile();
+            Configurations = ConfigRepositoryJson.LoadConfigurationsFromFile();
         }
 
         private void SaveConfiguration(GameConfiguration config, string configName) // adds to the list and to the file
         {
             Configurations.RemoveAll(c => c.ConfigName == configName);
             Configurations.Add(new ConfigurationEntry(configName, config));
-            ConfigRepositoryJson.SaveConfigurationsToFile();
+            SaveAndUpdate();
         }
         
 
@@ -171,7 +177,7 @@ namespace Configs
                 Configurations.RemoveAt(configIndex - 1);
                 Console.WriteLine($"Configuration '{selectedConfig}' deleted successfully.");
 
-                ConfigRepositoryJson.SaveConfigurationsToFile();
+                SaveAndUpdate();
             }
             else
             {
