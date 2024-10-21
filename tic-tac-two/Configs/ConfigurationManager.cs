@@ -1,13 +1,10 @@
-using System.Text.Json;
-
 namespace Configs
 {
     public class ConfigurationManager
     {
         
-        private const string ConfigFilePath = "configurations.json";
-        private List<ConfigurationEntry> Configurations { get; set; } = [];
-
+        
+        private List<ConfigurationEntry> Configurations { get; set; } 
         public GameConfiguration CurrentConfiguration { get; private set; }
         
         private readonly GameConfiguration _defaultConfiguration = new() {
@@ -27,34 +24,10 @@ namespace Configs
         public ConfigurationManager()
         {
             CurrentConfiguration = _defaultConfiguration;
-            LoadConfigurationsFromFile();
+            Configurations = ConfigRepositoryJson.LoadConfigurationsFromFile(); // problem
             InitializeDefaultConfigurations();
         }
-
-        private void LoadConfigurationsFromFile()
-        {
-            if (File.Exists(ConfigFilePath))
-            {
-                try
-                {
-                    var json = File.ReadAllText(ConfigFilePath);
-                    var loadedConfigs = JsonSerializer.Deserialize<List<ConfigurationEntry>>(json);
-
-                    if (loadedConfigs != null)
-                    {
-                        Configurations = loadedConfigs;
-                    }
-                }
-                catch (Exception ex)
-                {
-                    Console.WriteLine($"Error loading configurations: {ex.Message}");
-                }
-            }
-            else // mostly will never get here on my PC
-            {
-                Console.WriteLine("No previous configurations found.");
-            }
-        }
+        
 
         private void InitializeDefaultConfigurations()
         {
@@ -90,28 +63,16 @@ namespace Configs
             };
             Configurations.Add(new ConfigurationEntry(defaultConfig3.GameName,defaultConfig3));
             
-            SaveConfigurationsToFile();
+            ConfigRepositoryJson.SaveConfigurationsToFile();
         }
 
         private void SaveConfiguration(GameConfiguration config, string configName) // adds to the list and to the file
         {
             Configurations.RemoveAll(c => c.ConfigName == configName);
             Configurations.Add(new ConfigurationEntry(configName, config));
-            SaveConfigurationsToFile();
+            ConfigRepositoryJson.SaveConfigurationsToFile();
         }
-
-        private void SaveConfigurationsToFile() // around the list and the file
-        {
-            try
-            {
-                var json = JsonSerializer.Serialize(Configurations);
-                File.WriteAllText(ConfigFilePath, json);
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"Error saving configurations: {ex.Message}");
-            }
-        }
+        
 
         public GameConfiguration GetConfigurationByName(string configName)
         {
@@ -212,7 +173,7 @@ namespace Configs
                 Configurations.RemoveAt(configIndex - 1);
                 Console.WriteLine($"Configuration '{selectedConfig}' deleted successfully.");
 
-                SaveConfigurationsToFile();
+                ConfigRepositoryJson.SaveConfigurationsToFile();
             }
             else
             {
