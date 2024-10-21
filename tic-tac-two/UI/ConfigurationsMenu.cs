@@ -5,7 +5,7 @@ namespace UI
 {
     public class ConfigurationsMenu
     {
-        private List<MenuItem> ConfigMenuItems { get; } = []; // Initialize the list
+        private List<MenuItem> ConfigMenuItems { get; } = [];
         private ConfigurationManager ConfigManager { get; }
 
         public ConfigurationsMenu(ConfigurationManager configManager)
@@ -37,10 +37,9 @@ namespace UI
                 Console.Write("Enter an option (Press Enter to go back): ");
                 var choice = Console.ReadLine();
 
-                // If Enter is pressed without input, go back to the previous menu (break)
                 if (string.IsNullOrWhiteSpace(choice))
                 {
-                    break; // Return to the previous menu
+                    break; 
                 }
 
                 if (int.TryParse(choice, out int choiceNumber))
@@ -71,16 +70,15 @@ namespace UI
             {
                 Console.WriteLine($"{i + 1}. {savedConfigs[i]}");
             }
-
+            
             var input = Console.ReadLine();
 
-            // If Enter is pressed without input, go back
             if (string.IsNullOrWhiteSpace(input))
             {
-                return; // Go back to the previous menu
+                return;
             }
 
-            if (int.TryParse(input, out int configIndex) && configIndex >= 1 && configIndex <= savedConfigs.Count)
+            if (int.TryParse(input, out var configIndex) && configIndex >= 1 && configIndex <= savedConfigs.Count)
             {
                 var selectedConfig = savedConfigs[configIndex - 1];
                 ConfigManager.SetCurrentConfiguration(selectedConfig);
@@ -112,7 +110,7 @@ namespace UI
                 // If Enter is pressed without input, go back
                 if (string.IsNullOrWhiteSpace(input))
                 {
-                    return; // Go back to the previous menu
+                    return;
                 }
 
                 if (int.TryParse(input, out int choice) && choice >= 1 && choice <= savedConfigs.Count)
