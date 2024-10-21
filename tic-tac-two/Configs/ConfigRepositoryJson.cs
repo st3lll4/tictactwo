@@ -7,6 +7,11 @@ public class ConfigRepositoryJson : IConfigRepository
     
     private const string ConfigFilePath = "configurations.json";
         private static List<ConfigurationEntry> Configurations { get; set; } = [];
+
+        public ConfigRepositoryJson()
+        {
+            Configurations = LoadConfigurationsFromFile();
+        }
     
 
         public static List<ConfigurationEntry> LoadConfigurationsFromFile()

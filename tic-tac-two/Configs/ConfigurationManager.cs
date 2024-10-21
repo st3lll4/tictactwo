@@ -2,9 +2,7 @@ namespace Configs
 {
     public class ConfigurationManager
     {
-        
-        
-        private List<ConfigurationEntry> Configurations { get; set; } 
+        private List<ConfigurationEntry> Configurations { get; set; } // not in sync with the actual configs
         public GameConfiguration CurrentConfiguration { get; private set; }
         
         private readonly GameConfiguration _defaultConfiguration = new() {
