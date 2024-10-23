@@ -6,7 +6,7 @@ namespace tic_tac_two
     {
         public static void Main()
         {
-            Menu.Display();
+            Menus.MainMenu.Run(); // kuidas kaver sai 1 reaga selle
         }
     }
 }

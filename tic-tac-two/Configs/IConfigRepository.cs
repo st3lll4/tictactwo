@@ -7,6 +7,6 @@ public interface IConfigRepository
 
     void SaveConfigurations();
 
-    List<ConfigurationEntry> LoadConfigurations();
+    List<ConfigurationEntry>? LoadConfigurations();
 
 }

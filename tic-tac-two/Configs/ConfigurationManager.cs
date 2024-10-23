@@ -1,11 +1,11 @@
 namespace Configs
 {
-    public class ConfigurationManager
+    public static class ConfigurationManager
     {
-        private List<ConfigurationEntry> Configurations { get; set; } 
-        public GameConfiguration CurrentConfiguration { get; private set; }
+        private static List<ConfigurationEntry>? Configurations { get; set; } 
+        public static GameConfiguration CurrentConfiguration { get; private set; }
         
-        private readonly GameConfiguration _defaultConfiguration = new() {
+        private static readonly GameConfiguration DefaultConfiguration = new() {
             GameName = "Tic-Tac-Two",
             Width = 5,
             Height = 5,
@@ -19,10 +19,9 @@ namespace Configs
         };
 
 
-        public ConfigurationManager()
+        static ConfigurationManager()
         {
-            CurrentConfiguration = _defaultConfiguration;
-            Configurations = ConfigRepositoryJson.LoadConfigurations(); // problem
+            CurrentConfiguration = DefaultConfiguration;
             InitializeDefaultConfigurations();
         }
         
@@ -32,11 +31,11 @@ namespace Configs
             Configurations = ConfigRepositoryJson.LoadConfigurations();
         }
 
-        private void InitializeDefaultConfigurations()
+        private static void InitializeDefaultConfigurations()
         {
             if (Configurations.Count != 0) return;
 
-            Configurations.Add(new ConfigurationEntry(_defaultConfiguration.GameName, _defaultConfiguration));
+            Configurations.Add(new ConfigurationEntry(DefaultConfiguration.GameName, DefaultConfiguration));
 
             var defaultConfig2 = new GameConfiguration()
             {
@@ -69,7 +68,84 @@ namespace Configs
             SaveAndUpdate();
         }
 
+        public void SelectConfiguration() // moved from menu
+        {
+            var savedConfigs = GetSavedConfigurations(); 
+
+            Console.WriteLine("Enter the number of the configuration you want to play with (Press Enter to go back):");
+            for (int i = 0; i < savedConfigs.Count; i++)
+            {
+                Console.WriteLine($"{i + 1}. {savedConfigs[i]}");
+            }
+            
+            var input = Console.ReadLine();
+
+            if (string.IsNullOrWhiteSpace(input))
+            {
+                return;
+            }
+
+            if (int.TryParse(input, out var configIndex) && configIndex >= 1 && configIndex <= savedConfigs.Count)
+            {
+                var selectedConfig = savedConfigs[configIndex - 1];
+                SetCurrentConfiguration(selectedConfig);
+                ShowMessage($"Configuration '{selectedConfig}' selected for future games.");
+            }
+            else
+            {
+                ShowMessage("Invalid input. Press Enter to return to the menu.");
+            }
+        }
         
+        public void SeeConfigurations()
+        {
+            var savedConfigs = GetSavedConfigurations();
+
+            while (true)
+            {
+                Console.Clear();
+                Console.WriteLine("Your saved configurations:");
+                for (var i = 0; i < savedConfigs.Count; i++)
+                {
+                    Console.WriteLine($"{i + 1}. {savedConfigs[i]}");
+                }
+
+                Console.WriteLine("Enter the number of the configuration you want to view in detail, or press Enter to go back:");
+
+                var input = Console.ReadLine();
+                
+
+                if (int.TryParse(input, out int choice) && choice >= 1 && choice <= savedConfigs.Count)
+                {
+                    var selectedConfigName = savedConfigs[choice - 1];
+                    var selectedConfig = GetConfigurationByName(selectedConfigName);
+
+                    DisplayConfigurationDetails(selectedConfig);
+                    Console.ReadLine();
+                }
+                else
+                {
+                    ShowMessage("Invalid input. Please try again.");
+                }
+            }
+        }
+        
+        private static void DisplayConfigurationDetails(GameConfiguration config)
+        {
+            Console.Clear();
+            Console.WriteLine($"Configuration: {config.GameName}");
+            Console.WriteLine($"Board width: {config.Width}");
+            Console.WriteLine($"Board height: {config.Height}");
+            Console.WriteLine($"Player 1 symbol: {config.Player1Symbol}");
+            Console.WriteLine($"Player 2 symbol: {config.Player2Symbol}");
+            Console.WriteLine($"Starting player: {config.StartingPlayer}");
+            Console.WriteLine($"Movable grid size: {config.MovableGridSize}");
+            Console.WriteLine($"Winning condition: {config.WinningCondition}");
+            Console.WriteLine($"Initial moves before getting more options: {config.InitialMoves}");
+            Console.WriteLine($"Max pieces per Player: {config.MaxPieces}");
+            Console.WriteLine("\nPress Enter to return.");
+        }
+
 
         private void SaveConfiguration(GameConfiguration config, string configName) // adds to the list and to the file
         {
@@ -77,15 +153,15 @@ namespace Configs
             Configurations.Add(new ConfigurationEntry(configName, config));
             SaveAndUpdate();
         }
-        
 
-        public GameConfiguration GetConfigurationByName(string configName)
+
+        private GameConfiguration GetConfigurationByName(string configName)
         {
             var configEntry = Configurations.Find(c => c.ConfigName == configName);
             return configEntry!.Config; // only used when selecting config so it always exists
         }
 
-        public void SetCurrentConfiguration(string configName)
+        private void SetCurrentConfiguration(string configName)
         {
             var config = GetConfigurationByName(configName);
             CurrentConfiguration = config; 
@@ -144,10 +220,10 @@ namespace Configs
             }
             else
             {
-                config.MovableGridSize = _defaultConfiguration.MovableGridSize;
-                config.WinningCondition = _defaultConfiguration.WinningCondition;
-                config.InitialMoves = _defaultConfiguration.InitialMoves;
-                config.MaxPieces = _defaultConfiguration.MaxPieces;
+                config.MovableGridSize = DefaultConfiguration.MovableGridSize;
+                config.WinningCondition = DefaultConfiguration.WinningCondition;
+                config.InitialMoves = DefaultConfiguration.InitialMoves;
+                config.MaxPieces = DefaultConfiguration.MaxPieces;
             }
             SaveConfiguration(config, name);
             Console.WriteLine($"Configuration '{name}' created successfully.");
@@ -228,6 +304,12 @@ namespace Configs
                     Console.WriteLine("Invalid symbol! Please enter a valid non-space character:");
                 }
             }
+        }
+        
+        private static void ShowMessage(string message)
+        {
+            Console.WriteLine(message);
+            Console.ReadLine();
         }
     }
 }

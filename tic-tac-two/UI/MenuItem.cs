@@ -1,15 +1,16 @@
 namespace UI;
-public record MenuItem
+public class MenuItem
 {
-    public int Number { get; }
-    public string Name { get; }
+    public int  Number { get; set; }
+    public string Name { get; set; }
 
-    public Func<string>? MenuItemAction { get; set; }
+    public Action? MenuItemAction { get; set; } // monel pole return value
 
 
-    public MenuItem(int number, string name)
+    public MenuItem(int number, string name, Action? menuItemAction)
     {
         Number = number;
         Name = name;
+        MenuItemAction = menuItemAction;
     }
 }
