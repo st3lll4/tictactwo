@@ -1,5 +1,5 @@
 /*
-using Configs;
+using DAL;
 using GameLogic;
 
 namespace UI

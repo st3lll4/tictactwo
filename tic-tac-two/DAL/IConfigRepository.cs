@@ -1,4 +1,6 @@
-namespace Configs;
+using Configs;
+
+namespace DAL;
 
 public interface IConfigRepository
 {

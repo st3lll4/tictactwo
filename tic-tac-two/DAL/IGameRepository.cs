@@ -1,4 +1,4 @@
-namespace Configs;
+namespace DAL;
 
 public interface IGameRepository
 {

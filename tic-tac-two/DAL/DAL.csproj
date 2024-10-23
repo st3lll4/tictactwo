@@ -4,11 +4,11 @@
         <TargetFramework>net8.0</TargetFramework>
         <ImplicitUsings>enable</ImplicitUsings>
         <Nullable>enable</Nullable>
+        <RootNamespace>Configs</RootNamespace>
     </PropertyGroup>
 
     <ItemGroup>
-      <ProjectReference Include="..\DAL\DAL.csproj" />
-      <ProjectReference Include="..\GameLogic\GameLogic.csproj" />
+      <ProjectReference Include="..\Configs\Configs.csproj" />
     </ItemGroup>
 
 </Project>

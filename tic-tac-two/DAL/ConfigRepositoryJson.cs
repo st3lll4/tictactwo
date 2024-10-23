@@ -1,6 +1,7 @@
 using System.Text.Json;
+using Configs;
 
-namespace Configs;
+namespace DAL;
 
 public class ConfigRepositoryJson : IConfigRepository
 {
