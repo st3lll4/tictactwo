@@ -6,7 +6,7 @@ public class ConfigRepositoryJson : IConfigRepository
 {
     
     private const string ConfigFilePath = "configurations.json";
-        private List<ConfigurationEntry>? Configurations { get; set; }
+        private List<ConfigurationEntry> Configurations { get; set; }
 
         public ConfigRepositoryJson()
         {
@@ -14,7 +14,7 @@ public class ConfigRepositoryJson : IConfigRepository
         }
     
 
-        public List<ConfigurationEntry>? LoadConfigurations()
+        public List<ConfigurationEntry> LoadConfigurations()
         {
             if (File.Exists(ConfigFilePath))
             {

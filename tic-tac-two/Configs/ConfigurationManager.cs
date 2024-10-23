@@ -1,11 +1,11 @@
 namespace Configs
 {
-    public static class ConfigurationManager
+    public class ConfigurationManager
     {
-        private static List<ConfigurationEntry>? Configurations { get; set; } 
-        public static GameConfiguration CurrentConfiguration { get; private set; }
+        private List<ConfigurationEntry> Configurations { get; set; } 
+        public GameConfiguration CurrentConfiguration { get; private set; }
         
-        private static readonly GameConfiguration DefaultConfiguration = new() {
+        private readonly GameConfiguration _defaultConfiguration = new() {
             GameName = "Tic-Tac-Two",
             Width = 5,
             Height = 5,
@@ -19,9 +19,10 @@ namespace Configs
         };
 
 
-        static ConfigurationManager()
+        public ConfigurationManager()
         {
-            CurrentConfiguration = DefaultConfiguration;
+            CurrentConfiguration = _defaultConfiguration;
+            Configurations = ConfigRepositoryJson.LoadConfigurations(); // problem
             InitializeDefaultConfigurations();
         }
         
@@ -31,11 +32,11 @@ namespace Configs
             Configurations = ConfigRepositoryJson.LoadConfigurations();
         }
 
-        private static void InitializeDefaultConfigurations()
+        private void InitializeDefaultConfigurations()
         {
             if (Configurations.Count != 0) return;
 
-            Configurations.Add(new ConfigurationEntry(DefaultConfiguration.GameName, DefaultConfiguration));
+            Configurations.Add(new ConfigurationEntry(_defaultConfiguration.GameName, _defaultConfiguration));
 
             var defaultConfig2 = new GameConfiguration()
             {
@@ -115,7 +116,7 @@ namespace Configs
                 var input = Console.ReadLine();
                 
 
-                if (int.TryParse(input, out int choice) && choice >= 1 && choice <= savedConfigs.Count)
+                if (int.TryParse(input, out var choice) && choice >= 1 && choice <= savedConfigs.Count)
                 {
                     var selectedConfigName = savedConfigs[choice - 1];
                     var selectedConfig = GetConfigurationByName(selectedConfigName);
@@ -220,10 +221,10 @@ namespace Configs
             }
             else
             {
-                config.MovableGridSize = DefaultConfiguration.MovableGridSize;
-                config.WinningCondition = DefaultConfiguration.WinningCondition;
-                config.InitialMoves = DefaultConfiguration.InitialMoves;
-                config.MaxPieces = DefaultConfiguration.MaxPieces;
+                config.MovableGridSize = _defaultConfiguration.MovableGridSize;
+                config.WinningCondition = _defaultConfiguration.WinningCondition;
+                config.InitialMoves = _defaultConfiguration.InitialMoves;
+                config.MaxPieces = _defaultConfiguration.MaxPieces;
             }
             SaveConfiguration(config, name);
             Console.WriteLine($"Configuration '{name}' created successfully.");
