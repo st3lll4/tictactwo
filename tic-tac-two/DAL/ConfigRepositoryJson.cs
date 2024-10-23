@@ -1,5 +1,5 @@
 using System.Text.Json;
-using Configs;
+using GameLogic;
 
 namespace DAL;
 

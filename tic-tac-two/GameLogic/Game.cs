@@ -1,6 +1,4 @@
-﻿using Configs;
-
-namespace GameLogic
+﻿namespace GameLogic
 {
     public class Game
     {

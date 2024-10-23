@@ -1,5 +1,3 @@
-using Configs;
-
 namespace GameLogic
 {
     public class Board

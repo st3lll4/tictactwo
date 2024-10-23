@@ -1,4 +1,4 @@
-namespace Configs
+namespace GameLogic
 {
     public class ConfigurationManager
     {
