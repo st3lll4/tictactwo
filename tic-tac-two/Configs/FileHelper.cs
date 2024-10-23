@@ -1,6 +1,6 @@
 namespace DAL;
 
-public static class FileHelper
+public static class FileHelper // not in use rn
 {
     public static string BasePath = Environment
                                         .GetFolderPath(System.Environment.SpecialFolder.UserProfile)

@@ -2,7 +2,7 @@ namespace Configs
 {
     public class ConfigurationManager
     {
-        private List<ConfigurationEntry> Configurations { get; set; } // not in sync with the actual configs
+        private List<ConfigurationEntry> Configurations { get; set; } 
         public GameConfiguration CurrentConfiguration { get; private set; }
         
         private readonly GameConfiguration _defaultConfiguration = new() {
@@ -22,10 +22,15 @@ namespace Configs
         public ConfigurationManager()
         {
             CurrentConfiguration = _defaultConfiguration;
-            Configurations = ConfigRepositoryJson.LoadConfigurationsFromFile(); // problem
+            Configurations = ConfigRepositoryJson.LoadConfigurations(); // problem
             InitializeDefaultConfigurations();
         }
         
+        private void SaveAndUpdate()
+        {
+            ConfigRepositoryJson.SaveConfigurations(); 
+            Configurations = ConfigRepositoryJson.LoadConfigurations();
+        }
 
         private void InitializeDefaultConfigurations()
         {
@@ -64,11 +69,7 @@ namespace Configs
             SaveAndUpdate();
         }
 
-        private void SaveAndUpdate()
-        {
-            ConfigRepositoryJson.SaveConfigurationsToFile();
-            Configurations = ConfigRepositoryJson.LoadConfigurationsFromFile();
-        }
+        
 
         private void SaveConfiguration(GameConfiguration config, string configName) // adds to the list and to the file
         {

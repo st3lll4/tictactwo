@@ -1,14 +1,15 @@
 namespace UI;
-public class MenuItem
+public record MenuItem
 {
     public int Number { get; }
     public string Name { get; }
-    public Action Action { get; }
 
-    public MenuItem(int number, string name, Action action)
+    public Func<string>? MenuItemAction { get; set; }
+
+
+    public MenuItem(int number, string name)
     {
         Number = number;
         Name = name;
-        Action = action;
     }
 }

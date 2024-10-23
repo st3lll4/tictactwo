@@ -6,15 +6,15 @@ public class ConfigRepositoryJson : IConfigRepository
 {
     
     private const string ConfigFilePath = "configurations.json";
-        private static List<ConfigurationEntry> Configurations { get; set; } = [];
+        private List<ConfigurationEntry> Configurations { get; set; }
 
         public ConfigRepositoryJson()
         {
-            Configurations = LoadConfigurationsFromFile();
+            Configurations = LoadConfigurations();
         }
     
 
-        public static List<ConfigurationEntry> LoadConfigurationsFromFile()
+        public List<ConfigurationEntry> LoadConfigurations()
         {
             if (File.Exists(ConfigFilePath))
             {
@@ -42,7 +42,7 @@ public class ConfigRepositoryJson : IConfigRepository
         }
         
 
-        public static void SaveConfigurationsToFile() // problem
+        public void SaveConfigurations() // problem
         {
             try
             {
