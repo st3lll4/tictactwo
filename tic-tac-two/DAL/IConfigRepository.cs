@@ -4,11 +4,11 @@ namespace DAL;
 
 public interface IConfigRepository
 {
-    List<string> GetSavedConfigurations();
+    List<string> GetConfigurationNames();
     GameConfiguration GetConfigurationByName(string name);
+    void DeleteConfiguration(string selectedConfig);
 
-    void SaveConfigurations();
-
-    List<ConfigurationEntry> LoadConfigurations();
-
+    void SaveConfiguration(GameConfiguration newConfig);
+    List<GameConfiguration> GetAllConfigurations();
+    GameConfiguration DefaultConfiguration { get; set; }
 }

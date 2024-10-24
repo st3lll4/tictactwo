@@ -1,70 +1,145 @@
 using System.Text.Json;
 using GameLogic;
 
-namespace DAL;
-
-public class ConfigRepositoryJson : IConfigRepository
+namespace DAL
 {
-    
-    private const string ConfigFilePath = "configurations.json";
-        private List<ConfigurationEntry> Configurations { get; set; }
+
+    public class ConfigRepositoryJson : IConfigRepository
+    {
+        public GameConfiguration DefaultConfiguration { get; set; }
+
 
         public ConfigRepositoryJson()
         {
-            Configurations = LoadConfigurations();
+            DefaultConfiguration = new GameConfiguration
+            {
+                GameName = "Tic-Tac-Two",
+                Width = 5,
+                Height = 5,
+                Player1Symbol = 'X',
+                Player2Symbol = 'O',
+                StartingPlayer = "Player 1",
+                MovableGridSize = 3,
+                WinningCondition = 3,
+                InitialMoves = 2,
+                MaxPieces = 3
+            };
+            CheckAndCreateInitialDirectory();
         }
-    
 
-        public List<ConfigurationEntry> LoadConfigurations()
+
+        private void CheckAndCreateInitialDirectory()
         {
-            if (File.Exists(ConfigFilePath))
+            if (!Directory.Exists(FileHelper.BasePath))
+            {
+                Directory.CreateDirectory(FileHelper.BasePath);
+            }
+            var data = Directory.GetFiles(FileHelper.BasePath, "*" + FileHelper.ConfigExtension).ToList();
+            if (data.Count == 0)
+            {
+                InitializeDefaultConfigurations();
+            }
+        }
+        
+        
+        private void InitializeDefaultConfigurations()
+        {
+            SaveConfiguration(DefaultConfiguration);
+
+            var defaultConfig2 = new GameConfiguration()
+            {
+                GameName = "Tic-Tac-Two with a 10x10 board",
+                Width = 10,
+                Height = 10,
+                Player1Symbol = 'X',
+                Player2Symbol = 'O',
+                StartingPlayer = "Player 1",
+                InitialMoves = 5,
+                MaxPieces = 7, // idk
+                MovableGridSize = 5,
+                WinningCondition = 5
+            };
+            SaveConfiguration(defaultConfig2);
+            
+            var defaultConfig3 = new GameConfiguration()
+            {
+                GameName = "Tic-Tac-Toe",
+                Width = 3,
+                Height = 3,
+                Player1Symbol = 'X',
+                Player2Symbol = 'O',
+                StartingPlayer = "Player 1",
+                WinningCondition = 3
+            };
+            SaveConfiguration(defaultConfig3);
+        }
+        
+        
+        public List<string> GetConfigurationNames()
+        {
+            var result = new List<string>();
+            foreach (var fullFileName in Directory.GetFiles(FileHelper.BasePath, "*" + FileHelper.ConfigExtension))
+            {
+                var primaryName = Path.GetFileNameWithoutExtension(Path.GetFileNameWithoutExtension(fullFileName));
+                result.Add(primaryName);
+            }
+
+            return result;
+        }
+        
+        
+        public List<GameConfiguration> GetAllConfigurations()
+        {
+            var configurations = new List<GameConfiguration>();
+
+            foreach (var fullFileName in Directory.GetFiles(FileHelper.BasePath, "*" + FileHelper.ConfigExtension))
             {
                 try
                 {
-                    var json = File.ReadAllText(ConfigFilePath);
-                    var loadedConfigs = JsonSerializer.Deserialize<List<ConfigurationEntry>>(json);
-
-                    if (loadedConfigs != null)
+                    var configJsonStr = File.ReadAllText(fullFileName);
+                    var config = JsonSerializer.Deserialize<GameConfiguration>(configJsonStr);
+                    if (config != null)
                     {
-                        Configurations = loadedConfigs;
+                        configurations.Add(config);
                     }
                 }
                 catch (Exception ex)
                 {
-                    Console.WriteLine($"Error loading configurations: {ex.Message}");
+                    Console.WriteLine($"Error reading configuration from file {fullFileName}: {ex.Message}");
                 }
             }
-            else // mostly will never get here on my PC
-            {
-                Console.WriteLine("No previous configurations found.");
-            }
-
-            return Configurations; 
+            return configurations;
         }
         
 
-        public void SaveConfigurations() // problem
+        public GameConfiguration GetConfigurationByName(string name)
         {
-            try
+            var configJsonStr = File.ReadAllText(FileHelper.BasePath + name + FileHelper.ConfigExtension);
+            var config = JsonSerializer.Deserialize<GameConfiguration>(configJsonStr);
+            return config!;
+        }
+        
+
+        public void SaveConfiguration(GameConfiguration config)
+        {
+            var configJsonStr = JsonSerializer.Serialize(config);
+            var safeFileName = string.Join("_", config.GameName.Split(Path.GetInvalidFileNameChars()));
+            File.WriteAllText(FileHelper.BasePath + safeFileName + FileHelper.ConfigExtension, configJsonStr);
+        }
+
+        
+        public void DeleteConfiguration(string name)
+        {
+            var filePath = FileHelper.BasePath + name + FileHelper.ConfigExtension;
+            if (File.Exists(filePath))
             {
-                var json = JsonSerializer.Serialize(Configurations);
-                File.WriteAllText(ConfigFilePath, json);
+                File.Delete(filePath);
+                Console.WriteLine($"Configuration '{name}' has been deleted.");
             }
-            catch (Exception ex)
+            else
             {
-                Console.WriteLine($"Error saving configurations: {ex.Message}");
+                Console.WriteLine($"Configuration '{name}' not found.");
             }
         }
-
-        public GameConfiguration GetConfigurationByName(string configName)
-        {
-            var configEntry = Configurations.Find(c => c.ConfigName == configName);
-            return configEntry!.Config; // only used when selecting config so it always exists
-        }
-
-
-        public List<string> GetSavedConfigurations()
-        {
-            return Configurations.Select(configEntry => configEntry.ConfigName).ToList();
-        }
+    }
 }

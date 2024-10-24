@@ -1,31 +1,34 @@
-﻿using System.ComponentModel.DataAnnotations;
-using System.Runtime.CompilerServices;
-
-namespace UI
+﻿namespace UI
 {
-
     public class Menu
     {
         private string MenuHeader { get; set; }
-        
-        private static string _menuDivider = "-----------------";
+        private static string _menuDivider = "~~~~~~~~~~~~~~~~~~~~";
         private List<MenuItem> MenuItems { get; set; }
-        private EMenuLevel MenuLevel { get; set; }
 
-        private MenuItem _menuItemReturn = new(100, "Go back", null);
-
-        private MenuItem _menuItemReturnMain = new(200, "Return to main menu", null);
-
-        private MenuItem _menuItemExit = new(300, "Exit the game", null);
-        
-
-        public void SetMenuItemAction(int number, Action action) // do i need
+        private MenuItem _menuItemExit = new MenuItem()
         {
-            var menuItem = MenuItems.Single(m => m.Number == number);
-            menuItem.MenuItemAction = action;
-        }
+            Shortcut = "E",
+            Title = "Exit"
+        };
 
-        public Menu(EMenuLevel menuLevel, string menuHeader, List<MenuItem> menuItems)
+        private MenuItem _menuItemReturn = new MenuItem()
+        {
+            Shortcut = "R",
+            Title = "Return"
+        };
+
+        private MenuItem _menuItemReturnMain = new MenuItem()
+        {
+            Shortcut = "M",
+            Title = "Return to Main menu"
+        };
+
+        private EMenuLevel _menuLevel { get; set; }
+
+        private bool _isCustomMenu;
+
+        public Menu(EMenuLevel menuLevel, string menuHeader, List<MenuItem> menuItems, bool isCustomMenu = false)
         {
             if (string.IsNullOrWhiteSpace(menuHeader))
             {
@@ -40,56 +43,64 @@ namespace UI
             }
 
             MenuItems = menuItems;
-            MenuLevel = menuLevel;
-            
-            if (MenuLevel != EMenuLevel.Main)
+            _menuLevel = menuLevel;
+            _isCustomMenu = isCustomMenu;
+
+            if (_menuLevel != EMenuLevel.Main)
             {
                 MenuItems.Add(_menuItemReturn);
             }
 
-            if (MenuLevel == EMenuLevel.Deep)
+            if (_menuLevel == EMenuLevel.Deep)
             {
                 MenuItems.Add(_menuItemReturnMain);
             }
 
             MenuItems.Add(_menuItemExit);
-
         }
 
-        public void Run()
+        public void SetMenuItemAction(string shortCut, Func<string> action)
+        {
+            var menuItem = MenuItems.Single(m => m.Shortcut == shortCut);
+            menuItem.MenuItemAction = action;
+        }
+
+        public string Run()
         {
             Console.Clear();
-
-            while (true)
+            do
             {
-                DrawMenu();
+                var menuItem = DisplayMenuGetUserChoice();
+                var menuReturnValue = "";
 
-                Console.Write("Enter your choice (number): ");
-                var userInput = Console.ReadLine();
-
-                if (!int.TryParse(userInput, out var choiceNumber))
+                if (menuItem.MenuItemAction != null)
                 {
-                    Console.WriteLine("Invalid input. Please enter a number.");
-                    Console.WriteLine();
+                    menuReturnValue = menuItem.MenuItemAction();
+
+                    if (_isCustomMenu)
+                    {
+                        return menuReturnValue;
+                    }
                 }
 
-                var selectedMenuItem = MenuItems.FirstOrDefault(m => m.Number == choiceNumber);
-
-                if (selectedMenuItem == null)
+                if (menuItem.Shortcut == _menuItemReturn.Shortcut)
                 {
-                    Console.WriteLine("Invalid option. Please select an available option.");
-                    Console.WriteLine();
-                    continue; 
+                    return menuItem.Shortcut;
                 }
 
-                selectedMenuItem.MenuItemAction?.Invoke();
-                
-                Console.WriteLine("No action associated with this menu item.");
-                Console.WriteLine();
-            }
+                if (menuItem.Shortcut == _menuItemExit.Shortcut || menuReturnValue == _menuItemExit.Shortcut)
+                {
+                    return _menuItemExit.Shortcut;
+                }
+
+                if ((menuItem.Shortcut == _menuItemReturnMain.Shortcut ||
+                     menuReturnValue == _menuItemReturnMain.Shortcut) && _menuLevel != EMenuLevel.Main)
+                {
+                    return _menuItemReturnMain.Shortcut;
+                }
+
+            } while (true);
         }
-
-
 
         private MenuItem DisplayMenuGetUserChoice()
         {
@@ -97,30 +108,30 @@ namespace UI
             {
                 DrawMenu();
 
-                Console.Write("Enter your choice: ");
                 var userInput = Console.ReadLine();
 
-                if (int.TryParse(userInput, out var menuNumber))
+                if (string.IsNullOrWhiteSpace(userInput))
                 {
-                    var selectedMenuItem = MenuItems.FirstOrDefault(m => m.Number == menuNumber);
-            
-                    if (selectedMenuItem != null)
-                    {
-                        return selectedMenuItem;
-                    }
-                    else
-                    {
-                        Console.WriteLine("Invalid choice. Please select an available menu option.");
-                    }
+                    Console.WriteLine("It would be nice if you actually choose something! Try again...");
+                    Console.WriteLine();
                 }
                 else
                 {
-                    Console.WriteLine("Please enter a valid number.");
+                    userInput = userInput.ToUpper();
+
+                    foreach (var menuItem in MenuItems)
+                    {
+                        if (menuItem.Shortcut.ToUpper() == userInput)
+                        {
+                            return menuItem;
+                        }
+                    }
+
+                    Console.WriteLine("Please choose something from the existing options.");
+                    Console.WriteLine();
                 }
-                Console.WriteLine();
             } while (true);
         }
-
 
         private void DrawMenu()
         {
@@ -133,8 +144,7 @@ namespace UI
             }
 
             Console.WriteLine();
-
-            Console.Write("> ");
+            Console.Write(">");
         }
     }
 }
