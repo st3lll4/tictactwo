@@ -6,14 +6,19 @@ namespace tic_tac_two
 {
     public class ConfigurationManager
     {
-        private static readonly ConfigRepositoryJson ConfigRepository = new();
-        public GameConfiguration CurrentConfiguration { get; private set; } = ConfigRepository.DefaultConfiguration; // use in game
+        private readonly ConfigRepositoryJson _configRepository = new();
+        public GameConfiguration CurrentConfiguration { get; private set; } // use in game
+
+        public ConfigurationManager()
+        {
+            CurrentConfiguration = _configRepository.DefaultConfiguration;
+        }
         
 
-        public static string SelectConfiguration()
+        public string SelectConfiguration()
         {
             var configMenuItems = new List<MenuItem>();
-            var configNames = ConfigRepository.GetConfigurationNames();
+            var configNames = _configRepository.GetConfigurationNames();
 
             for (var i = 0; i < configNames.Count; i++)
             {
@@ -42,9 +47,9 @@ namespace tic_tac_two
         }
 
 
-        public static string SeeConfigurations()
+        public string SeeConfigurations()
         {
-            var savedConfigs = ConfigRepository.GetAllConfigurations();
+            var savedConfigs = _configRepository.GetAllConfigurations();
 
             while (true)
             {
@@ -77,7 +82,7 @@ namespace tic_tac_two
         }
         
 
-        private static void DisplayConfigurationDetails(GameConfiguration config)
+        private void DisplayConfigurationDetails(GameConfiguration config)
         {
             Console.Clear();
             Console.WriteLine($"Configuration: {config.GameName}");
@@ -96,22 +101,22 @@ namespace tic_tac_two
 
         public void SetCurrentConfiguration(string configName) // use in selecting
         {
-            var config = ConfigRepository.GetConfigurationByName(configName);
+            var config = _configRepository.GetConfigurationByName(configName);
             CurrentConfiguration = config;
         }
 
-        public static string AddConfiguration()
+        public string AddConfiguration()
         {
             var newConfig = CreateConfiguration();
 
-            ConfigRepository.SaveConfiguration(newConfig);
+            _configRepository.SaveConfiguration(newConfig);
 
             Console.WriteLine($"Configuration '{newConfig.GameName}' has been created and saved.");
 
             return $"Configuration '{newConfig.GameName}' created successfully.";
         }
 
-        private static GameConfiguration CreateConfiguration()
+        private GameConfiguration CreateConfiguration()
         {
             Console.Clear();
             Console.WriteLine("Game configuration creation:");
@@ -119,7 +124,7 @@ namespace tic_tac_two
             var config = new GameConfiguration();
 
             Console.WriteLine("Name your configuration:");
-            var name = Console.ReadLine() ?? $"Config nr {ConfigRepository.GetAllConfigurations().Count + 1}";
+            var name = Console.ReadLine() ?? $"Config nr {_configRepository.GetAllConfigurations().Count + 1}";
             config.GameName = name;
 
             const int min = 3;
@@ -163,10 +168,10 @@ namespace tic_tac_two
             }
             else
             {
-                config.MovableGridSize = ConfigRepository.DefaultConfiguration.MovableGridSize;
-                config.WinningCondition = ConfigRepository.DefaultConfiguration.WinningCondition;
-                config.InitialMoves = ConfigRepository.DefaultConfiguration.InitialMoves;
-                config.MaxPieces = ConfigRepository.DefaultConfiguration.MaxPieces;
+                config.MovableGridSize = _configRepository.DefaultConfiguration.MovableGridSize;
+                config.WinningCondition = _configRepository.DefaultConfiguration.WinningCondition;
+                config.InitialMoves = _configRepository.DefaultConfiguration.InitialMoves;
+                config.MaxPieces = _configRepository.DefaultConfiguration.MaxPieces;
             }
 
             Console.WriteLine($"Configuration '{name}' created successfully. Press Enter to return to menu.");
@@ -175,9 +180,9 @@ namespace tic_tac_two
 
         }
 
-        public static string DeleteConfiguration()
+        public string DeleteConfiguration()
         {
-            var configNames = ConfigRepository.GetConfigurationNames();
+            var configNames = _configRepository.GetConfigurationNames();
 
             if (configNames.Count == 0)
             {
@@ -201,7 +206,7 @@ namespace tic_tac_two
             }
             
             var selectedConfig = configNames[configIndex - 1];
-            ConfigRepository.DeleteConfiguration(selectedConfig);
+            _configRepository.DeleteConfiguration(selectedConfig);
 
             return $"Configuration '{selectedConfig}' has been deleted.";
         }

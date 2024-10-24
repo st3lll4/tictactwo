@@ -1,62 +1,78 @@
 using UI;
 
 namespace tic_tac_two
-
 {
     public class Menus
     {
+        private readonly ConfigurationManager _configManager;
 
-        public static readonly Menu ConfigurationsMenu = new Menu(
-            EMenuLevel.Secondary, "Configurations", [
-                new MenuItem
-                {
-                    Shortcut = "S",
-                    MenuItemAction = ConfigurationManager.SelectConfiguration,
-                    Title = "Select a configuration to play"
-                },
-                new MenuItem
-                {
-                    Shortcut = "C",
-                    MenuItemAction = ConfigurationManager.AddConfiguration,
-                    Title = "Create a configuration"
-                },
-                new MenuItem
-                {
-                    Shortcut = "D",
-                    MenuItemAction = ConfigurationManager.DeleteConfiguration,
-                    Title = "Delete a configuration"
-                },
-                new MenuItem
-                {
-                    Shortcut = "V",
-                    MenuItemAction = ConfigurationManager.SeeConfigurations,
-                    Title = "View your configurations"
-                }
-            ]);
+        // Instance properties for menus
+        public Menu ConfigurationsMenu { get; set; }
+        public Menu MainMenu { get; set; }
 
+        public Menus()
+        {
+            _configManager = new ConfigurationManager();
 
-        public static readonly Menu MainMenu = new Menu(
-            EMenuLevel.Main,
-            "TIC-TAC-TWOOOOO", [
-                new MenuItem
-                {
-                    Shortcut = "N",
-                    Title = "New game"
+            ConfigurationsMenu = new Menu(
+                EMenuLevel.Secondary,
+                "Configurations",
+                [
+                    new MenuItem
+                    {
+                        Shortcut = "S",
+                        MenuItemAction = _configManager.SelectConfiguration,
+                        Title = "Select a configuration to play"
+                    },
 
-                },
-                new MenuItem
-                {
-                    Shortcut = "L",
-                    Title = "Load game"
-                },
-                new MenuItem
-                {
-                    Shortcut = "C",
-                    Title = "Configs",
-                    MenuItemAction = ConfigurationsMenu.Run
-                }
-            ]);
+                    new MenuItem
+                    {
+                        Shortcut = "C",
+                        MenuItemAction = _configManager.AddConfiguration,
+                        Title = "Create a configuration"
+                    },
+
+                    new MenuItem
+                    {
+                        Shortcut = "D",
+                        MenuItemAction = _configManager.DeleteConfiguration,
+                        Title = "Delete a configuration"
+                    },
+
+                    new MenuItem
+                    {
+                        Shortcut = "V",
+                        MenuItemAction = _configManager.SeeConfigurations,
+                        Title = "View your configurations"
+                    }
+                ]
+            );
+
+            // Initialize the MainMenu instance
+            MainMenu = new Menu(
+                EMenuLevel.Main,
+                "TIC-TAC-TWOOOOO",
+                [
+                    new MenuItem
+                    {
+                        Shortcut = "N",
+                        Title = "New game"
+                    },
+
+                    new MenuItem
+                    {
+                        Shortcut = "L",
+                        Title = "Load game"
+                    },
+
+                    new MenuItem
+                    {
+                        Shortcut = "C",
+                        Title = "Configs",
+                        MenuItemAction = ConfigurationsMenu.Run
+                    }
+                ]
+            );
+        }
     }
 }
-    
-    

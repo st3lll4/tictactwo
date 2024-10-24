@@ -1,4 +1,4 @@
 ﻿using tic_tac_two;
 
-Menus.MainMenu.Run();
-
+var menus = new Menus();
+menus.MainMenu.Run(); 
