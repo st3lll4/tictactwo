@@ -7,7 +7,7 @@ namespace tic_tac_two
         private readonly ConfigurationManager _configManager;
 
         // Instance properties for menus
-        public Menu ConfigurationsMenu { get; set; }
+        private Menu ConfigurationsMenu { get; set; }
         public Menu MainMenu { get; set; }
 
         public Menus()

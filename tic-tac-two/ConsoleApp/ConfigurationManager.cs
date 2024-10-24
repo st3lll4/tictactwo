@@ -15,36 +15,39 @@ namespace tic_tac_two
         }
         
 
-        public string SelectConfiguration()
+        public string SelectConfiguration() // TODO: Doesnt return to main menu after selecting M
         {
             var configMenuItems = new List<MenuItem>();
             var configNames = _configRepository.GetConfigurationNames();
 
             for (var i = 0; i < configNames.Count; i++)
             {
-                var index = i;
+                var configName = configNames[i];
+
                 configMenuItems.Add(new MenuItem()
                 {
-                    Title = configNames[i],
+                    Title = configName,
                     Shortcut = (i + 1).ToString(),
-                    MenuItemAction = () => index.ToString()
+                    MenuItemAction = () =>
+                    {
+                        SetCurrentConfiguration(configName);
+                        return configName;
+                    }
                 });
             }
 
             var configMenu = new Menu(
-                EMenuLevel.Secondary,
+                EMenuLevel.Deep,
                 "Choose a configuration for future games:",
                 configMenuItems,
                 true
             );
 
-            var selectedIndexStr = configMenu.Run();
-            if (!int.TryParse(selectedIndexStr, out var selectedIndex)) return "No configuration selected.";
-            var selectedConfigName = configNames[selectedIndex];
-            var configManager = new ConfigurationManager();
-            configManager.SetCurrentConfiguration(selectedConfigName);
-            return $"Configuration '{selectedConfigName}' selected.";
+            var selectedConfigName = configMenu.Run();
+
+            return string.IsNullOrEmpty(selectedConfigName) ? "No configuration selected." : $"Configuration '{selectedConfigName}' selected.";
         }
+
 
 
         public string SeeConfigurations()
@@ -62,9 +65,12 @@ namespace tic_tac_two
                 Console.WriteLine("Enter the number of the configuration you want to view in detail, or press Enter to go back:");
 
                 var input = Console.ReadLine();
-
-                if (string.IsNullOrEmpty(input)) break;
-
+                
+                if (string.IsNullOrEmpty(input))
+                {
+                    break;
+                }
+                
                 if (int.TryParse(input, out var choice) && choice >= 1 && choice <= savedConfigs.Count)
                 {
                     var selectedConfig = savedConfigs[choice - 1];
@@ -99,7 +105,7 @@ namespace tic_tac_two
         }
         
 
-        public void SetCurrentConfiguration(string configName) // use in selecting
+        private void SetCurrentConfiguration(string configName) // use in selecting
         {
             var config = _configRepository.GetConfigurationByName(configName);
             CurrentConfiguration = config;
@@ -184,20 +190,14 @@ namespace tic_tac_two
         {
             var configNames = _configRepository.GetConfigurationNames();
 
-            if (configNames.Count == 0)
-            {
-                Console.WriteLine("No configurations to delete."); // TODO: idk how to exit this
-                Console.ReadLine();
-            }
-
             Console.WriteLine("Saved Configurations:");
             for (var i = 0; i < configNames.Count; i++)
             {
                 Console.WriteLine($"{i + 1}. {configNames[i]}");
             }
 
-            Console.Write("Enter the number of the configuration to delete: ");
-            if (!int.TryParse(Console.ReadLine(), out int configIndex) || configIndex < 1 ||
+            Console.Write("Enter the number of the configuration to delete or Enter to go back: ");
+            if (!int.TryParse(Console.ReadLine(), out var configIndex) || configIndex < 1 ||
                 configIndex > configNames.Count)
             {
                 Console.WriteLine();
@@ -206,6 +206,9 @@ namespace tic_tac_two
             }
             
             var selectedConfig = configNames[configIndex - 1];
+            
+            if (string.IsNullOrEmpty(selectedConfig)) return "";
+            
             _configRepository.DeleteConfiguration(selectedConfig);
 
             return $"Configuration '{selectedConfig}' has been deleted.";
@@ -224,9 +227,8 @@ namespace tic_tac_two
 
             return result;
         }
-
-
-        private static char GetValidSymbol(char player1Symbol = '\0') // TODO:CHECK IF WORKS
+    
+        private static char GetValidSymbol(char player1Symbol = '\0')
         {
             while (true)
             {
@@ -234,34 +236,12 @@ namespace tic_tac_two
 
                 if (string.IsNullOrWhiteSpace(input))
                 {
-                    if (player1Symbol == '\0')
-                    {
-                        return 'X';
-                    }
-                    else
-                    {
-                        char defaultSymbol;
-
-                        if (player1Symbol != 'O')
-                        {
-                            defaultSymbol = 'O';
-                        }
-                        else if (player1Symbol != 'X')
-                        {
-                            defaultSymbol = 'X';
-                        }
-                        else
-                        {
-                            Console.WriteLine("Default symbol is already taken by Player 1. Please enter a different symbol:");
-                            continue;
-                        }
-                        return defaultSymbol;
-                    }
+                    return GetDefaultSymbol(player1Symbol);
                 }
 
-                if (char.TryParse(input, out var symbol) && !char.IsWhiteSpace(symbol) && !char.IsControl(symbol))
+                if (char.TryParse(input, out var symbol) && IsValidSymbol(symbol))
                 {
-                    if (char.ToUpper(symbol) == char.ToUpper(player1Symbol))
+                    if (IsSymbolTaken(symbol, player1Symbol))
                     {
                         Console.WriteLine($"This symbol is already taken by Player 1 ('{player1Symbol}'). Please try again:");
                     }
@@ -276,5 +256,32 @@ namespace tic_tac_two
                 }
             }
         }
+
+        private static char GetDefaultSymbol(char player1Symbol)
+        {
+            if (player1Symbol == '\0')
+            {
+                return 'X';
+            }
+
+            if (player1Symbol != 'O')
+            {
+                return 'O';
+            }
+            
+            Console.WriteLine("Default symbol is already taken by Player 1. Please enter a different symbol:");
+            return '\0'; // ? marker to indicate invalid state, will prompt user to enter again
+        }
+
+        private static bool IsValidSymbol(char symbol)
+        {
+            return !char.IsWhiteSpace(symbol) && !char.IsControl(symbol);
+        }
+
+        private static bool IsSymbolTaken(char symbol, char player1Symbol)
+        {
+            return char.ToUpper(symbol) == char.ToUpper(player1Symbol);
+        }
+
     }
 }

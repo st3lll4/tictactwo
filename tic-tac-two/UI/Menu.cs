@@ -45,11 +45,7 @@
             MenuItems = menuItems;
             _menuLevel = menuLevel;
             _isCustomMenu = isCustomMenu;
-
-            if (_menuLevel != EMenuLevel.Main)
-            {
-                MenuItems.Add(_menuItemReturn);
-            }
+            
 
             if (_menuLevel == EMenuLevel.Deep)
             {
@@ -94,7 +90,7 @@
                 }
 
                 if ((menuItem.Shortcut == _menuItemReturnMain.Shortcut ||
-                     menuReturnValue == _menuItemReturnMain.Shortcut) && _menuLevel != EMenuLevel.Main)
+                     menuReturnValue == _menuItemReturnMain.Shortcut))
                 {
                     return _menuItemReturnMain.Shortcut;
                 }
@@ -105,31 +101,29 @@
         private MenuItem DisplayMenuGetUserChoice()
         {
             do
-            {
+            {            
+                Console.Clear();
+
                 DrawMenu();
 
                 var userInput = Console.ReadLine();
-
+                
                 if (string.IsNullOrWhiteSpace(userInput))
                 {
-                    Console.WriteLine("It would be nice if you actually choose something! Try again...");
-                    Console.WriteLine();
+                    return _menuItemReturn;
                 }
-                else
+                
+                userInput = userInput.ToUpper();
+
+                foreach (var menuItem in MenuItems)
                 {
-                    userInput = userInput.ToUpper();
-
-                    foreach (var menuItem in MenuItems)
+                    if (menuItem.Shortcut.ToUpper() == userInput)
                     {
-                        if (menuItem.Shortcut.ToUpper() == userInput)
-                        {
-                            return menuItem;
-                        }
+                        Console.Clear();
+                        return menuItem;
                     }
-
-                    Console.WriteLine("Please choose something from the existing options.");
-                    Console.WriteLine();
                 }
+                
             } while (true);
         }
 
@@ -139,7 +133,7 @@
             Console.WriteLine(_menuDivider);
 
             foreach (var t in MenuItems)
-            {
+            { 
                 Console.WriteLine(t);
             }
 
