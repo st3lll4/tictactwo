@@ -36,15 +36,14 @@ namespace tic_tac_two
                 });
             }
 
-            var configMenu = new Menu(
+            var selectMenu = new Menu(
                 EMenuLevel.Deep,
                 "Choose a configuration for future games:",
                 configMenuItems,
                 true
             );
             
-            var selectedConfigName = configMenu.Run();
-            
+            var selectedConfigName = selectMenu.Run(); // todo: make it work diff than run
             
             return string.IsNullOrEmpty(selectedConfigName) ? "No configuration selected." : $"Configuration '{selectedConfigName}' selected.";
         }

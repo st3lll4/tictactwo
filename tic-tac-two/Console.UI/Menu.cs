@@ -22,7 +22,13 @@
         {
             Shortcut = "M",
             Title = "Return to Main menu",
+            MenuItemAction = GoToMainMenu()
         };
+
+        private static Func<string>? GoToMainMenu()
+        {
+            GoToMainMenu().ToString();
+        }
 
         private EMenuLevel _menuLevel { get; set; }
 

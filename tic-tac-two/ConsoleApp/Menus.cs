@@ -22,7 +22,7 @@ namespace tic_tac_two
                     {
                         Shortcut = "S",
                         MenuItemAction = _configManager.SelectConfiguration,
-                        Title = "Select a configuration to play"
+                        Title = "Select a configuration to play" // todo: try parentmenu
                     },
 
                     new MenuItem
@@ -48,7 +48,6 @@ namespace tic_tac_two
                 ]
             );
 
-            // Initialize the MainMenu instance
             MainMenu = new Menu(
                 EMenuLevel.Main,
                 "TIC-TAC-TWOOOOO",
