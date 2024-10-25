@@ -21,7 +21,7 @@
         private MenuItem _menuItemReturnMain = new MenuItem()
         {
             Shortcut = "M",
-            Title = "Return to Main menu"
+            Title = "Return to Main menu",
         };
 
         private EMenuLevel _menuLevel { get; set; }
@@ -90,9 +90,9 @@
                 }
 
                 if ((menuItem.Shortcut == _menuItemReturnMain.Shortcut ||
-                     menuReturnValue == _menuItemReturnMain.Shortcut))
+                     menuReturnValue == _menuItemReturnMain.Shortcut) && _menuLevel == EMenuLevel.Deep)
                 {
-                    return _menuItemReturnMain.Shortcut;
+                    return _menuItemReturnMain.Shortcut; // todo: doesnt return to main????
                 }
 
             } while (true);
@@ -102,7 +102,7 @@
         {
             do
             {            
-                Console.Clear();
+                Console.Clear(); // do i need
 
                 DrawMenu();
 
@@ -117,11 +117,9 @@
 
                 foreach (var menuItem in MenuItems)
                 {
-                    if (menuItem.Shortcut.ToUpper() == userInput)
-                    {
-                        Console.Clear();
-                        return menuItem;
-                    }
+                    if (menuItem.Shortcut.ToUpper() != userInput) continue;
+                    Console.Clear();
+                    return menuItem;
                 }
                 
             } while (true);
@@ -140,5 +138,6 @@
             Console.WriteLine();
             Console.Write(">");
         }
+        
     }
 }

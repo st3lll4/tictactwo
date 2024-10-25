@@ -42,9 +42,10 @@ namespace tic_tac_two
                 configMenuItems,
                 true
             );
-
+            
             var selectedConfigName = configMenu.Run();
-
+            
+            
             return string.IsNullOrEmpty(selectedConfigName) ? "No configuration selected." : $"Configuration '{selectedConfigName}' selected.";
         }
 
