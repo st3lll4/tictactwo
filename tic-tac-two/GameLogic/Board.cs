@@ -119,7 +119,7 @@ namespace GameLogic
 
 
 
-        public bool CheckWin(char symbol)
+        public bool CheckWin(char symbol) // todo: loeng 25.10 !!!!! 
         {
             for (var i = GridCenterRow - 1; i <= GridCenterRow + 1; i++)
             {
