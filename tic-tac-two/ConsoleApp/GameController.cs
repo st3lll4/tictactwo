@@ -50,7 +50,7 @@ namespace tic_tac_two
             {
                 Console.WriteLine("Enter the number of your next action:");
                 Console.WriteLine("1. Move your existing piece");
-                Console.WriteLine("2. Move the grid"); // something weird happens if runs twice in a row
+                Console.WriteLine("2. Move the griddy"); // something weird happens if runs twice in a row ? idk if still, check todo
                 if (Brain.GetMovingPlayerPiecesPlaced() < CurrentConfig.MaxPieces)
                 {
                     Console.WriteLine("3. Place a new piece");
