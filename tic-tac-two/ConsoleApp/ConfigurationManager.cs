@@ -7,7 +7,7 @@ namespace tic_tac_two
     public class ConfigurationManager
     {
         private readonly ConfigRepositoryJson _configRepository = new();
-        public GameConfiguration CurrentConfiguration { get; private set; } // use in game .. =default!?
+        public static GameConfiguration CurrentConfiguration { get; private set; } = default!;
 
         public ConfigurationManager()
         {
@@ -15,7 +15,7 @@ namespace tic_tac_two
         }
         
 
-        public string SelectConfiguration() // TODO: Doesnt return to main menu after selecting M
+        public string SelectConfiguration()
         {
             var configMenuItems = new List<MenuItem>();
             var configNames = _configRepository.GetConfigurationNames();
@@ -43,9 +43,9 @@ namespace tic_tac_two
                 true
             );
             
-            var selectedConfigName = selectMenu.Run(); // todo: make it work diff than run
+            var selectedValue = selectMenu.Run();
             
-            return string.IsNullOrEmpty(selectedConfigName) ? "No configuration selected." : $"Configuration '{selectedConfigName}' selected.";
+            return selectedValue;
         }
 
 

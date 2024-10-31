@@ -1,18 +1,19 @@
+using ConsoleApp;
+using GameLogic;
 using UI;
 
 namespace tic_tac_two
 {
     public class Menus
     {
-        private readonly ConfigurationManager _configManager;
-
         // Instance properties for menus
-        private Menu ConfigurationsMenu { get; set; }
+        public Menu ConfigurationsMenu { get; set; }
         public Menu MainMenu { get; set; }
+        
 
         public Menus()
         {
-            _configManager = new ConfigurationManager();
+            var configManager = new ConfigurationManager();
 
             ConfigurationsMenu = new Menu(
                 EMenuLevel.Secondary,
@@ -21,28 +22,28 @@ namespace tic_tac_two
                     new MenuItem
                     {
                         Shortcut = "S",
-                        MenuItemAction = _configManager.SelectConfiguration,
-                        Title = "Select a configuration to play" // todo: try parentmenu
+                        MenuItemAction = configManager.SelectConfiguration,
+                        Title = "Select a configuration to play"
                     },
 
                     new MenuItem
                     {
                         Shortcut = "C",
-                        MenuItemAction = _configManager.AddConfiguration,
+                        MenuItemAction = configManager.AddConfiguration,
                         Title = "Create a configuration"
                     },
 
                     new MenuItem
                     {
                         Shortcut = "D",
-                        MenuItemAction = _configManager.DeleteConfiguration,
+                        MenuItemAction = configManager.DeleteConfiguration,
                         Title = "Delete a configuration"
                     },
 
                     new MenuItem
                     {
                         Shortcut = "V",
-                        MenuItemAction = _configManager.SeeConfigurations,
+                        MenuItemAction = configManager.SeeConfigurations,
                         Title = "View your configurations"
                     }
                 ]
@@ -55,7 +56,8 @@ namespace tic_tac_two
                     new MenuItem
                     {
                         Shortcut = "N",
-                        Title = "New game"
+                        Title = "New game",
+                        MenuItemAction = GameController.MainLoop,
                     },
 
                     new MenuItem

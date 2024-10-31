@@ -22,13 +22,7 @@
         {
             Shortcut = "M",
             Title = "Return to Main menu",
-            MenuItemAction = GoToMainMenu()
         };
-
-        private static Func<string>? GoToMainMenu()
-        {
-            GoToMainMenu().ToString();
-        }
 
         private EMenuLevel _menuLevel { get; set; }
 
@@ -98,7 +92,7 @@
                 if ((menuItem.Shortcut == _menuItemReturnMain.Shortcut ||
                      menuReturnValue == _menuItemReturnMain.Shortcut) && _menuLevel == EMenuLevel.Deep)
                 {
-                    return _menuItemReturnMain.Shortcut; // todo: doesnt return to main????
+                    return _menuItemReturnMain.Shortcut;
                 }
 
             } while (true);
