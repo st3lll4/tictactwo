@@ -14,14 +14,14 @@ namespace DAL
             DefaultConfiguration = new GameConfiguration
             {
                 GameName = "Tic-Tac-Two",
-                Width = 10, // TODO: change back to 5
-                Height = 10,
+                Width = 5,
+                Height = 5,
                 Player1Symbol = 'X',
                 Player2Symbol = 'O',
                 StartingPlayer = "Player 1",
-                MovableGridSize = 5,
+                MovableGridSize = 3,
                 WinningCondition = 3,
-                InitialMoves = 2,
+                InitialMoves = 1, // change back to 2
                 MaxPieces = 3
             };
             CheckAndCreateInitialDirectory();

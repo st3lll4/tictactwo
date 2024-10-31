@@ -18,7 +18,7 @@ namespace tic_tac_two
                 DrawBoard(gameState);
                 Console.WriteLine($"Player {gameState.MovingPlayer}, it's your turn!");
 
-                if (Brain.GetMovingPlayerPiecesPlaced() <= CurrentConfig.InitialMoves)
+                if (Brain.GetMovingPlayerPiecesPlaced() < CurrentConfig.InitialMoves)
                 {
                     SimpleMove(gameState);
                 }
@@ -43,14 +43,14 @@ namespace tic_tac_two
             return "";
         }
 
-        private static void AdvancedMove(GameState gameState)
+                private static void AdvancedMove(GameState gameState)
         {
             var validMoveMade = false;
             while (!validMoveMade)
             {
                 Console.WriteLine("Enter the number of your next action:");
                 Console.WriteLine("1. Move your existing piece");
-                Console.WriteLine("2. Move the grid");
+                Console.WriteLine("2. Move the grid"); // something weird happens if runs twice in a row
                 if (Brain.GetMovingPlayerPiecesPlaced() < CurrentConfig.MaxPieces)
                 {
                     Console.WriteLine("3. Place a new piece");
@@ -61,39 +61,88 @@ namespace tic_tac_two
                 switch (input)
                 {
                     case "1":
-                        Console.WriteLine("Enter the coordinates of the piece you want to move: ");
-                        var oldCoord = Console.ReadLine()!.Split(",");
-                        var oldX = int.Parse(oldCoord[0]) - 1;
-                        var oldY = int.Parse(oldCoord[1]) - 1;
-
-                        Console.WriteLine("Enter new coordinates: ");
-                        var newCoord = Console.ReadLine()!.Split(",");
-                        var newX = int.Parse(newCoord[0]) - 1;
-                        var newY = int.Parse(newCoord[1]) - 1;
-
-                        if (Brain.MovePiece(oldX, oldY, newX, newY))
-                        {
-                            validMoveMade = true;
-                        }
-                        else
-                        {
-                            Console.WriteLine("Invalid move! New place has to be free and inside the grid");
-                        }
+                        validMoveMade = MovePiece(gameState);
                         break;
 
                     case "2":
-                        //Brain.MoveGrid();
-                        validMoveMade = true; 
+                        validMoveMade = MoveGrid();
                         break;
 
                     case "3":
-                        SimpleMove(gameState);
+                        if (Brain.GetMovingPlayerPiecesPlaced() < CurrentConfig.MaxPieces)
+                        {
+                            SimpleMove(gameState);
+                        }
+                        else
+                        {
+                            Console.WriteLine("You already used up all your pieces, move them or move the board or something....");
+                        }
                         break;
 
                     default:
                         Console.WriteLine("Invalid input! PLS! enter a valid number.");
                         break;
                 }
+            }
+        }
+
+        private static bool MovePiece(GameState gameState)
+        {
+            while (true)
+            {
+                Console.WriteLine("Enter the coordinates of the piece you want to move: ");
+                var oldCoord = Console.ReadLine()!.Split(",");
+                if (oldCoord.Length < 2 || !int.TryParse(oldCoord[0], out var oldX) || !int.TryParse(oldCoord[1], out var oldY))
+                {
+                    Console.WriteLine("Invalid input! Please enter valid coordinates (x,y).");
+                    continue; 
+                }
+                
+
+                Console.WriteLine("Enter new coordinates: ");
+                var newCoord = Console.ReadLine()!.Split(",");
+                if (newCoord.Length < 2 || !int.TryParse(newCoord[0], out var newX) || !int.TryParse(newCoord[1], out var newY))
+                {
+                    Console.WriteLine("Invalid input! Please enter valid coordinates (x,y).");
+                    continue; 
+                }
+
+                if (Brain.MovePiece(oldX, oldY, newX, newY))
+                {
+                    return true; 
+                }
+                Console.WriteLine("Invalid move! The new position must be free and inside the grid.");
+            }
+        }
+
+
+        private static bool MoveGrid()
+        {
+            while (true)
+            {
+                Console.WriteLine("Enter the shortcut letter for direction you want to move the grid 1 step.");
+                Console.WriteLine("Options are up [u], down [d], left [l], right [r], up-left [ul], up-right [ur], down-left [dl], down-right [dr]");
+                var direction = Console.ReadLine();
+
+                if (direction == null)
+                {
+                    Console.WriteLine("Invalid input! PLS! enter a valid direction.");
+                    continue; 
+                }
+
+                string[] availableDirections = { "u", "d", "l", "r", "ul", "ur", "dl", "dr" };
+                if (!availableDirections.Contains(direction) && !availableDirections.Contains(direction.ToUpper()))
+                {
+                    Console.WriteLine("Please for the love of god, pick a valid direction.");
+                    continue; 
+                }
+
+                if (Brain.MoveGrid(direction))
+                {
+                    return true; 
+                }
+                Console.WriteLine("Invalid move! You can't move the grid like that dude.");
+                
             }
         }
 

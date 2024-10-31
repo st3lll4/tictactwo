@@ -1,3 +1,5 @@
+using System.Diagnostics.CodeAnalysis;
+
 namespace GameLogic
 {
     public class GameState // hoiab koike mis on currently happening in the game, muutuvad asjad 
@@ -10,21 +12,32 @@ namespace GameLogic
         public int GridStartRow { get; set; }
         public int GridStartCol { get; set; }
         
-        public bool IsStandardTicTacToe { get; set; }
+        public int GridCenterRow { get; set; }
+        public int GridCenterCol { get; set; }
+        public int GridSize { get; set; }
         
+        public bool IsStandardTicTacToe { get; set; }
 
+        [SuppressMessage("ReSharper", "PossibleLossOfFraction")]
         public GameState(GameConfiguration config)
         {
             Config = config;
-            Board = new char[config.Width, config.Height];
+            Board = new char[config.Height, config.Width]; 
 
             MovingPlayer = config.StartingPlayer == "Player 1" ? config.Player1Symbol : config.Player2Symbol;
-            GridStartRow = config.Height / 3;
-            GridStartCol = config.Width / 3;
             
-            IsStandardTicTacToe = config.MovableGridSize == null && 
-                                  config.InitialMoves == null && config.MaxPieces == null;
+            GridCenterRow = config.Height / 2; 
+            GridCenterCol = config.Width / 2; 
             
+            GridSize = config.MovableGridSize ?? 3; 
+            
+            GridStartRow = GridCenterRow - (GridSize - 1) / 2; 
+            GridStartCol = GridCenterCol - (GridSize - 1) / 2;
+            
+            IsStandardTicTacToe = GridSize == 0 && 
+                                  config.InitialMoves == null && 
+                                  config.MaxPieces == null;
+
             Player1PiecesPlaced = 0;
             Player2PiecesPlaced = 0;    
         }

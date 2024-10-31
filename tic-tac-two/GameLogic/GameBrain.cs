@@ -18,14 +18,28 @@ namespace GameLogic
                    col >= GameState.GridStartCol && col < GameState.GridStartCol + Config.MovableGridSize;
         }
 
-        public void MoveGrid(int dRow, int dCol) 
+        public bool MoveGrid(string direction) 
         {
-            //todo
+            switch (direction)
+            {
+                case "u":
+                    if (GameState.GridStartRow > 0)
+                    {
+                        GameState.GridStartRow--;
+                    }
+                    else
+                    {
+                        return false;
+                    }
+                    break;
+            }
+
+            return false;
         }
 
         public bool PlacePiece(int x, int y, char playerSymbol)
         {
-            if (!IsInGrid(x, y) || GameState.Board[x, y] != '\0') // ???
+            if (!IsInGrid(x, y) || GameState.Board[x, y] != '\0')
             {
                 return false;
             }
@@ -68,6 +82,10 @@ namespace GameLogic
 
         public bool MovePiece(int oldX, int oldY, int newX, int newY)
         {
+            oldX--;
+            oldY--;
+            newX--;
+            newY--;
             if (GameState.Board[oldX, oldY] != GameState.MovingPlayer 
                 || !IsInGrid(newY, newY) 
                 || GameState.Board[newX, newY] != '\0')
