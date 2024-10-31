@@ -1,4 +1,6 @@
-﻿namespace GameLogic
+﻿using System.Runtime.InteropServices;
+
+namespace GameLogic
 {
     public class GameBrain
     {
@@ -64,9 +66,17 @@
             return GameState.MovingPlayer == Config.Player1Symbol ? GameState.Player1PiecesPlaced : GameState.Player2PiecesPlaced;
         }
 
-        public void MovePiece() // variables
+        public bool MovePiece(int oldX, int oldY, int newX, int newY)
         {
-            throw new NotImplementedException();
+            if (GameState.Board[oldX, oldY] != GameState.MovingPlayer 
+                || !IsInGrid(newY, newY) 
+                || GameState.Board[newX, newY] != '\0')
+            {
+                return false;
+            }
+            GameState.Board[oldX, oldY] = '\0';
+            GameState.Board[newX, newY] = GameState.MovingPlayer;
+            return true;
         }
     }
 }
