@@ -58,5 +58,15 @@
             // Tie condition check logic
             return false;
         }
+        
+        public int GetMovingPlayerPiecesPlaced()
+        {
+            return GameState.MovingPlayer == Config.Player1Symbol ? GameState.Player1PiecesPlaced : GameState.Player2PiecesPlaced;
+        }
+
+        public void MovePiece() // variables
+        {
+            throw new NotImplementedException();
+        }
     }
 }

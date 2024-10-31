@@ -10,6 +10,8 @@ namespace GameLogic
         public int GridStartRow { get; set; }
         public int GridStartCol { get; set; }
         
+        public bool IsStandardTicTacToe { get; set; }
+        
 
         public GameState(GameConfiguration config)
         {
@@ -19,6 +21,9 @@ namespace GameLogic
             MovingPlayer = config.StartingPlayer == "Player 1" ? config.Player1Symbol : config.Player2Symbol;
             GridStartRow = config.Height / 3;
             GridStartCol = config.Width / 3;
+            
+            IsStandardTicTacToe = config.MovableGridSize == null && 
+                                  config.InitialMoves == null && config.MaxPieces == null;
             
             Player1PiecesPlaced = 0;
             Player2PiecesPlaced = 0;    
