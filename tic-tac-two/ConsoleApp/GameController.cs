@@ -61,7 +61,7 @@ namespace tic_tac_two
                 switch (input)
                 {
                     case "1":
-                        validMoveMade = MovePiece(gameState);
+                        validMoveMade = MovePiece();
                         break;
 
                     case "2":
@@ -86,7 +86,7 @@ namespace tic_tac_two
             }
         }
 
-        private static bool MovePiece(GameState gameState)
+        private static bool MovePiece()
         {
             while (true)
             {
@@ -129,11 +129,13 @@ namespace tic_tac_two
                     Console.WriteLine("Invalid input! PLS! enter a valid direction.");
                     continue; 
                 }
+                
+                direction = direction.ToLower();
 
-                string[] availableDirections = { "u", "d", "l", "r", "ul", "ur", "dl", "dr" };
-                if (!availableDirections.Contains(direction) && !availableDirections.Contains(direction.ToUpper()))
+                string[] availableDirections = ["u", "d", "l", "r", "ul", "ur", "dl", "dr"];
+                if (!availableDirections.Contains(direction))
                 {
-                    Console.WriteLine("Please for the love of god, pick a valid direction.");
+                    Console.WriteLine("Please for the love of god, pick a valid direction!!!");
                     continue; 
                 }
 

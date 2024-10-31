@@ -15,31 +15,69 @@ namespace GameLogic
         public bool IsInGrid(int row, int col) 
         {
             return row >= GameState.GridStartRow && row < GameState.GridStartRow + Config.MovableGridSize &&
-                   col >= GameState.GridStartCol && col < GameState.GridStartCol + Config.MovableGridSize;
+                   col >= GameState.gridStartCol && col < GameState.gridStartCol + Config.MovableGridSize;
         }
 
-        public bool MoveGrid(string direction) 
+        public bool MoveGrid(string direction)
         {
+            var gridStartRow = GameState.GridStartRow + 1; // vb saaks paremini
+            var gridStartCol = GameState.gridStartCol + 1;
+            
             switch (direction)
             {
                 case "u":
-                    if (GameState.GridStartRow > 0)
-                    {
-                        GameState.GridStartRow--;
-                    }
-                    else
-                    {
-                        return false;
-                    }
-                    break;
-            }
+                    if (gridStartRow <= 0) return false;
+                    GameState.GridStartRow--;
+                    return true;
 
+                case "d":
+                    if (!(gridStartCol + Config.MovableGridSize <= Config.Height)) return false;
+                    GameState.GridStartRow++;
+                    return true;
+
+                case "r":
+                    if (!(gridStartCol + Config.MovableGridSize <= Config.Width)) return false;
+                    GameState.gridStartCol++;
+                    return true;
+
+                case "l":
+                    if (gridStartCol <= 0) return false;
+                    GameState.gridStartCol--;
+                    return true;
+
+                case "ul":
+                    if (gridStartRow <= 0 || gridStartCol <= 0) return false;
+                    GameState.GridStartRow--;
+                    GameState.gridStartCol--;
+                    return true;
+
+                case "ur":
+                    if (gridStartRow <= 0 ||
+                        !(gridStartCol + Config.MovableGridSize <= Config.Width)) return false;
+                    GameState.GridStartRow--;
+                    GameState.gridStartCol++;
+                    return true;
+
+                case "dl":
+                    if (!(GameState.gridStartCol + Config.MovableGridSize <= Config.Height) ||
+                        GameState.gridStartCol <= 0) return false;
+                    GameState.GridStartRow++;
+                    GameState.gridStartCol--;
+                    return true;
+                
+                case "dr":
+                    if (!(gridStartRow + Config.MovableGridSize <= Config.Width) ||
+                        !(gridStartCol + Config.MovableGridSize <= Config.Height)) return false;
+                    GameState.GridStartRow++;
+                    GameState.gridStartCol++;
+                    return true;
+            }
             return false;
         }
 
         public bool PlacePiece(int x, int y, char playerSymbol)
         {
-            if (!IsInGrid(x, y) || GameState.Board[x, y] != '\0')
+            if (!IsInGrid(x, y) || GameState.Board[x, y] != '\0' || playerSymbol != GameState.MovingPlayer)
             {
                 return false;
             }

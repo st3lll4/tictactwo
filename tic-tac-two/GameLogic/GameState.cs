@@ -10,7 +10,7 @@ namespace GameLogic
         public int Player1PiecesPlaced { get; set; }
         public int Player2PiecesPlaced { get; set; }
         public int GridStartRow { get; set; }
-        public int GridStartCol { get; set; }
+        public int gridStartCol { get; set; }
         
         public int GridCenterRow { get; set; }
         public int GridCenterCol { get; set; }
@@ -32,7 +32,7 @@ namespace GameLogic
             GridSize = config.MovableGridSize ?? 3; 
             
             GridStartRow = GridCenterRow - (GridSize - 1) / 2; 
-            GridStartCol = GridCenterCol - (GridSize - 1) / 2;
+            gridStartCol = GridCenterCol - (GridSize - 1) / 2;
             
             IsStandardTicTacToe = GridSize == 0 && 
                                   config.InitialMoves == null && 
@@ -41,7 +41,6 @@ namespace GameLogic
             Player1PiecesPlaced = 0;
             Player2PiecesPlaced = 0;    
         }
-        
         
 
         public override string ToString()
