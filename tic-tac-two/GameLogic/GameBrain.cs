@@ -2,7 +2,7 @@
 {
     public class GameBrain
     {
-        private GameState GameState { get; set; }
+        public GameState GameState { get; set; }
         private GameConfiguration Config => GameState.Config;
 
         public GameBrain(GameState gameState)
@@ -23,12 +23,12 @@
 
         public bool PlacePiece(int x, int y, char playerSymbol)
         {
-            if (!IsInGrid(x, y) || GameState.Board[x, y] != '\0') // kas vordleb?? 
+            if (!IsInGrid(x, y) || GameState.Board[x, y] != '\0') // ???
             {
                 return false;
             }
             GameState.Board[x, y] = playerSymbol;
-            if (GameState.NextMoveBy == Config.Player1Symbol) // todo: KAS LISAB PLAYER 1 VOI PLAYER 2? MIS ON NEXT MOVE BY?
+            if (GameState.MovingPlayer == Config.Player1Symbol) 
             {
                 GameState.Player1PiecesPlaced++;
             }
@@ -42,7 +42,7 @@
 
         private void SwitchPlayer()
         {
-            GameState.NextMoveBy = GameState.NextMoveBy == GameState.Config.Player1Symbol
+            GameState.MovingPlayer = GameState.MovingPlayer == GameState.Config.Player1Symbol
                 ? GameState.Config.Player2Symbol
                 : GameState.Config.Player1Symbol;
         }

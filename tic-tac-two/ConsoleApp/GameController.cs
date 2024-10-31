@@ -1,45 +1,40 @@
 using GameLogic;
 using tic_tac_two;
 
-namespace ConsoleApp
+namespace tic_tac_two
 {
     public static class GameController
     {
         private static readonly GameConfiguration CurrentConfig = ConfigurationManager.CurrentConfiguration;
-        private static GameBrain brain { get; set; } // todo: kas nii reference?
-        
+        private static readonly GameBrain Brain = new(new GameState(CurrentConfig));
 
         public static string MainLoop()
         {
-            var gameState = new GameState(CurrentConfig);
-            var gameBrain = new GameBrain(gameState);
-            
-            do
-            {
+            var gameState = Brain.GameState; 
+    
+            do {
                 DrawBoard(gameState);
-                Console.WriteLine($"Player {gameState.NextMoveBy}, it's your turn!");
+                Console.WriteLine($"Player {gameState.MovingPlayer}, it's your turn!");
 
                 Console.Write("Enter row and column (x,y): ");
                 var input = Console.ReadLine()!.Split(",");
                 var x = int.Parse(input[0]) - 1;
                 var y = int.Parse(input[1]) - 1;
                 
-                var playerWhoseTurn = gameState.NextMoveBy == CurrentConfig.Player1Symbol ? 
-                    CurrentConfig.Player1Symbol : CurrentConfig.Player2Symbol;
 
-                if (!gameBrain.PlacePiece(x, y, playerWhoseTurn))
+                if (!Brain.PlacePiece(x, y, gameState.MovingPlayer))
                 {
-                    Console.WriteLine("Invalid move! Try again.");
+                    Console.WriteLine("Invalid move! Place your piece on a free spot inside the grid.");
                     continue;
                 }
 
-                if (gameBrain.CheckWin())
+                if (Brain.CheckWin())
                 {
-                    Console.WriteLine($"Player {gameState.NextMoveBy} wins!");
+                    Console.WriteLine($"Player {gameState.MovingPlayer} wins!");
                     break;
                 }
 
-                if (gameBrain.CheckTie())
+                if (Brain.CheckTie())
                 {
                     Console.WriteLine("a tie!");
                     break;
@@ -53,7 +48,6 @@ namespace ConsoleApp
 
         private static void DrawBoard(GameState gameState)
         {
-            Console.Clear();
             Console.Write("  ");
             for (int i = 0; i < gameState.Config.Width; i++)
             {
@@ -68,8 +62,10 @@ namespace ConsoleApp
                 
                 for (var j = 0; j < gameState.Config.Width; j++)
                 {
-                    Console.BackgroundColor = brain.IsInGrid(i,j) ? ConsoleColor.Green : ConsoleColor.DarkGray; // et saaks siin kasutada
-                    Console.Write($" {gameState.Board[i, j]} ");
+                    Console.BackgroundColor = Brain.IsInGrid(i,j) ? ConsoleColor.Black : ConsoleColor.Gray; 
+                    
+                    var toWrite = gameState.Board[i, j] == '\0' ? " " : $"{gameState.Board[i, j]}";
+                    Console.Write($" {toWrite} ");
                     Console.ResetColor();
                     Console.Write(" ");
                 }

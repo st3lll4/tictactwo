@@ -1,5 +1,3 @@
-using ConsoleApp;
-using GameLogic;
 using UI;
 
 namespace tic_tac_two

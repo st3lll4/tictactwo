@@ -3,7 +3,7 @@ namespace GameLogic
     public class GameState // hoiab koike mis on currently happening in the game, muutuvad asjad 
     {
         public char[,] Board { get; set; }
-        public char NextMoveBy { get; set; }
+        public char MovingPlayer { get; set; }
         public GameConfiguration Config { get; private set; }
         public int Player1PiecesPlaced { get; set; }
         public int Player2PiecesPlaced { get; set; }
@@ -16,7 +16,7 @@ namespace GameLogic
             Config = config;
             Board = new char[config.Width, config.Height];
 
-            NextMoveBy = config.StartingPlayer == "Player 1" ? config.Player1Symbol : config.Player2Symbol;
+            MovingPlayer = config.StartingPlayer == "Player 1" ? config.Player1Symbol : config.Player2Symbol;
             GridStartRow = config.Height / 3;
             GridStartCol = config.Width / 3;
             
