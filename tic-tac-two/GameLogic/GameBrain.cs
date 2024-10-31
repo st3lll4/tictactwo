@@ -28,6 +28,14 @@
                 return false;
             }
             GameState.Board[x, y] = playerSymbol;
+            if (GameState.NextMoveBy == Config.Player1Symbol) // todo: KAS LISAB PLAYER 1 VOI PLAYER 2? MIS ON NEXT MOVE BY?
+            {
+                GameState.Player1PiecesPlaced++;
+            }
+            else
+            {
+                GameState.Player2PiecesPlaced++;
+            }
             SwitchPlayer();
             return true;
         }
