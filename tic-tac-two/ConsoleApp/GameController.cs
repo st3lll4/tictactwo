@@ -29,22 +29,24 @@ namespace tic_tac_two
                 else if (gameState.IsStandardTicTacToe)
                 {
                     TicTacToeMove(gameState);
-
-                    if (Brain.CheckWin())
-                    {
-                        Console.WriteLine($"Player {gameState.MovingPlayer} wins!");
-                        break;
-                    }
-
-                    if (Brain.CheckTie())
-                    {
-                        Console.WriteLine("A tie!");
-                        break;
-                    }
                 }
+                
 
+                if (Brain.CheckTie())
+                {
+                    Console.WriteLine("OH MY GOD, a tie!");
+                    break;
+                }
+                
+                if (Brain.CheckWin(gameState.MovingPlayer))
+                {
+                    Console.WriteLine($"Player {gameState.MovingPlayer} wins! Winner winner, chicken dinner!");
+                    break;
+                }
                 Brain.SwitchPlayer();
+                
             } while (true);
+
             return "";
         }
 

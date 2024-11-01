@@ -16,6 +16,8 @@ namespace GameLogic
         public int GridCenterCol { get; set; }
         public int GridSize { get; set; }
         
+        public int WinCondition { get; set; }
+        
         public bool IsStandardTicTacToe { get; set; }
 
         [SuppressMessage("ReSharper", "PossibleLossOfFraction")]
@@ -40,7 +42,9 @@ namespace GameLogic
                                   config.MaxPieces == null;
 
             Player1PiecesPlaced = 0;
-            Player2PiecesPlaced = 0;    
+            Player2PiecesPlaced = 0;
+
+            WinCondition = config.WinningCondition;
         }
         
 

@@ -21,7 +21,7 @@ namespace DAL
                 StartingPlayer = "Player 1",
                 MovableGridSize = 3,
                 WinningCondition = 3,
-                InitialMoves = 1, // change back to 2
+                InitialMoves = 0, // change back to 2
                 MaxPieces = 3
             };
             CheckAndCreateInitialDirectory();
