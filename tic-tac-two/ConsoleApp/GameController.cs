@@ -7,9 +7,11 @@ namespace tic_tac_two
         private static readonly GameConfiguration CurrentConfig = ConfigurationManager.CurrentConfiguration;
         private static readonly GameBrain Brain = new(new GameState(CurrentConfig));
 
-        public static string MainLoop() // problem when moving a piece  
+        public static string MainLoop()
         {
             var gameState = Brain.GameState;
+
+            GameIntro(
 
             do
             {
@@ -39,11 +41,13 @@ namespace tic_tac_two
                         Console.WriteLine("A tie!");
                         break;
                     }
-                } Brain.SwitchPlayer(); 
-            } while (true);
+                }
 
+                Brain.SwitchPlayer();
+            } while (true);
             return "";
         }
+
 
         private static void TicTacToeMove(GameState gameState) // todo: test
         {
@@ -52,7 +56,7 @@ namespace tic_tac_two
             {
                 Console.WriteLine("Enter the number of your next action:");
                 Console.WriteLine("1. Move your existing piece");
-                
+
                 if (Brain.GetMovingPlayerPiecesPlaced() < CurrentConfig.MaxPieces)
                 {
                     Console.WriteLine("2. Place a piece");
@@ -75,12 +79,12 @@ namespace tic_tac_two
                         else
                         {
                             Console.WriteLine(
-                                "You already used up all your pieces, move them or move the board or something....");
+                                "You already used up all your pieces, move them or move the board or learn how to count or something...");
                         }
 
                         break;
                     default:
-                        Console.WriteLine("Invalid input! PLS! enter a valid number.");
+                        Console.WriteLine("Invalid input! PLS! enter valid numbers.");
                         break;
                 }
             }
@@ -137,28 +141,28 @@ namespace tic_tac_two
         {
             int oldX, oldY;
 
-            
+
             while (true)
             {
                 Console.WriteLine("Enter the coordinates of the piece you want to move in the form of x,y: ");
                 var oldCoord = Console.ReadLine()!.Split(",");
 
-                if (oldCoord.Length < 2 
-                    || !int.TryParse(oldCoord[0], out oldX) 
+                if (oldCoord.Length < 2
+                    || !int.TryParse(oldCoord[0], out oldX)
                     || !int.TryParse(oldCoord[1], out oldY))
                 {
                     Console.WriteLine("Invalid input! Please enter the coordinates in the form of x,y: ");
-                    continue; 
+                    continue;
                 }
 
-                if (Brain.GameState.Board[oldX - 1, oldY - 1] != Brain.GameState.MovingPlayer) 
+                if (Brain.GameState.Board[oldX - 1, oldY - 1] != Brain.GameState.MovingPlayer)
                     // checkib meetodi sees ka aga siin oluline sest siis kysib vanad koodrinaadid kohe uuesti
                 {
                     Console.WriteLine("Invalid input! Pick a coordinate with your own piece, damn it.");
-                    continue; 
+                    continue;
                 }
 
-                break; 
+                break;
             }
 
             while (true)
@@ -170,14 +174,16 @@ namespace tic_tac_two
                     || !int.TryParse(newCoord[0], out var newX)
                     || !int.TryParse(newCoord[1], out var newY))
                 {
-                    Console.WriteLine("Invalid input! Please enter the coordinates in the form of (x,y) (literally same as last time).");
+                    Console.WriteLine(
+                        "Invalid input! Please enter the coordinates in the form of (x,y) (literally same as last time).");
                     continue;
                 }
-                
+
                 //error check siin ka et ma saaks normaalset tagasisidet anda, aga gamebrain checkib ka
-                if (Brain.GameState.Board[newX - 1, newY - 1] != '\0' || !Brain.IsInGrid(newX - 1, newY - 1)) 
+                if (Brain.GameState.Board[newX - 1, newY - 1] != '\0' || !Brain.IsInGrid(newX - 1, newY - 1))
                 {
-                    Console.WriteLine("Invalid input! Is it really that hard to pick a free coordinate inside the grid?");
+                    Console.WriteLine(
+                        "Invalid input! Is it really that hard to pick a free coordinate inside the grid?");
                     continue;
                 }
 
@@ -189,8 +195,6 @@ namespace tic_tac_two
                 Console.WriteLine("Something went wrong... dont know what though.");
             }
         }
-
-
 
         private static bool MoveGrid()
         {
@@ -253,6 +257,25 @@ namespace tic_tac_two
             }
         }
 
+        private static void GameIntro()
+        {
+            Console.WriteLine("Welcome to this ratchet ass console game!");
+            Console.WriteLine($"You are playing with configuration {CurrentConfig.GameName} :)");
+            Console.WriteLine(
+                $"The board is {CurrentConfig.Width}x{CurrentConfig.Height}, you can place the total of {CurrentConfig.MaxPieces} pieces, ");
+            if (CurrentConfig.GameName != "Tic-Tac-Toe")
+            {
+                Console.WriteLine($"you can move the grid after {CurrentConfig.InitialMoves} moves, ");
+            }
+
+            Console.WriteLine($"and you must win by aligning {CurrentConfig.WinningCondition} pieces.");
+            Console.WriteLine("Good luck nerds!");
+            Console.WriteLine();
+            Console.WriteLine("Press enter to continue, genius... ");
+            Console.WriteLine();
+
+            Console.ReadLine();
+        }
 
         private static void DrawBoard(GameState gameState)
         {
