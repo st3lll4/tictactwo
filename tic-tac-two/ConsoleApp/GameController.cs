@@ -34,13 +34,19 @@ namespace tic_tac_two
 
                 if (Brain.CheckTie())
                 {
-                    Console.WriteLine("OH MY GOD, a tie!");
+                    DrawBoard(gameState);
+                    Console.WriteLine("You somehow managed to tie in the game that's almost impossible to tie in... try harder next time.");
+                    Console.WriteLine("Press enter to return to main menu, geniuses... "); 
+                    Console.ReadLine();
                     break;
                 }
                 
                 if (Brain.CheckWin(gameState.MovingPlayer))
                 {
+                    DrawBoard(gameState);
                     Console.WriteLine($"Player {gameState.MovingPlayer} wins! Winner winner, chicken dinner!");
+                    Console.WriteLine("Press enter to return to main menu, genius... "); 
+                    Console.ReadLine();
                     break;
                 }
                 Brain.SwitchPlayer();

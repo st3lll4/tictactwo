@@ -17,7 +17,7 @@ namespace GameLogic
             return row >= GameState.GridStartRow && row < GameState.GridStartRow + Config.MovableGridSize &&
                    col >= GameState.GridStartCol && col < GameState.GridStartCol + Config.MovableGridSize;
         }
-        
+
         public bool MoveGrid(string direction)
         {
             switch (direction)
@@ -90,7 +90,7 @@ namespace GameLogic
         {
             return GameState.GridStartCol == 0;
         }
-        
+
 
         public bool PlacePiece(int x, int y, char playerSymbol)
         {
@@ -123,17 +123,15 @@ namespace GameLogic
         public bool CheckWin(char player)
         {
             if (GetMovingPlayerPiecesPlaced() < Config.WinningCondition) return false;
-            
-            var startRow = GameState.GridStartRow;
-            var startCol = GameState.GridStartCol;
 
+            var gridEndRow = GameState.GridStartRow + Config.MovableGridSize;
+            var gridEndCol = GameState.GridStartCol + Config.MovableGridSize;
 
-            for (var i = startRow; i < startRow + Config.MovableGridSize; i++)
+            for (var i = GameState.GridStartRow; i < gridEndRow; i++)
             {
-                for (var j = startCol; j < startCol + Config.MovableGridSize; j++) // errors
+                for (var j = GameState.GridStartCol; j < gridEndCol; j++)
                 {
-
-                    if (CheckWinFromPosition(startRow + i, startCol + j, player))
+                    if (CheckWinFromPosition(i, j, player))
                     {
                         return true;
                     }
@@ -142,14 +140,15 @@ namespace GameLogic
 
             return false;
         }
-        
+
 
         private bool CheckWinFromPosition(int startRow, int startCol, char player)
         {
             if (startRow < 0 || startRow >= Config.Height || startCol < 0 || startCol >= Config.Width)
             {
-                return false; 
+                return false;
             }
+
             return (CheckSouth(startRow, startCol, player))
                    || CheckEast(startRow, startCol, player)
                    || CheckSouthEast(startRow, startCol, player)
@@ -160,141 +159,145 @@ namespace GameLogic
                    || CheckSouthWest(startRow, startCol, player);
         }
 
-        private bool CheckSouthWest(int startRow, int startCol, char player)
+        private bool CheckSouth(int startRow, int startCol, char player)
         {
-            var piecesInARow = 0;
-            for (var i = startRow; i < Config.MovableGridSize; i++)
+            int piecesInARow = 0;
+            for (int i = 0; i < Config.WinningCondition; i++)
             {
-                if (startRow + i >= Config.Height || startCol - i < 0) break;
-                if (GameState.Board[startRow + i, startCol - i] == player)
-                {
-                    piecesInARow++;
-                }
-                else
-                {
-                    break;
-                }
-            } return piecesInARow >= Config.WinningCondition;
-        }
+                int row = startRow + i;
+                if (row >= Config.Height || row >= GameState.GridStartRow + Config.MovableGridSize) break;
 
-        private bool CheckNorthWest(int startRow, int startCol, char player)
-        {
-            var piecesInARow = 0;
-            for (var i = 0 ; i < Config.MovableGridSize; i++)
-            {
-                if (startRow - i < 0 || startCol - i < 0) break; 
-                if (GameState.Board[startRow - i, startCol - i] == player)
-                {
+                if (GameState.Board[row, startCol] == player)
                     piecesInARow++;
-                }
                 else
-                {
                     break;
-                }
-            } return piecesInARow >= Config.WinningCondition;
-        }
+            }
 
-        private bool CheckNorthEast(int startRow, int startCol, char player)
-        {
-            var piecesInARow = 0;
-            for (var i = 0 ; i < Config.MovableGridSize; i++)
-            {
-                if (startRow - i < 0 || startCol + i >= Config.Width) break; 
-                if (GameState.Board[startRow - i, startCol + i] == player)
-                {
-                    piecesInARow++;
-                }
-                else
-                {
-                    break;
-                }
-            } return piecesInARow >= Config.WinningCondition;
-        }
-
-        private bool CheckWest(int startRow, int startCol, char player)
-        {
-            var piecesInARow = 0;
-            for (var i = startRow; i < Config.MovableGridSize; i--)
-            {
-                if (startRow - i < 0) break; 
-                if (GameState.Board[startRow, startCol - i] == player)
-                {
-                    piecesInARow++;
-                }
-                else
-                {
-                    break;
-                }
-            } return piecesInARow >= Config.WinningCondition;
+            return piecesInARow >= Config.WinningCondition;
         }
 
         private bool CheckNorth(int startRow, int startCol, char player)
         {
-            var piecesInARow = 0;
-            for (var i = startRow; i >= 0; i--)
+            int piecesInARow = 0;
+            for (int i = 0; i < Config.WinningCondition; i++)
             {
-                if (startRow - i < 0) break; 
-                if (GameState.Board[startRow - i, startCol] == player)
-                {
+                int row = startRow - i;
+                if (row < 0 || row < GameState.GridStartRow) break;
+
+                if (GameState.Board[row, startCol] == player)
                     piecesInARow++;
-                }
                 else
-                {
                     break;
-                }
             }
+
+            return piecesInARow >= Config.WinningCondition;
+        }
+
+        private bool CheckEast(int startRow, int startCol, char player)
+        {
+            int piecesInARow = 0;
+            for (int i = 0; i < Config.WinningCondition; i++)
+            {
+                int col = startCol + i;
+                if (col >= Config.Width || col >= GameState.GridStartCol + Config.MovableGridSize) break;
+
+                if (GameState.Board[startRow, col] == player)
+                    piecesInARow++;
+                else
+                    break;
+            }
+
+            return piecesInARow >= Config.WinningCondition;
+        }
+
+        private bool CheckWest(int startRow, int startCol, char player)
+        {
+            int piecesInARow = 0;
+            for (int i = 0; i < Config.WinningCondition; i++)
+            {
+                int col = startCol - i;
+                if (col < 0 || col < GameState.GridStartCol) break;
+
+                if (GameState.Board[startRow, col] == player)
+                    piecesInARow++;
+                else
+                    break;
+            }
+
             return piecesInARow >= Config.WinningCondition;
         }
 
         private bool CheckSouthEast(int startRow, int startCol, char player)
         {
-            var piecesInARow = 0;
-            for (var i = 0; i < Config.MovableGridSize; i++)
+            int piecesInARow = 0;
+            for (int i = 0; i < Config.WinningCondition; i++)
             {
-                if (startRow + i >= Config.Height - 1 || startCol + i >= Config.Width) break;
-                if (GameState.Board[startRow + i, startCol + i] == player)
-                {
-                    piecesInARow++;
-                }
-                else
-                {
-                    break;
-                }
-            } return piecesInARow >= Config.WinningCondition;
-        }
+                int row = startRow + i, col = startCol + i;
+                if (row >= Config.Height || col >= Config.Width ||
+                    row >= GameState.GridStartRow + Config.MovableGridSize ||
+                    col >= GameState.GridStartCol + Config.MovableGridSize) break;
 
-        private bool CheckEast(int startRow, int startCol, char player)
-        {
-            var piecesInARow = 0;
-            for (var i = 0; i < Config.MovableGridSize; i++)
-            {
-                if (startCol + i >= Config.Width) break; 
-                if (GameState.Board[startRow, startCol + i] == player)
-                {
+                if (GameState.Board[row, col] == player)
                     piecesInARow++;
-                }
                 else
-                {
                     break;
-                }
             }
+
             return piecesInARow >= Config.WinningCondition;
         }
 
-        private bool CheckSouth(int startRow, int startCol, char player)
+        private bool CheckNorthEast(int startRow, int startCol, char player)
         {
-            var piecesInARow = 0;
-            for (var i = startRow; i < Config.MovableGridSize; i++)
+            int piecesInARow = 0;
+            for (int i = 0; i < Config.WinningCondition; i++)
             {
-                if (startRow + i >= Config.Height) break; 
-                if (GameState.Board[startRow + i, startCol] == player)
-                {
+                int row = startRow - i, col = startCol + i;
+                if (row < 0 || col >= Config.Width ||
+                    row < GameState.GridStartRow ||
+                    col >= GameState.GridStartCol + Config.MovableGridSize) break;
+
+                if (GameState.Board[row, col] == player)
                     piecesInARow++;
-                }
                 else
-                {
                     break;
-                }
+            }
+
+            return piecesInARow >= Config.WinningCondition;
+        }
+
+        private bool CheckSouthWest(int startRow, int startCol, char player)
+        {
+            int piecesInARow = 0;
+            for (int i = 0; i < Config.WinningCondition; i++)
+            {
+                int row = startRow + i, col = startCol - i;
+                if (row >= Config.Height || col < 0 ||
+                    row >= GameState.GridStartRow + Config.MovableGridSize ||
+                    col < GameState.GridStartCol) break;
+
+                if (GameState.Board[row, col] == player)
+                    piecesInARow++;
+                else
+                    break;
+            }
+
+            return piecesInARow >= Config.WinningCondition;
+        }
+
+        private bool CheckNorthWest(int startRow, int startCol, char player)
+        {
+            int piecesInARow = 0;
+            for (int i = 0; i < Config.WinningCondition; i++)
+            {
+                int row = startRow - i, col = startCol - i;
+                if (row < 0 || col < 0 ||
+                    row < GameState.GridStartRow ||
+                    col < GameState.GridStartCol) break;
+
+                if (GameState.Board[row, col] == player)
+                    piecesInARow++;
+                else
+                    break;
             }
 
             return piecesInARow >= Config.WinningCondition;
