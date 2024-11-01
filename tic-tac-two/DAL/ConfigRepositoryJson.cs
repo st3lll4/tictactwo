@@ -21,7 +21,7 @@ namespace DAL
                 StartingPlayer = "Player 1",
                 MovableGridSize = 3,
                 WinningCondition = 3,
-                InitialMoves = 1, // change back to 2
+                InitialMoves = 0, // change back to 2
                 MaxPieces = 3
             };
             CheckAndCreateInitialDirectory();
@@ -69,7 +69,8 @@ namespace DAL
                 Player1Symbol = 'X',
                 Player2Symbol = 'O',
                 StartingPlayer = "Player 1",
-                WinningCondition = 3
+                WinningCondition = 3,
+                MovableGridSize = 3 // todo: kas 3 voi 0
             };
             SaveConfiguration(defaultConfig3);
         }

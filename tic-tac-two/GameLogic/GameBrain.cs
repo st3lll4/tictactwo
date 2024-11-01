@@ -15,61 +15,59 @@ namespace GameLogic
         public bool IsInGrid(int row, int col) 
         {
             return row >= GameState.GridStartRow && row < GameState.GridStartRow + Config.MovableGridSize &&
-                   col >= GameState.gridStartCol && col < GameState.gridStartCol + Config.MovableGridSize;
+                   col >= GameState.GridStartCol && col < GameState.GridStartCol + Config.MovableGridSize;
         }
 
         public bool MoveGrid(string direction)
         {
-            var gridStartRow = GameState.GridStartRow + 1; // vb saaks paremini
-            var gridStartCol = GameState.gridStartCol + 1;
-            
             switch (direction)
             {
                 case "u":
-                    if (gridStartRow <= 0) return false;
+                    if (GameState.GridStartRow == 0) return false; 
                     GameState.GridStartRow--;
-                    return true;
+                    return true; 
 
                 case "d":
-                    if (!(gridStartCol + Config.MovableGridSize <= Config.Height)) return false;
+                    if ((GameState.GridStartRow + Config.MovableGridSize >= Config.Height)) return false; 
                     GameState.GridStartRow++;
-                    return true;
+                    return true; 
 
                 case "r":
-                    if (!(gridStartCol + Config.MovableGridSize <= Config.Width)) return false;
-                    GameState.gridStartCol++;
-                    return true;
+                    if ((GameState.GridStartCol + Config.MovableGridSize >= Config.Width)) return false;
+                    Console.WriteLine(GameState.GridStartCol);
+                    GameState.GridStartCol++;
+                    return true; 
 
                 case "l":
-                    if (gridStartCol <= 0) return false;
-                    GameState.gridStartCol--;
-                    return true;
+                    if (GameState.GridStartCol == 0) return false;
+                    GameState.GridStartCol--;
+                    return true; 
 
                 case "ul":
-                    if (gridStartRow <= 0 || gridStartCol <= 0) return false;
+                    if (GameState.GridStartRow == 0 || GameState.GridStartCol == 0) return false;
                     GameState.GridStartRow--;
-                    GameState.gridStartCol--;
-                    return true;
+                    GameState.GridStartCol--;
+                    return true; 
 
                 case "ur":
-                    if (gridStartRow <= 0 ||
-                        !(gridStartCol + Config.MovableGridSize <= Config.Width)) return false;
+                    if (GameState.GridStartRow == 0 ||
+                        (GameState.GridStartCol + Config.MovableGridSize >= Config.Width)) return false;
                     GameState.GridStartRow--;
-                    GameState.gridStartCol++;
+                    GameState.GridStartCol++;
                     return true;
 
                 case "dl":
-                    if (!(GameState.gridStartCol + Config.MovableGridSize <= Config.Height) ||
-                        GameState.gridStartCol <= 0) return false;
+                    if ((GameState.GridStartRow + Config.MovableGridSize >= Config.Height) ||
+                        GameState.GridStartCol == 0) return false;
                     GameState.GridStartRow++;
-                    GameState.gridStartCol--;
-                    return true;
+                    GameState.GridStartCol--;
+                    return true; 
                 
                 case "dr":
-                    if (!(gridStartRow + Config.MovableGridSize <= Config.Width) ||
-                        !(gridStartCol + Config.MovableGridSize <= Config.Height)) return false;
-                    GameState.GridStartRow++;
-                    GameState.gridStartCol++;
+                    if ((GameState.GridStartRow + Config.MovableGridSize >= Config.Width) ||
+                        (GameState.GridStartCol + Config.MovableGridSize >= Config.Height)) return false;
+                    GameState.GridStartRow++; 
+                    GameState.GridStartCol++;
                     return true;
             }
             return false;
@@ -90,11 +88,11 @@ namespace GameLogic
             {
                 GameState.Player2PiecesPlaced++;
             }
-            SwitchPlayer();
+            // SwitchPlayer();
             return true;
         }
 
-        private void SwitchPlayer()
+        public void SwitchPlayer()
         {
             GameState.MovingPlayer = GameState.MovingPlayer == GameState.Config.Player1Symbol
                 ? GameState.Config.Player2Symbol

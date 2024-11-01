@@ -9,7 +9,7 @@ namespace tic_tac_two
         private static readonly GameConfiguration CurrentConfig = ConfigurationManager.CurrentConfiguration;
         private static readonly GameBrain Brain = new(new GameState(CurrentConfig));
 
-        public static string MainLoop()
+        public static string MainLoop() // problem when moving a piece  
         {
             var gameState = Brain.GameState;
 
@@ -22,35 +22,81 @@ namespace tic_tac_two
                 {
                     SimpleMove(gameState);
                 }
-                else if (!gameState.IsStandardTicTacToe) // peaks sellele tegema ka oma ifi
+                else if (!gameState.IsStandardTicTacToe)
                 {
                     AdvancedMove(gameState);
                 }
-
-                if (Brain.CheckWin())
+                else if (gameState.IsStandardTicTacToe)
                 {
-                    Console.WriteLine($"Player {gameState.MovingPlayer} wins!");
-                    break;
-                }
+                    TicTacToeMove(gameState);
 
-                if (Brain.CheckTie())
-                {
-                    Console.WriteLine("A tie!");
-                    break;
-                }
+                    if (Brain.CheckWin())
+                    {
+                        Console.WriteLine($"Player {gameState.MovingPlayer} wins!");
+                        break;
+                    }
+
+                    if (Brain.CheckTie())
+                    {
+                        Console.WriteLine("A tie!");
+                        break;
+                    }
+                } Brain.SwitchPlayer(); // todo: kas siin v kuskil mujal loopi sees
             } while (true);
 
             return "";
         }
 
-                private static void AdvancedMove(GameState gameState)
+        private static void TicTacToeMove(GameState gameState) // todo: test
         {
             var validMoveMade = false;
             while (!validMoveMade)
             {
                 Console.WriteLine("Enter the number of your next action:");
                 Console.WriteLine("1. Move your existing piece");
-                Console.WriteLine("2. Move the griddy"); // something weird happens if runs twice in a row ? idk if still, check todo
+                
+                if (Brain.GetMovingPlayerPiecesPlaced() < CurrentConfig.MaxPieces)
+                {
+                    Console.WriteLine("2. Place a piece");
+                }
+
+                var input = Console.ReadLine();
+
+                switch (input)
+                {
+                    case "1":
+                        validMoveMade = MovePiece();
+                        break;
+
+                    case "2":
+                        if (Brain.GetMovingPlayerPiecesPlaced() < CurrentConfig.MaxPieces)
+                        {
+                            SimpleMove(gameState);
+                            validMoveMade = true;
+                        }
+                        else
+                        {
+                            Console.WriteLine(
+                                "You already used up all your pieces, move them or move the board or something....");
+                        }
+
+                        break;
+                    default:
+                        Console.WriteLine("Invalid input! PLS! enter a valid number.");
+                        break;
+                }
+            }
+        }
+
+        private static void AdvancedMove(GameState gameState)
+        {
+            var validMoveMade = false;
+            while (!validMoveMade)
+            {
+                Console.WriteLine("Enter the number of your next action:");
+                Console.WriteLine("1. Move your existing piece");
+                Console.WriteLine(
+                    "2. Move the griddy"); // something weird happens if runs twice in a row ? idk if still, check todo
                 if (Brain.GetMovingPlayerPiecesPlaced() < CurrentConfig.MaxPieces)
                 {
                     Console.WriteLine("3. Place a new piece");
@@ -72,11 +118,14 @@ namespace tic_tac_two
                         if (Brain.GetMovingPlayerPiecesPlaced() < CurrentConfig.MaxPieces)
                         {
                             SimpleMove(gameState);
+                            validMoveMade = true; // ?????
                         }
                         else
                         {
-                            Console.WriteLine("You already used up all your pieces, move them or move the board or something....");
+                            Console.WriteLine(
+                                "You already used up all your pieces, move them or move the board or something....");
                         }
+
                         break;
 
                     default:
@@ -92,25 +141,28 @@ namespace tic_tac_two
             {
                 Console.WriteLine("Enter the coordinates of the piece you want to move: ");
                 var oldCoord = Console.ReadLine()!.Split(",");
-                if (oldCoord.Length < 2 || !int.TryParse(oldCoord[0], out var oldX) || !int.TryParse(oldCoord[1], out var oldY))
+                if (oldCoord.Length < 2 || !int.TryParse(oldCoord[0], out var oldX) ||
+                    !int.TryParse(oldCoord[1], out var oldY))
                 {
                     Console.WriteLine("Invalid input! Please enter valid coordinates (x,y).");
-                    continue; 
+                    continue;
                 }
-                
+
 
                 Console.WriteLine("Enter new coordinates: ");
                 var newCoord = Console.ReadLine()!.Split(",");
-                if (newCoord.Length < 2 || !int.TryParse(newCoord[0], out var newX) || !int.TryParse(newCoord[1], out var newY))
+                if (newCoord.Length < 2 || !int.TryParse(newCoord[0], out var newX) ||
+                    !int.TryParse(newCoord[1], out var newY))
                 {
                     Console.WriteLine("Invalid input! Please enter valid coordinates (x,y).");
-                    continue; 
+                    continue;
                 }
 
                 if (Brain.MovePiece(oldX, oldY, newX, newY))
                 {
-                    return true; 
+                    return true;
                 }
+
                 Console.WriteLine("Invalid move! The new position must be free and inside the grid.");
             }
         }
@@ -121,30 +173,31 @@ namespace tic_tac_two
             while (true)
             {
                 Console.WriteLine("Enter the shortcut letter for direction you want to move the grid 1 step.");
-                Console.WriteLine("Options are up [u], down [d], left [l], right [r], up-left [ul], up-right [ur], down-left [dl], down-right [dr]");
+                Console.WriteLine(
+                    "Options are up [u], down [d], left [l], right [r], up-left [ul], up-right [ur], down-left [dl], down-right [dr]");
                 var direction = Console.ReadLine();
 
                 if (direction == null)
                 {
                     Console.WriteLine("Invalid input! PLS! enter a valid direction.");
-                    continue; 
+                    continue;
                 }
-                
+
                 direction = direction.ToLower();
 
                 string[] availableDirections = ["u", "d", "l", "r", "ul", "ur", "dl", "dr"];
                 if (!availableDirections.Contains(direction))
                 {
                     Console.WriteLine("Please for the love of god, pick a valid direction!!!");
-                    continue; 
+                    continue;
                 }
 
                 if (Brain.MoveGrid(direction))
                 {
-                    return true; 
+                    return true;
                 }
+
                 Console.WriteLine("Invalid move! You can't move the grid like that dude.");
-                
             }
         }
 
@@ -200,6 +253,7 @@ namespace tic_tac_two
                     Console.ResetColor();
                     Console.Write(" ");
                 }
+
                 Console.WriteLine();
             }
         }
