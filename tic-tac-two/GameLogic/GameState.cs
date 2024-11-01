@@ -35,7 +35,7 @@ namespace GameLogic
             GridStartCol = GridCenterCol - (GridSize / 2);
 
             
-            IsStandardTicTacToe = GridSize == 3 && // grid size 3??
+            IsStandardTicTacToe = GridSize == 3 && 
                                   config.InitialMoves == null && 
                                   config.MaxPieces == null;
 
