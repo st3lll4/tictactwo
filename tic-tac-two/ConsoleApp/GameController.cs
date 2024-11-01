@@ -11,7 +11,7 @@ namespace tic_tac_two
         {
             var gameState = Brain.GameState;
 
-            GameIntro(
+            GameIntro();
 
             do
             {
