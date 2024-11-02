@@ -109,7 +109,6 @@ namespace GameLogic
                 GameState.Player2PiecesPlaced++;
             }
 
-            // SwitchPlayer();
             return true;
         }
 
@@ -320,10 +319,6 @@ namespace GameLogic
 
         public bool MovePiece(int oldX, int oldY, int newX, int newY)
         {
-            oldX--;
-            oldY--;
-            newX--;
-            newY--;
             if (GameState.Board[oldX, oldY] != GameState.MovingPlayer
                 || !IsInGrid(newY, newY)
                 || GameState.Board[newX, newY] != '\0')

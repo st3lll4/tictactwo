@@ -24,7 +24,7 @@
             Title = "Return to Main menu",
         };
 
-        private EMenuLevel _menuLevel { get; set; }
+        private EMenuLevel MenuLevel { get; set; }
 
         private bool _isCustomMenu;
 
@@ -43,22 +43,16 @@
             }
 
             MenuItems = menuItems;
-            _menuLevel = menuLevel;
+            MenuLevel = menuLevel;
             _isCustomMenu = isCustomMenu;
             
 
-            if (_menuLevel == EMenuLevel.Deep)
+            if (MenuLevel == EMenuLevel.Deep)
             {
                 MenuItems.Add(_menuItemReturnMain);
             }
 
             MenuItems.Add(_menuItemExit);
-        }
-
-        public void SetMenuItemAction(string shortCut, Func<string> action)
-        {
-            var menuItem = MenuItems.Single(m => m.Shortcut == shortCut);
-            menuItem.MenuItemAction = action;
         }
 
         public string Run()
@@ -90,7 +84,7 @@
                 }
 
                 if ((menuItem.Shortcut == _menuItemReturnMain.Shortcut ||
-                     menuReturnValue == _menuItemReturnMain.Shortcut) && _menuLevel == EMenuLevel.Deep)
+                     menuReturnValue == _menuItemReturnMain.Shortcut) && MenuLevel == EMenuLevel.Deep)
                 {
                     return _menuItemReturnMain.Shortcut;
                 }

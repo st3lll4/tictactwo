@@ -9,7 +9,7 @@ namespace GameLogic
         public char Player2Symbol { get; set; }
         public string StartingPlayer { get; set; } = default!;  
         
-        public int? MovableGridSize { get; set; } // always square
+        public int MovableGridSize { get; set; } 
         
         public int WinningCondition { get; set; }
         

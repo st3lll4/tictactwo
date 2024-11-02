@@ -13,7 +13,7 @@ namespace tic_tac_two
         {
             CurrentConfiguration = _configRepository.DefaultConfiguration;
         }
-        
+
 
         public string SelectConfiguration()
         {
@@ -42,12 +42,11 @@ namespace tic_tac_two
                 configMenuItems,
                 true
             );
-            
+
             var selectedValue = selectMenu.Run();
-            
+
             return selectedValue;
         }
-
 
 
         public string SeeConfigurations()
@@ -62,15 +61,17 @@ namespace tic_tac_two
                 {
                     Console.WriteLine($"{i + 1}. {savedConfigs[i].GameName}");
                 }
-                Console.WriteLine("Enter the number of the configuration you want to view in detail, or press Enter to go back:");
+
+                Console.WriteLine(
+                    "Enter the number of the configuration you want to view in detail, or press Enter to go back:");
 
                 var input = Console.ReadLine();
-                
+
                 if (string.IsNullOrEmpty(input))
                 {
                     break;
                 }
-                
+
                 if (int.TryParse(input, out var choice) && choice >= 1 && choice <= savedConfigs.Count)
                 {
                     var selectedConfig = savedConfigs[choice - 1];
@@ -86,7 +87,7 @@ namespace tic_tac_two
 
             return "Configuration viewing completed.";
         }
-        
+
 
         private void DisplayConfigurationDetails(GameConfiguration config)
         {
@@ -103,7 +104,7 @@ namespace tic_tac_two
             Console.WriteLine($"Max pieces per Player: {config.MaxPieces}");
             Console.WriteLine("\nPress Enter to return.");
         }
-        
+
 
         private void SetCurrentConfiguration(string configName) // use in selecting
         {
@@ -134,7 +135,7 @@ namespace tic_tac_two
             config.GameName = name;
 
             const int min = 3;
-            const int max = 54; // max that console to display normally
+            const int max = 54; // got to stop somewhere, max really depends on the user's screen size
 
             config.Width = GetValidInput("Enter the width of the board (at least 3):", min, max);
             config.Height = GetValidInput("Enter the height of the board (at least 3):", min, max);
@@ -160,30 +161,25 @@ namespace tic_tac_two
                 Console.WriteLine("Invalid input. Please try again.");
             }
 
-            if (config.Height != 3 || config.Width != 3)
-            {
-                var boardCapacity = config.Width * config.Height;
-                config.MovableGridSize = GetValidInput("Enter the size of the movable grid (always square):", min,
-                    Math.Min(config.Height, config.Width));
-                config.WinningCondition = GetValidInput("Enter the winning condition of the game (more than 3):", 4,
-                    boardCapacity);
-                config.InitialMoves =
-                    GetValidInput("Enter the number of moves have to made before moving the pieces or the grid:", 0,
-                        boardCapacity);
-                config.MaxPieces = GetValidInput("Enter the number of pieces every player has:", config.WinningCondition, boardCapacity);
-            }
-            else
-            {
-                config.MovableGridSize = _configRepository.DefaultConfiguration.MovableGridSize;
-                config.WinningCondition = _configRepository.DefaultConfiguration.WinningCondition;
-                config.InitialMoves = _configRepository.DefaultConfiguration.InitialMoves;
-                config.MaxPieces = _configRepository.DefaultConfiguration.MaxPieces;
-            }
+
+            var boardCapacity = config.Width * config.Height;
+            var maxWinningCondition = (int)Math.Floor(config.MovableGridSize * Math.Sqrt(2));    
+            
+            config.MovableGridSize = GetValidInput(
+                "Enter the size of the movable grid (always square):", min, Math.Min(config.Height, config.Width));
+            
+            config.WinningCondition = GetValidInput(
+                "Enter the winning condition of the game (more than 3):", 4, maxWinningCondition);
+            
+            config.InitialMoves = GetValidInput(
+                "Enter the number of moves have to made before moving the pieces or the grid:", 0, boardCapacity);
+            
+            config.MaxPieces = GetValidInput(
+                "Enter the number of pieces every player has:", config.WinningCondition, boardCapacity);
 
             Console.WriteLine($"Configuration '{name}' created successfully. Press Enter to return to menu.");
             Console.ReadLine();
             return config;
-
         }
 
         public string DeleteConfiguration()
@@ -197,37 +193,38 @@ namespace tic_tac_two
             }
 
             Console.Write("Enter the number of the configuration to delete or Enter to go back: ");
+            
             if (!int.TryParse(Console.ReadLine(), out var configIndex) || configIndex < 1 ||
                 configIndex > configNames.Count)
             {
                 Console.WriteLine();
-                Console.WriteLine("Invalid selection. No configuration deleted.");
-                return "No configuration deleted.";
+                Console.WriteLine("Invalid selection. No configuration deleted."); // todo: test if you see the messages
+                return "";
             }
-            
+
             var selectedConfig = configNames[configIndex - 1];
-            
+
             if (string.IsNullOrEmpty(selectedConfig)) return "";
-            
+
             _configRepository.DeleteConfiguration(selectedConfig);
 
             return $"Configuration '{selectedConfig}' has been deleted.";
         }
-    
 
-    private static int GetValidInput(string prompt, int minValue, int maxValue)
+
+        private static int GetValidInput(string prompt, int minValue, int maxValue)
         {
             int result;
             Console.WriteLine(prompt);
 
             while (!int.TryParse(Console.ReadLine(), out result) || result < minValue || result > maxValue)
             {
-                Console.WriteLine($"Invalid input! Please enter a number between {minValue + 1} and {maxValue}:");
+                Console.WriteLine($"Invalid input! Please enter a number between {minValue} and {maxValue}:");
             }
 
             return result;
         }
-    
+
         private static char GetValidSymbol(char player1Symbol = '\0')
         {
             while (true)
@@ -243,7 +240,8 @@ namespace tic_tac_two
                 {
                     if (IsSymbolTaken(symbol, player1Symbol))
                     {
-                        Console.WriteLine($"This symbol is already taken by Player 1 ('{player1Symbol}'). Please try again:");
+                        Console.WriteLine(
+                            $"This symbol is already taken by Player 1 ('{player1Symbol}'). Please try again:");
                     }
                     else
                     {
@@ -268,9 +266,9 @@ namespace tic_tac_two
             {
                 return 'O';
             }
-            
+
             Console.WriteLine("Default symbol is already taken by Player 1. Please enter a different symbol:");
-            return '\0'; // ? marker to indicate invalid state, will prompt user to enter again
+            return '\0';
         }
 
         private static bool IsValidSymbol(char symbol)
@@ -282,6 +280,5 @@ namespace tic_tac_two
         {
             return char.ToUpper(symbol) == char.ToUpper(player1Symbol);
         }
-
     }
 }

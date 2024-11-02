@@ -31,7 +31,7 @@ namespace GameLogic
             GridCenterRow = config.Height / 2; // 5/2 = 2.5
             GridCenterCol = config.Width / 2; 
             
-            GridSize = config.MovableGridSize ?? 3; 
+            GridSize = config.MovableGridSize; 
             
             GridStartRow = GridCenterRow - (GridSize / 2);
             GridStartCol = GridCenterCol - (GridSize / 2);

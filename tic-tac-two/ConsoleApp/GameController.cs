@@ -92,7 +92,7 @@ namespace tic_tac_two
 
                         break;
                     default:
-                        Console.WriteLine("Invalid input! PLS! enter valid numbers.");
+                        Console.WriteLine("PLS! enter valid numbers.");
                         break;
                 }
             }
@@ -139,7 +139,7 @@ namespace tic_tac_two
                         break;
 
                     default:
-                        Console.WriteLine("Invalid input! PLS! enter a valid number.");
+                        Console.WriteLine("PLS! enter a valid number.");
                         break;
                 }
             }
@@ -159,14 +159,14 @@ namespace tic_tac_two
                     || !int.TryParse(oldCoord[0], out oldX)
                     || !int.TryParse(oldCoord[1], out oldY))
                 {
-                    Console.WriteLine("Invalid input! Please enter the coordinates in the form of x,y: ");
+                    Console.WriteLine("Not this... Please enter the coordinates in the form of x,y: ");
                     continue;
                 }
 
                 if (Brain.GameState.Board[oldX - 1, oldY - 1] != Brain.GameState.MovingPlayer)
                     // checkib meetodi sees ka aga siin oluline sest siis kysib vanad koodrinaadid kohe uuesti
                 {
-                    Console.WriteLine("Invalid input! Pick a coordinate with your own piece, damn it.");
+                    Console.WriteLine("Are you blind? Pick a coordinate with your own piece.");
                     continue;
                 }
 
@@ -183,7 +183,7 @@ namespace tic_tac_two
                     || !int.TryParse(newCoord[1], out var newY))
                 {
                     Console.WriteLine(
-                        "Invalid input! Please enter the coordinates in the form of (x,y) (literally same as last time).");
+                        "Please enter the coordinates in the form of (x,y) (literally same as every last time).");
                     continue;
                 }
 
@@ -191,9 +191,15 @@ namespace tic_tac_two
                 if (Brain.GameState.Board[newX - 1, newY - 1] != '\0' || !Brain.IsInGrid(newX - 1, newY - 1))
                 {
                     Console.WriteLine(
-                        "Invalid input! Is it really that hard to pick a free coordinate inside the grid?");
+                        "Try again... Is it really that hard to pick a free coordinate inside the grid?");
                     continue;
                 }
+                 
+                // to array values
+                oldX--;
+                oldY--;
+                newX--;
+                newY--;
 
                 if (Brain.MovePiece(oldX, oldY, newX, newY))
                 {
@@ -215,7 +221,7 @@ namespace tic_tac_two
 
                 if (direction == null)
                 {
-                    Console.WriteLine("Invalid input! PLS! enter a valid direction.");
+                    Console.WriteLine("PLS! enter a valid direction.");
                     continue;
                 }
 
@@ -260,7 +266,7 @@ namespace tic_tac_two
                 }
                 else
                 {
-                    Console.WriteLine("Invalid input! PLS!! enter valid numbers.");
+                    Console.WriteLine("PLS!! enter valid numbers.");
                 }
             }
         }
