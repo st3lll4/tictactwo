@@ -1,3 +1,4 @@
+using System.Globalization;
 using DAL;
 using GameLogic;
 
@@ -7,6 +8,8 @@ namespace tic_tac_two
     {
         private static readonly GameConfiguration CurrentConfig = ConfigurationManager.CurrentConfiguration;
         private static readonly GameBrain Brain = new(new GameState(CurrentConfig));
+        private static readonly IGameRepository GameRepository = new GameRepositoryJson();
+
 
         public static string MainLoop()
         {
@@ -106,8 +109,7 @@ namespace tic_tac_two
             {
                 Console.WriteLine("Enter the number of your next action:");
                 Console.WriteLine("1. Move your existing piece");
-                Console.WriteLine(
-                    "2. Move the griddy");
+                Console.WriteLine("2. Move the griddy");
                 if (Brain.GetMovingPlayerPiecesPlaced() < CurrentConfig.MaxPieces)
                 {
                     Console.WriteLine("3. Place a new piece");
@@ -282,6 +284,7 @@ namespace tic_tac_two
             {
                 Console.WriteLine($"you can move the grid after {CurrentConfig.InitialMoves} moves, ");
             }
+            Console.WriteLine("Type X at any point to save the game and return to main menu."); // todo: idk how to do this
 
             Console.WriteLine($"and you must win by aligning {CurrentConfig.WinningCondition} pieces.");
             Console.WriteLine("Good luck nerds!");

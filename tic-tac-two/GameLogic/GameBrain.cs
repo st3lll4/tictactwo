@@ -156,6 +156,7 @@ namespace GameLogic
                    || CheckNorthEast(startRow, startCol, player)
                    || CheckNorthWest(startRow, startCol, player)
                    || CheckSouthWest(startRow, startCol, player);
+            // if you're wondering why this looks ratchet then I didn't want to use chatgpt
         }
 
         private bool CheckSouth(int startRow, int startCol, char player)
@@ -330,5 +331,11 @@ namespace GameLogic
             GameState.Board[newX, newY] = GameState.MovingPlayer;
             return true;
         }
+        
+        public string GetGameStateJson()
+        {
+            return GameState.ToString();
+        }
+        
     }
 }
