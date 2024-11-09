@@ -1,5 +1,3 @@
-using System.Diagnostics.CodeAnalysis;
-
 namespace GameLogic
 {
     public class GameState // hoiab koike mis on currently happening in the game, muutuvad asjad 
@@ -11,22 +9,21 @@ namespace GameLogic
         public int Player2PiecesPlaced { get; set; }
         public int GridStartRow { get; set; }
         public int GridStartCol { get; set; }
-        
-        public int GridCenterRow { get; set; }
-        public int GridCenterCol { get; set; }
-        public int GridSize { get; set; }
+
+        private int GridCenterRow { get; set; }
+        private int GridCenterCol { get; set; }
+        private int GridSize { get; set; }
         
         public int WinCondition { get; set; }
         
         public bool IsStandardTicTacToe { get; set; }
 
-        [SuppressMessage("ReSharper", "PossibleLossOfFraction")]
         public GameState(GameConfiguration config)
         {
             Config = config;
             Board = new char[config.Height, config.Width]; 
 
-            MovingPlayer = config.StartingPlayer == "Player 1" ? config.Player1Symbol : config.Player2Symbol;
+            MovingPlayer = config.StartingPlayer == EStartingPlayer.Player1 ? config.Player1Symbol : config.Player2Symbol;
             
             GridCenterRow = config.Height / 2; // 5/2 = 2.5
             GridCenterCol = config.Width / 2; 

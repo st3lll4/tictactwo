@@ -7,7 +7,7 @@ namespace GameLogic
         public int Height { get; set; }
         public char Player1Symbol { get; set; }
         public char Player2Symbol { get; set; }
-        public string StartingPlayer { get; set; } = default!;  
+        public EStartingPlayer StartingPlayer { get; set; } 
         
         public int MovableGridSize { get; set; } 
         

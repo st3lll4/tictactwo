@@ -1,3 +1,4 @@
+using DAL;
 using GameLogic;
 
 namespace tic_tac_two
@@ -10,7 +11,7 @@ namespace tic_tac_two
         public static string MainLoop()
         {
             var gameState = Brain.GameState;
-
+            
             GameIntro();
 
             do

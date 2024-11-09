@@ -18,10 +18,10 @@ namespace DAL
                 Height = 5,
                 Player1Symbol = 'X',
                 Player2Symbol = 'O',
-                StartingPlayer = "Player 1",
+                StartingPlayer = EStartingPlayer.Player1,
                 MovableGridSize = 3,
                 WinningCondition = 3,
-                InitialMoves = 2, // change back to 2
+                InitialMoves = 2,
                 MaxPieces = 3
             };
             CheckAndCreateInitialDirectory();
@@ -53,7 +53,7 @@ namespace DAL
                 Height = 10,
                 Player1Symbol = 'X',
                 Player2Symbol = 'O',
-                StartingPlayer = "Player 1",
+                StartingPlayer = EStartingPlayer.Player1,
                 InitialMoves = 5,
                 MaxPieces = 7, // idk
                 MovableGridSize = 5,
@@ -68,7 +68,7 @@ namespace DAL
                 Height = 3,
                 Player1Symbol = 'X',
                 Player2Symbol = 'O',
-                StartingPlayer = "Player 1",
+                StartingPlayer = EStartingPlayer.Player1,
                 WinningCondition = 3,
                 MovableGridSize = 3
             };
@@ -134,7 +134,7 @@ namespace DAL
             var filePath = FileHelper.BasePath + name + FileHelper.ConfigExtension;
             if (File.Exists(filePath))
             {
-                File.Delete(filePath);
+                File.Delete(filePath); //todo: console based error message
                 Console.WriteLine($"Configuration '{name}' has been deleted.");
             }
             else

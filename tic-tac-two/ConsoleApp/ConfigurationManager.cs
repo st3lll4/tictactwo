@@ -154,7 +154,7 @@ namespace tic_tac_two
 
                 if (startingPlayerChoice is "1" or "2")
                 {
-                    config.StartingPlayer = startingPlayerChoice == "1" ? "Player 1" : "Player 2";
+                    config.StartingPlayer = startingPlayerChoice == "1" ? EStartingPlayer.Player1 : EStartingPlayer.Player2;
                     break;
                 }
 
