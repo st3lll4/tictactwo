@@ -9,6 +9,8 @@ namespace tic_tac_two
         private static readonly GameBrain Brain = new(new GameState(CurrentConfig));
         private static readonly IGameRepository GameRepository = new GameRepositoryJson();
 
+        private static bool _quit = false;
+
 
         public static string MainLoop()
         {
@@ -55,6 +57,10 @@ namespace tic_tac_two
                 }
 
                 Brain.SwitchPlayer();
+                if (_quit)
+                {
+                    break;
+                }
             } while (true);
 
             return "";
@@ -114,9 +120,9 @@ namespace tic_tac_two
             Console.WriteLine("Enter a name for the game to continue later, or if u don't care just press enter:");
             var input = Console.ReadLine();
             GameRepository.SaveGame(Brain.GameState, CurrentConfig.GameName, input!, userName);
-            Console.WriteLine("Game saved. Press enter to quit app..");
+            Console.WriteLine("Game saved. Press enter to run away to main menu..");
             Console.ReadLine();
-            Environment.Exit(0);
+            _quit = true;
         }
 
 
@@ -281,6 +287,7 @@ namespace tic_tac_two
                 if (input == "X" || input == "x")
                 {
                     SaveAndQuit();
+                    break;
                 }
 
                 var coords = input!.Split(",");
@@ -315,11 +322,9 @@ namespace tic_tac_two
             {
                 Console.WriteLine($"you can move the grid after {CurrentConfig.InitialMoves} moves, ");
             }
-
-            Console.WriteLine(
-                "Type X at any point to save the game and return to main menu."); // todo: idk how to do this
-
+            
             Console.WriteLine($"and you must win by aligning {CurrentConfig.WinningCondition} pieces.");
+            Console.WriteLine("Type X at any point to save the game and return to main menu.");
             Console.WriteLine("Good luck nerds!");
             Console.WriteLine();
             Console.WriteLine("Press enter to continue, genius... ");
@@ -338,7 +343,7 @@ namespace tic_tac_two
 
             Console.WriteLine();
 
-            for (var i = 0; i < gameState.Config.Height; i++)
+            for (int i = 0; i < gameState.Config.Height; i++)
             {
                 Console.Write(i < 9 ? $" {i + 1} " : $"{i + 1} ");
 
@@ -368,7 +373,8 @@ namespace tic_tac_two
                 return "";
             }
 
-            Console.WriteLine($"Pick a game to continue then, {userName}, if a new game is not good enough for you...:");
+            Console.WriteLine(
+                $"Pick a game to continue then, {userName}, if a new game is not good enough for you...:");
             for (int i = 0; i < games.Count; i++)
             {
                 Console.WriteLine($"{i + 1}. {games[i]}");

@@ -16,7 +16,7 @@ public class Configuration : BaseEntity
     
     public char Player2Symbol { get; set; }
     
-    public EStartingPlayer StartingPlayer { get; set; } 
+    public string StartingPlayer { get; set; } = default!;
         
     public int MovableGridSize { get; set; } 
         

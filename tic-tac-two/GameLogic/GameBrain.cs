@@ -126,9 +126,9 @@ namespace GameLogic
             var gridEndRow = GameState.GridStartRow + Config.MovableGridSize;
             var gridEndCol = GameState.GridStartCol + Config.MovableGridSize;
 
-            for (var i = GameState.GridStartRow; i < gridEndRow; i++)
+            for (int i = GameState.GridStartRow; i < gridEndRow; i++)
             {
-                for (var j = GameState.GridStartCol; j < gridEndCol; j++)
+                for (int j = GameState.GridStartCol; j < gridEndCol; j++)
                 {
                     if (CheckWinFromPosition(i, j, player))
                     {

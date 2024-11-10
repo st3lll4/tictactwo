@@ -6,7 +6,7 @@ public interface IConfigRepository
 {
     List<string> GetConfigurationNames();
     GameConfiguration GetConfigurationByName(string name);
-    void DeleteConfiguration(string selectedConfig);
+    bool DeleteConfiguration(string selectedConfig);
 
     void SaveConfiguration(GameConfiguration newConfig);
     List<GameConfiguration> GetAllConfigurations();

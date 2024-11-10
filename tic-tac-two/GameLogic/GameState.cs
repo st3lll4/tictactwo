@@ -30,7 +30,7 @@ namespace GameLogic
         
         public bool IsStandardTicTacToe { get; set; }
         
-        private JsonSerializerOptions _options = new()
+        private readonly JsonSerializerOptions _options = new()
         {
             WriteIndented = true
         };
@@ -40,9 +40,9 @@ namespace GameLogic
             Config = config;
             Board = new char[config.Height, config.Width]; 
 
-            MovingPlayer = config.StartingPlayer == EStartingPlayer.Player1 ? config.Player1Symbol : config.Player2Symbol;
+            MovingPlayer = config.StartingPlayer == "Player 1" ? config.Player1Symbol : config.Player2Symbol;
             
-            GridCenterRow = config.Height / 2; // 5/2 = 2.5
+            GridCenterRow = config.Height / 2;
             GridCenterCol = config.Width / 2; 
             
             GridSize = config.MovableGridSize; 
