@@ -1,4 +1,4 @@
-using System.Globalization;
+
 using DAL;
 using GameLogic;
 
@@ -66,13 +66,15 @@ namespace tic_tac_two
             var validMoveMade = false;
             while (!validMoveMade)
             {
-                Console.WriteLine("Enter the number of your next action:");
+                Console.WriteLine("Enter the number for your next action:");
                 Console.WriteLine("1. Move your existing piece");
 
                 if (Brain.GetMovingPlayerPiecesPlaced() < CurrentConfig.MaxPieces)
                 {
                     Console.WriteLine("2. Place a piece");
                 }
+
+                Console.WriteLine("X. Save and quit");
 
                 var input = Console.ReadLine();
 
@@ -93,13 +95,26 @@ namespace tic_tac_two
                             Console.WriteLine(
                                 "You already used up all your pieces, move them or move the board or learn how to count or something...");
                         }
-
                         break;
+                    case "X" or "x":
+                        SaveAndQuit();
+                        break;
+                    
                     default:
                         Console.WriteLine("PLS! enter valid numbers.");
                         break;
                 }
             }
+        }
+
+        private static void SaveAndQuit()
+        { 
+            Console.WriteLine("Enter a name for the game to continue later, or if u don't care just press enter:");
+            var input = Console.ReadLine();
+            GameRepository.SaveGame(Brain.GameState, CurrentConfig.GameName, input!);            
+            Console.WriteLine("Game saved. Press enter to quit app..");
+            Console.ReadLine();
+            Environment.Exit(0);
         }
 
         private static void AdvancedMove(GameState gameState)
@@ -114,6 +129,7 @@ namespace tic_tac_two
                 {
                     Console.WriteLine("3. Place a new piece");
                 }
+                Console.WriteLine("X. Save and quit");
 
                 var input = Console.ReadLine();
 
@@ -139,6 +155,9 @@ namespace tic_tac_two
                                 "You already used up all your pieces, move them or move the board or something....");
                         }
 
+                        break;
+                    case "X" or "x":
+                        SaveAndQuit();
                         break;
 
                     default:
@@ -251,13 +270,21 @@ namespace tic_tac_two
             var validMoveMade = false;
             while (!validMoveMade)
             {
-                Console.Write("Enter row and column (x,y): ");
-                var input = Console.ReadLine()!.Split(",");
-
-                if (int.TryParse(input[0], out _) && int.TryParse(input[1], out _)) // looks clumsy but okay
+                Console.Write("Enter row and column (x,y) or X to save and quit: ");
+                
+                var input = Console.ReadLine();
+                
+                if (input == "X" || input == "x")
                 {
-                    var x = int.Parse(input[0]) - 1;
-                    var y = int.Parse(input[1]) - 1;
+                    SaveAndQuit();
+                }
+                
+                var coords = input!.Split(",");
+
+                if (int.TryParse(coords[0], out _) && int.TryParse(coords[1], out _)) // looks clumsy but okay
+                {
+                    var x = int.Parse(coords[0]) - 1;
+                    var y = int.Parse(coords[1]) - 1;
                     if (Brain.PlacePiece(x, y, gameState.MovingPlayer))
                     {
                         validMoveMade = true;
@@ -322,5 +349,37 @@ namespace tic_tac_two
                 Console.WriteLine();
             }
         }
+
+        public static string LoadGames()
+        {
+            var games = GameRepository.GetGameNames();
+            if (games.Count == 0)
+            {
+                Console.WriteLine("Bro u have to play and save something first to see stuff here.");
+                return "";
+            }
+
+            Console.WriteLine("Select a game to continue playing you lazy mfs:");
+            for (int i = 0; i < games.Count; i++)
+            {
+                Console.WriteLine($"{i + 1}. {games[i]}");
+            }
+
+            var input = Console.ReadLine();
+            if (int.TryParse(input, out var gameIndex))
+            {
+                var gameState = GameRepository.GetGameByName(games[gameIndex - 1]);
+                Brain.SetGameState(gameState); 
+                Console.WriteLine($"Enjoy playing your loaded game '{games[gameIndex - 1]}'!");
+                MainLoop();
+            }
+            else
+            {
+                Console.WriteLine("NOPE! Try again.");
+            }
+
+            return "";
+        }
+
     }
 }

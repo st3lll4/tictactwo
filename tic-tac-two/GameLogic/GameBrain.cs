@@ -331,11 +331,10 @@ namespace GameLogic
             GameState.Board[newX, newY] = GameState.MovingPlayer;
             return true;
         }
-        
-        public string GetGameStateJson()
+
+        public void SetGameState(GameState gameState)
         {
-            return GameState.ToString();
+            GameState = gameState;
         }
-        
     }
 }
