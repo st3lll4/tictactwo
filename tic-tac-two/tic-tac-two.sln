@@ -8,6 +8,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GameLogic", "GameLogic\Game
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DAL", "DAL\DAL.csproj", "{B3993D79-74BC-4F09-8F6F-614794D17329}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Domain", "Domain\Domain.csproj", "{49094347-E2C9-4F0C-883A-9ACDBDE276D7}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -30,5 +32,9 @@ Global
 		{B3993D79-74BC-4F09-8F6F-614794D17329}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{B3993D79-74BC-4F09-8F6F-614794D17329}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{B3993D79-74BC-4F09-8F6F-614794D17329}.Release|Any CPU.Build.0 = Release|Any CPU
+		{49094347-E2C9-4F0C-883A-9ACDBDE276D7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{49094347-E2C9-4F0C-883A-9ACDBDE276D7}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{49094347-E2C9-4F0C-883A-9ACDBDE276D7}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{49094347-E2C9-4F0C-883A-9ACDBDE276D7}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal

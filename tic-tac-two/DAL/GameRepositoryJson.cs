@@ -5,16 +5,16 @@ namespace DAL;
 
 public class GameRepositoryJson : IGameRepository
 {
-    public void SaveGame(GameState gameState, string gameConfigName, string? saveName)
+    public void SaveGame(GameState gameState, string gameConfigName, string? saveName, string userName)
     {
         string fileName;
         if (saveName != "")
         {
-            fileName = FileHelper.BasePath + saveName + FileHelper.GameExtension;
+            fileName = FileHelper.BasePath + userName + "_" + saveName + FileHelper.GameExtension;
         }
         else
         {
-            fileName = FileHelper.BasePath +
+            fileName = FileHelper.BasePath + userName + "_" +
                            gameConfigName + "_" +
                            DateTime.Now.ToString("dd-MMMM-yyyy_HH:mm:ss") +
                            FileHelper.GameExtension;
@@ -30,6 +30,18 @@ public class GameRepositoryJson : IGameRepository
     public List<string> GetGameNames()
     {
         var files = Directory.GetFiles(FileHelper.BasePath, "*" + FileHelper.GameExtension);
+        var result = new List<string>();
+        foreach (var file in files)
+        {
+            var primaryName = Path.GetFileNameWithoutExtension(Path.GetFileNameWithoutExtension(file));
+            result.Add(primaryName);
+        }
+
+        return result;
+    }
+    
+    public List<string> GetGameByUser(string user) {
+        var files = Directory.GetFiles(FileHelper.BasePath, user + "_*" + FileHelper.GameExtension);
         var result = new List<string>();
         foreach (var file in files)
         {

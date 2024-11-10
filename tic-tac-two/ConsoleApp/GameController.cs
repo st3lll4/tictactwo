@@ -1,4 +1,3 @@
-
 using DAL;
 using GameLogic;
 
@@ -14,7 +13,7 @@ namespace tic_tac_two
         public static string MainLoop()
         {
             var gameState = Brain.GameState;
-            
+
             GameIntro();
 
             do
@@ -34,27 +33,28 @@ namespace tic_tac_two
                 {
                     TicTacToeMove(gameState);
                 }
-                
+
 
                 if (Brain.CheckTie())
                 {
                     DrawBoard(gameState);
-                    Console.WriteLine("You somehow managed to tie in the game that's almost impossible to tie in... try harder next time.");
-                    Console.WriteLine("Press enter to return to main menu, geniuses... "); 
+                    Console.WriteLine(
+                        "You somehow managed to tie in the game that's almost impossible to tie in... try harder next time.");
+                    Console.WriteLine("Press enter to return to main menu, geniuses... ");
                     Console.ReadLine();
                     break;
                 }
-                
+
                 if (Brain.CheckWin(gameState.MovingPlayer))
                 {
                     DrawBoard(gameState);
                     Console.WriteLine($"Player {gameState.MovingPlayer} wins! Winner winner, chicken dinner!");
-                    Console.WriteLine("Press enter to return to main menu, genius... "); 
+                    Console.WriteLine("Press enter to return to main menu, genius... ");
                     Console.ReadLine();
                     break;
                 }
+
                 Brain.SwitchPlayer();
-                
             } while (true);
 
             return "";
@@ -95,11 +95,12 @@ namespace tic_tac_two
                             Console.WriteLine(
                                 "You already used up all your pieces, move them or move the board or learn how to count or something...");
                         }
+
                         break;
                     case "X" or "x":
                         SaveAndQuit();
                         break;
-                    
+
                     default:
                         Console.WriteLine("PLS! enter valid numbers.");
                         break;
@@ -108,14 +109,16 @@ namespace tic_tac_two
         }
 
         private static void SaveAndQuit()
-        { 
+        {
+            var userName = GetUserName();
             Console.WriteLine("Enter a name for the game to continue later, or if u don't care just press enter:");
             var input = Console.ReadLine();
-            GameRepository.SaveGame(Brain.GameState, CurrentConfig.GameName, input!);            
+            GameRepository.SaveGame(Brain.GameState, CurrentConfig.GameName, input!, userName);
             Console.WriteLine("Game saved. Press enter to quit app..");
             Console.ReadLine();
             Environment.Exit(0);
         }
+
 
         private static void AdvancedMove(GameState gameState)
         {
@@ -129,6 +132,7 @@ namespace tic_tac_two
                 {
                     Console.WriteLine("3. Place a new piece");
                 }
+
                 Console.WriteLine("X. Save and quit");
 
                 var input = Console.ReadLine();
@@ -216,7 +220,7 @@ namespace tic_tac_two
                         "Try again... Is it really that hard to pick a free coordinate inside the grid?");
                     continue;
                 }
-                 
+
                 // to array values
                 oldX--;
                 oldY--;
@@ -271,14 +275,14 @@ namespace tic_tac_two
             while (!validMoveMade)
             {
                 Console.Write("Enter row and column (x,y) or X to save and quit: ");
-                
+
                 var input = Console.ReadLine();
-                
+
                 if (input == "X" || input == "x")
                 {
                     SaveAndQuit();
                 }
-                
+
                 var coords = input!.Split(",");
 
                 if (int.TryParse(coords[0], out _) && int.TryParse(coords[1], out _)) // looks clumsy but okay
@@ -311,7 +315,9 @@ namespace tic_tac_two
             {
                 Console.WriteLine($"you can move the grid after {CurrentConfig.InitialMoves} moves, ");
             }
-            Console.WriteLine("Type X at any point to save the game and return to main menu."); // todo: idk how to do this
+
+            Console.WriteLine(
+                "Type X at any point to save the game and return to main menu."); // todo: idk how to do this
 
             Console.WriteLine($"and you must win by aligning {CurrentConfig.WinningCondition} pieces.");
             Console.WriteLine("Good luck nerds!");
@@ -352,14 +358,17 @@ namespace tic_tac_two
 
         public static string LoadGames()
         {
-            var games = GameRepository.GetGameNames();
+            var userName = GetUserName();
+
+            var games = GameRepository.GetGameByUser(userName);
+
             if (games.Count == 0)
             {
                 Console.WriteLine("Bro u have to play and save something first to see stuff here.");
                 return "";
             }
 
-            Console.WriteLine("Select a game to continue playing you lazy mfs:");
+            Console.WriteLine($"Pick a game to continue then, {userName}, if a new game is not good enough for you...:");
             for (int i = 0; i < games.Count; i++)
             {
                 Console.WriteLine($"{i + 1}. {games[i]}");
@@ -369,7 +378,7 @@ namespace tic_tac_two
             if (int.TryParse(input, out var gameIndex))
             {
                 var gameState = GameRepository.GetGameByName(games[gameIndex - 1]);
-                Brain.SetGameState(gameState); 
+                Brain.SetGameState(gameState);
                 Console.WriteLine($"Enjoy playing your loaded game '{games[gameIndex - 1]}'!");
                 MainLoop();
             }
@@ -381,5 +390,16 @@ namespace tic_tac_two
             return "";
         }
 
+        private static string GetUserName()
+        {
+            var userName = "";
+            while (string.IsNullOrWhiteSpace(userName))
+            {
+                Console.WriteLine("Who are you??");
+                userName = Console.ReadLine();
+            }
+
+            return userName;
+        }
     }
 }
