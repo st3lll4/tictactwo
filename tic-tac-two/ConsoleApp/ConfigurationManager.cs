@@ -6,7 +6,8 @@ namespace tic_tac_two
 {
     public class ConfigurationManager
     {
-        private readonly ConfigRepositoryJson _configRepository = new();
+        // private readonly ConfigRepositoryJson _configRepository = new();
+        private readonly ConfigRepositoryDb _configRepository = new();
         public static GameConfiguration CurrentConfiguration { get; private set; } = default!;
 
         public ConfigurationManager()

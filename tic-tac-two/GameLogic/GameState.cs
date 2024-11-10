@@ -3,7 +3,7 @@ using System.Text.Json.Serialization;
 
 namespace GameLogic
 {
-    public class GameState // hoiab koike mis on currently happening in the game, muutuvad asjad 
+    public class GameState 
     {
         [JsonIgnore]
         public char[,] Board { get; set; }

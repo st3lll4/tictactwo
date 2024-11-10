@@ -1,3 +1,4 @@
+using Domain;
 using GameLogic;
 
 namespace DAL;
@@ -11,4 +12,7 @@ public interface IConfigRepository
     void SaveConfiguration(GameConfiguration newConfig);
     List<GameConfiguration> GetAllConfigurations();
     GameConfiguration DefaultConfiguration { get; set; }
+    GameConfiguration DefaultConfiguration2 { get; set; } 
+    GameConfiguration DefaultConfiguration3 { get; set; }
+
 }

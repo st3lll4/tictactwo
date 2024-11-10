@@ -7,7 +7,7 @@ namespace tic_tac_two
     {
         private static readonly GameConfiguration CurrentConfig = ConfigurationManager.CurrentConfiguration;
         private static readonly GameBrain Brain = new(new GameState(CurrentConfig));
-        private static readonly IGameRepository GameRepository = new GameRepositoryJson();
+        private static readonly IGameRepository GameRepository = new GameRepositoryJson(); // change here between json and db
 
         private static bool _quit = false;
 

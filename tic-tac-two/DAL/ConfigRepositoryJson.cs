@@ -1,4 +1,5 @@
 using System.Text.Json;
+using Domain;
 using GameLogic;
 
 namespace DAL
