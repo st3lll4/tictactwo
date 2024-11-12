@@ -73,6 +73,14 @@ namespace DAL.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("INTEGER");
 
+                    b.Property<string>("BoardData")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("Config")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
                     b.Property<int>("ConfigurationId")
                         .HasColumnType("INTEGER");
 
@@ -84,15 +92,40 @@ namespace DAL.Migrations
                         .HasMaxLength(128)
                         .HasColumnType("TEXT");
 
-                    b.Property<string>("GameState")
-                        .IsRequired()
-                        .HasMaxLength(10240)
-                        .HasColumnType("TEXT");
+                    b.Property<int>("GridCenterCol")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<int>("GridCenterRow")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<int>("GridSize")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<int>("GridStartCol")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<int>("GridStartRow")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<bool>("IsStandardTicTacToe")
+                        .HasColumnType("INTEGER");
 
                     b.Property<DateTime?>("ModifiedAt")
                         .HasColumnType("TEXT");
 
+                    b.Property<char>("MovingPlayer")
+                        .HasColumnType("TEXT");
+
+                    b.Property<int>("Player1PiecesPlaced")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<int>("Player2PiecesPlaced")
+                        .HasColumnType("INTEGER");
+
                     b.Property<int>("UserId")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<int>("WinCondition")
                         .HasColumnType("INTEGER");
 
                     b.HasKey("Id");

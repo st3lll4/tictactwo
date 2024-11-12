@@ -22,9 +22,9 @@ namespace GameLogic
         public int GridStartRow { get; set; }
         public int GridStartCol { get; set; }
 
-        private int GridCenterRow { get; set; }
-        private int GridCenterCol { get; set; }
-        private int GridSize { get; set; }
+        public int GridCenterRow { get; set; }
+        public int GridCenterCol { get; set; }
+        public int GridSize { get; set; }
         
         public int WinCondition { get; set; }
         

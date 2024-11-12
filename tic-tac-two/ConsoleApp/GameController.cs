@@ -1,19 +1,24 @@
 using DAL;
 using GameLogic;
+using DTO;
 
 namespace tic_tac_two
 {
     public static class GameController
     {
         private static readonly GameConfiguration CurrentConfig = ConfigurationManager.CurrentConfiguration;
+        
         private static readonly GameBrain Brain = new(new GameState(CurrentConfig));
-        private static readonly IGameRepository GameRepository = new GameRepositoryJson(); // change here between json and db
-
-        private static bool _quit = false;
+        
+        private static readonly IGameRepository GameRepository = new GameRepositoryDb(); // change here between json and db
+        // how to inject this in the brain?
+        
+        private static bool _quit;
 
 
         public static string MainLoop()
         {
+            
             var gameState = Brain.GameState;
 
             GameIntro();
@@ -59,6 +64,7 @@ namespace tic_tac_two
                 Brain.SwitchPlayer();
                 if (_quit)
                 {
+                    Brain.SetGameState(new GameState(CurrentConfig));
                     break;
                 }
             } while (true);
@@ -119,7 +125,11 @@ namespace tic_tac_two
             var userName = GetUserName();
             Console.WriteLine("Enter a name for the game to continue later, or if u don't care just press enter:");
             var input = Console.ReadLine();
-            GameRepository.SaveGame(Brain.GameState, CurrentConfig.GameName, input!, userName);
+            if (string.IsNullOrWhiteSpace(input))
+            {
+                input = DateTime.Now.ToString("dd-MMMM-yyyy_HH-mm-ss");
+            }
+            GameRepository.SaveGame(Brain.GameState, CurrentConfig.GameName, input, userName);
             Console.WriteLine("Game saved. Press enter to run away to main menu..");
             Console.ReadLine();
             _quit = true;
@@ -365,11 +375,12 @@ namespace tic_tac_two
         {
             var userName = GetUserName();
 
-            var games = GameRepository.GetGameByUser(userName);
+            var games = GameRepository.GetGamesByUser(userName);
 
             if (games.Count == 0)
             {
                 Console.WriteLine("Bro u have to play and save something first to see stuff here.");
+                Console.ReadLine();
                 return "";
             }
 
@@ -377,7 +388,7 @@ namespace tic_tac_two
                 $"Pick a game to continue then, {userName}, if a new game is not good enough for you...:");
             for (int i = 0; i < games.Count; i++)
             {
-                Console.WriteLine($"{i + 1}. {games[i]}");
+                Console.WriteLine($"{i + 1}. {games[i]}"); //todo: doesnt show name
             }
 
             var input = Console.ReadLine();

@@ -1,11 +1,10 @@
-﻿using System.Runtime.InteropServices;
-
-namespace GameLogic
+﻿namespace GameLogic
 {
     public class GameBrain
     {
         public GameState GameState { get; set; }
         private GameConfiguration Config => GameState.Config;
+        
 
         public GameBrain(GameState gameState)
         {
