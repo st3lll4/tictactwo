@@ -64,12 +64,17 @@ namespace tic_tac_two
                 Brain.SwitchPlayer();
                 if (_quit)
                 {
-                    Brain.SetGameState(new GameState(CurrentConfig));
+                    ResetGame();
                     break;
                 }
             } while (true);
 
             return "";
+        }
+
+        private static void ResetGame()
+        {
+            Brain.SetGameState(new GameState(CurrentConfig));
         }
 
 
@@ -79,12 +84,16 @@ namespace tic_tac_two
             while (!validMoveMade)
             {
                 Console.WriteLine("Enter the number for your next action:");
-                Console.WriteLine("1. Move your existing piece");
+                
+                if (Brain.GetMovingPlayerPiecesPlaced() != 0) {
+                    Console.WriteLine("1. Move your existing piece");
+                }
 
                 if (Brain.GetMovingPlayerPiecesPlaced() < CurrentConfig.MaxPieces)
                 {
                     Console.WriteLine("2. Place a piece");
                 }
+                
 
                 Console.WriteLine("X. Save and quit");
 
@@ -327,10 +336,11 @@ namespace tic_tac_two
             Console.WriteLine("Welcome to this ratchet ass console game!");
             Console.WriteLine($"You are playing with configuration {CurrentConfig.GameName} :)");
             Console.WriteLine(
-                $"The board is {CurrentConfig.Width}x{CurrentConfig.Height}, you can place the total of {CurrentConfig.MaxPieces} pieces, ");
+                $"The board is {CurrentConfig.Width}x{CurrentConfig.Height}, ");
             if (CurrentConfig.GameName != "Tic-Tac-Toe")
             {
-                Console.WriteLine($"you can move the grid after {CurrentConfig.InitialMoves} moves, ");
+                Console.WriteLine($"you can place the total of {CurrentConfig.MaxPieces} pieces, " +
+                                  $"you can move the grid after {CurrentConfig.InitialMoves} moves, ");
             }
             
             Console.WriteLine($"and you must win by aligning {CurrentConfig.WinningCondition} pieces.");
@@ -388,7 +398,7 @@ namespace tic_tac_two
                 $"Pick a game to continue then, {userName}, if a new game is not good enough for you...:");
             for (int i = 0; i < games.Count; i++)
             {
-                Console.WriteLine($"{i + 1}. {games[i]}"); //todo: doesnt show name
+                Console.WriteLine($"{i + 1}. {games[i]}");
             }
 
             var input = Console.ReadLine();

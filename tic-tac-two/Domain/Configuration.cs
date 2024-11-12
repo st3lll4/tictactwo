@@ -24,7 +24,7 @@ public class Configuration : BaseEntity
         
     public int? InitialMoves { get; set; } 
             
-    public int? MaxPieces { get; set; }
+    public int MaxPieces { get; set; }
 
     public ICollection<Game>? Games { get; set; }
 }

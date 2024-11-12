@@ -41,7 +41,8 @@ public static class DefaultConfigurations
         Player2Symbol = 'O',
         StartingPlayer = "Player 1",
         WinningCondition = 3,
-        MovableGridSize = 3
+        MovableGridSize = 3,
+        MaxPieces = 5
     };
     
 }

@@ -46,6 +46,9 @@ namespace tic_tac_two
 
             var selectedValue = selectMenu.Run();
 
+            Console.WriteLine($"Configuration {selectedValue} selected. Press enter now!");
+            Console.ReadLine();
+            
             return selectedValue;
         }
 
@@ -86,7 +89,7 @@ namespace tic_tac_two
                 }
             }
 
-            return "Configuration viewing completed.";
+            return "";
         }
 
 
@@ -121,7 +124,7 @@ namespace tic_tac_two
 
             Console.WriteLine($"Configuration '{newConfig.GameName}' has been created and saved.");
 
-            return $"Configuration '{newConfig.GameName}' created successfully.";
+            return "";
         }
 
         private GameConfiguration CreateConfiguration()
@@ -165,11 +168,12 @@ namespace tic_tac_two
 
 
             var boardCapacity = config.Width * config.Height;
-            var maxWinningCondition = (int)Math.Floor(config.MovableGridSize * Math.Sqrt(2));
 
             config.MovableGridSize = GetValidInput(
-                "Enter the size of the movable grid (always square):", min, Math.Min(config.Height, config.Width));
-
+                "Enter the size of the movable grid (always square):", min, config.Height > config.Width ? config.Width : config.Height);
+            
+            var maxWinningCondition = Convert.ToInt32(config.MovableGridSize * Math.Sqrt(2));
+            
             config.WinningCondition = GetValidInput(
                 "Enter the winning condition of the game (more than 3):", 4, maxWinningCondition);
 
@@ -194,7 +198,7 @@ namespace tic_tac_two
                 Console.WriteLine($"{i + 1}. {configNames[i]}");
             }
 
-            Console.Write("Enter the number of the configuration to delete or Enter to go back: ");
+            Console.Write("Enter the number of the configuration to delete or enter to go back: ");
 
             if (!int.TryParse(Console.ReadLine(), out var configIndex) || configIndex < 1 ||
                 configIndex > configNames.Count)
@@ -203,7 +207,7 @@ namespace tic_tac_two
                 Console.WriteLine("Invalid selection. No configuration deleted. Enter to return...."); 
                 // todo: test if you see the messages, test if maybe needs to ask again
                 Console.ReadLine();
-                return "";
+                return ""; // i know this is not good but....
             }
 
             var selectedConfig = configNames[configIndex - 1];
@@ -212,9 +216,11 @@ namespace tic_tac_two
 
             if (_configRepository.DeleteConfiguration(selectedConfig))
             {
-                return $"Configuration '{selectedConfig}' has been deleted.";
+                Console.WriteLine($"Configuration '{selectedConfig}' has been deleted.");
+                Console.ReadLine();
             }
-            return "error deleting configuration :(";
+            Console.WriteLine("error while deleting :(");
+            return "";
         }
 
 

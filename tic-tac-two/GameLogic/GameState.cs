@@ -50,11 +50,9 @@ namespace GameLogic
             GridStartRow = GridCenterRow - (GridSize / 2);
             GridStartCol = GridCenterCol - (GridSize / 2);
 
-            
-            IsStandardTicTacToe = GridSize == 3 && 
-                                  config.InitialMoves == null && 
-                                  config.MaxPieces == null;
 
+            IsStandardTicTacToe = config.MovableGridSize == config.Width && config.MovableGridSize == config.Height;
+            
             Player1PiecesPlaced = 0;
             Player2PiecesPlaced = 0;
 
