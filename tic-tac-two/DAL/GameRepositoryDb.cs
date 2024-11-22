@@ -19,9 +19,9 @@ public class GameRepositoryDb : IGameRepository
     public void SaveGame(GameState gameState, string gameConfigName, string saveName, string userName)
     {
         var user = _context.Users.FirstOrDefault(u => u.UserName == userName) ?? new User { UserName = userName };
-        var config = _context.Configurations.FirstOrDefault(c => c.GameName == gameConfigName);
+        var config = _context.Configurations.FirstOrDefault(c => c.ConfigName == gameConfigName);
 
-        var game = ConvertToGame(gameState, saveName, user, config); // see datetime ei toota
+        var game = ConvertToGame(gameState, saveName, user, config); 
         
         _context.Games.Add(game);
         _context.SaveChanges();

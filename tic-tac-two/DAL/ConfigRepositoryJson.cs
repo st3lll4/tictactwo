@@ -94,7 +94,7 @@ namespace DAL
             {
                 WriteIndented = true
             });
-            var safeFileName = string.Join("_", config.GameName.Split(Path.GetInvalidFileNameChars()));
+            var safeFileName = string.Join("_", config.ConfigName.Split(Path.GetInvalidFileNameChars()));
             File.WriteAllText(FileHelper.BasePath + safeFileName + FileHelper.ConfigExtension, configJsonStr);
         }
 

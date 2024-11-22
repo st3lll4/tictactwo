@@ -2,7 +2,7 @@ namespace GameLogic
 {
     public record GameConfiguration 
     {
-        public string GameName { get; set; } = default!;
+        public string ConfigName { get; set; } = default!;
         public int Width { get; set; }
         public int Height { get; set; }
         public char Player1Symbol { get; set; }

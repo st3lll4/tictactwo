@@ -13,7 +13,7 @@ namespace tic_tac_two
         private static readonly IGameRepository GameRepository = new GameRepositoryDb(); // change here between json and db
         // how to inject this in the brain?
         
-        private static bool _quit;
+        private static bool _quit = false;
 
 
         public static string MainLoop()
@@ -138,7 +138,7 @@ namespace tic_tac_two
             {
                 input = DateTime.Now.ToString("dd-MMMM-yyyy_HH-mm-ss");
             }
-            GameRepository.SaveGame(Brain.GameState, CurrentConfig.GameName, input, userName);
+            GameRepository.SaveGame(Brain.GameState, CurrentConfig.ConfigName, input, userName);
             Console.WriteLine("Game saved. Press enter to run away to main menu..");
             Console.ReadLine();
             _quit = true;
@@ -334,10 +334,10 @@ namespace tic_tac_two
         private static void GameIntro()
         {
             Console.WriteLine("Welcome to this ratchet ass console game!");
-            Console.WriteLine($"You are playing with configuration {CurrentConfig.GameName} :)");
+            Console.WriteLine($"You are playing with configuration {CurrentConfig.ConfigName} :)");
             Console.WriteLine(
                 $"The board is {CurrentConfig.Width}x{CurrentConfig.Height}, ");
-            if (CurrentConfig.GameName != "Tic-Tac-Toe")
+            if (CurrentConfig.ConfigName != "Tic-Tac-Toe")
             {
                 Console.WriteLine($"you can place the total of {CurrentConfig.MaxPieces} pieces, " +
                                   $"you can move the grid after {CurrentConfig.InitialMoves} moves, ");

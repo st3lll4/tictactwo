@@ -6,7 +6,7 @@ namespace Domain;
 public class Configuration : BaseEntity
 {
     [MaxLength(128)]
-    public string GameName { get; set; } = default!;
+    public string ConfigName { get; set; } = default!;
     
     public int Width { get; set; }
     

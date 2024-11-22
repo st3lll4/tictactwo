@@ -63,7 +63,7 @@ namespace tic_tac_two
                 Console.WriteLine("Your saved configurations:");
                 for (int i = 0; i < savedConfigs.Count; i++)
                 {
-                    Console.WriteLine($"{i + 1}. {savedConfigs[i].GameName}");
+                    Console.WriteLine($"{i + 1}. {savedConfigs[i].ConfigName}");
                 }
 
                 Console.WriteLine(
@@ -96,7 +96,7 @@ namespace tic_tac_two
         private void DisplayConfigurationDetails(GameConfiguration config)
         {
             Console.Clear();
-            Console.WriteLine($"Configuration: {config.GameName}");
+            Console.WriteLine($"Configuration: {config.ConfigName}");
             Console.WriteLine($"Board width: {config.Width}");
             Console.WriteLine($"Board height: {config.Height}");
             Console.WriteLine($"Player 1 symbol: {config.Player1Symbol}");
@@ -122,7 +122,7 @@ namespace tic_tac_two
 
             _configRepository.SaveConfiguration(newConfig);
 
-            Console.WriteLine($"Configuration '{newConfig.GameName}' has been created and saved.");
+            Console.WriteLine($"Configuration '{newConfig.ConfigName}' has been created and saved.");
 
             return "";
         }
@@ -136,7 +136,7 @@ namespace tic_tac_two
 
             Console.WriteLine("Name your configuration:");
             var name = Console.ReadLine() ?? $"Config nr {_configRepository.GetAllConfigurations().Count + 1}";
-            config.GameName = name;
+            config.ConfigName = name;
 
             const int min = 3;
             const int max = 54; // got to stop somewhere, max really depends on the user's screen size

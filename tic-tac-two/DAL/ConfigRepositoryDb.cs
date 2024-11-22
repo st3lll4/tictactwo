@@ -13,7 +13,7 @@ public class ConfigRepositoryDb : IConfigRepository
         .UseSqlite(_connectionString)
         .EnableDetailedErrors()
         .EnableSensitiveDataLogging()
-        .Options;
+        .Options; // todo: this is WRONG, have to open and close connection ?
 
     public GameConfiguration DefaultConfiguration { get; set; }
     public GameConfiguration DefaultConfiguration2 { get; set; }
@@ -51,7 +51,7 @@ public class ConfigRepositoryDb : IConfigRepository
 
     public List<string> GetConfigurationNames()
     {
-        return _context.Configurations.Select(c => c.GameName).ToList();
+        return _context.Configurations.Select(c => c.ConfigName).ToList();
     }
 
     public List<GameConfiguration> GetAllConfigurations()
@@ -61,7 +61,7 @@ public class ConfigRepositoryDb : IConfigRepository
 
     public GameConfiguration GetConfigurationByName(string name)
     {
-        return ConvertToGameConfiguration(_context.Configurations.FirstOrDefault(c => c.GameName == name)!);
+        return ConvertToGameConfiguration(_context.Configurations.FirstOrDefault(c => c.ConfigName == name)!);
     }
 
     public void SaveConfiguration(GameConfiguration config)
@@ -75,7 +75,7 @@ public class ConfigRepositoryDb : IConfigRepository
     {
         return new Configuration
         {
-            GameName = gameConfig.GameName,
+            ConfigName = gameConfig.ConfigName,
             Width = gameConfig.Width,
             Height = gameConfig.Height,
             Player1Symbol = gameConfig.Player1Symbol,
@@ -92,7 +92,7 @@ public class ConfigRepositoryDb : IConfigRepository
     {
         return new GameConfiguration
         {
-            GameName = config.GameName,
+            ConfigName = config.ConfigName,
             Width = config.Width,
             Height = config.Height,
             Player1Symbol = config.Player1Symbol,
@@ -107,7 +107,7 @@ public class ConfigRepositoryDb : IConfigRepository
     
     public bool DeleteConfiguration(string name)
     {
-        var config = _context.Configurations.FirstOrDefault(c => c.GameName == name);
+        var config = _context.Configurations.FirstOrDefault(c => c.ConfigName == name);
         if (config == null) return false;
 
         _context.Configurations.Remove(config);

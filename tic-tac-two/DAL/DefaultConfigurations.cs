@@ -6,7 +6,7 @@ public static class DefaultConfigurations
 {
     public static GameConfiguration DefaultConfiguration => new()
     {
-        GameName = "Tic-Tac-Two",
+        ConfigName = "Tic-Tac-Two",
         Width = 5,
         Height = 5,
         Player1Symbol = 'X',
@@ -20,7 +20,7 @@ public static class DefaultConfigurations
 
     public static GameConfiguration DefaultConfiguration2 => new()
     {
-        GameName = "Tic-Tac-Two with a 10x10 board",
+        ConfigName = "Tic-Tac-Two with a 10x10 board",
         Width = 10,
         Height = 10,
         Player1Symbol = 'X',
@@ -34,7 +34,7 @@ public static class DefaultConfigurations
 
     public static GameConfiguration DefaultConfiguration3 => new()
     {
-        GameName = "Tic-Tac-Toe",
+        ConfigName = "Tic-Tac-Toe",
         Width = 3,
         Height = 3,
         Player1Symbol = 'X',
