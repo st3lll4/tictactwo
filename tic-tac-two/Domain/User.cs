@@ -8,5 +8,4 @@ public class User : BaseEntity
     public string UserName { get; set; } = default!;
     
     public ICollection<Game>? Games { get; set; }
-
 }

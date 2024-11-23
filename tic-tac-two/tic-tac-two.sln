@@ -12,6 +12,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Domain", "Domain\Domain.csp
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DTO", "DTO\DTO.csproj", "{9DAEF1D0-9717-4191-810C-878FCDE742BC}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WebApp", "WebApp\WebApp.csproj", "{09ED2FE8-A627-45A8-953E-57ECB5FC3524}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -42,5 +44,9 @@ Global
 		{9DAEF1D0-9717-4191-810C-878FCDE742BC}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{9DAEF1D0-9717-4191-810C-878FCDE742BC}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{9DAEF1D0-9717-4191-810C-878FCDE742BC}.Release|Any CPU.Build.0 = Release|Any CPU
+		{09ED2FE8-A627-45A8-953E-57ECB5FC3524}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{09ED2FE8-A627-45A8-953E-57ECB5FC3524}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{09ED2FE8-A627-45A8-953E-57ECB5FC3524}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{09ED2FE8-A627-45A8-953E-57ECB5FC3524}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal

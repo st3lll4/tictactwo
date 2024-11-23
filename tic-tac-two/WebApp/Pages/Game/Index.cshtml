@@ -1,0 +1,31 @@
+@page
+@model WebApp.Pages.Game.Index
+
+<div>@Model.Brain.GameState.Config.ConfigName</div>
+<table class="table">
+    @for (int y = 0; y < @Model.Brain.GameState.Config.Height; y++)
+    {
+        <tr>
+            @for (int x = 0; x < @Model.Brain.GameState.Config.Width; x++)
+            {
+                @if (Model.Brain.GameState.Board[x, y] != '\0')
+                {
+                    <td>@(Model.Brain.GameState.Board[x, y]);</td>
+                }
+                else
+                {
+                    <td>_</td>
+                }
+            }
+        </tr>
+    }
+</table>
+
+<table class="table">
+    @foreach (var game in @Model.configs)
+    {
+        <tr>
+            <td>@game</td>
+        </tr>
+    }
+</table>

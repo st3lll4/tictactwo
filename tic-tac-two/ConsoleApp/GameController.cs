@@ -18,9 +18,9 @@ namespace tic_tac_two
 
         public static string MainLoop()
         {
-            
+            DirectGame();
             var gameState = Brain.GameState;
-
+            
             GameIntro();
 
             do
@@ -70,6 +70,31 @@ namespace tic_tac_two
             } while (true);
 
             return "";
+        }
+
+        private static void DirectGame()
+        {
+            Console.WriteLine("Create password for a new game? y/n");
+            Console.WriteLine("y - new password will be generated which your homeboy can use for joining");
+            Console.WriteLine("n - you ARE the homeboy and you wanna enter a password to join");
+            var input = Console.ReadLine();
+            
+            if (input == "y") {
+                var password = Brain.CreateGameWassPord();
+                Console.WriteLine($"Your dumbass password is: {password}");
+            }
+
+            if (input == "n")
+            {
+                Console.WriteLine("Enter the password to join the game:");
+                var password = Console.ReadLine();
+
+                while (!Brain.ValidateGameWassPord(password))
+                {
+                    Console.WriteLine("no such game boy.");
+                }
+                
+            }
         }
 
         private static void ResetGame()
@@ -402,11 +427,18 @@ namespace tic_tac_two
             }
 
             var input = Console.ReadLine();
+            
             if (int.TryParse(input, out var gameIndex))
             {
-                var gameState = GameRepository.GetGameByName(games[gameIndex - 1]);
+                var chosenGame = games[gameIndex - 1];
+                if (gameIndex <= 0 || gameIndex > games.Count)
+                {
+                    Console.WriteLine("Nope! Try again.");
+                    return "";
+                }
+                var gameState = GameRepository.GetGameByName(chosenGame);
                 Brain.SetGameState(gameState);
-                Console.WriteLine($"Enjoy playing your loaded game '{games[gameIndex - 1]}'!");
+                Console.WriteLine($"Enjoy playing your loaded game '{chosenGame}'!");
                 MainLoop();
             }
             else

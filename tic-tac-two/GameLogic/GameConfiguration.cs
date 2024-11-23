@@ -16,5 +16,6 @@ namespace GameLogic
         public int? InitialMoves { get; set; } 
             
         public int MaxPieces { get; set; }
+        
     }
 }
