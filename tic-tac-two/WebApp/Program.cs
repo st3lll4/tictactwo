@@ -22,7 +22,14 @@ builder.Services.AddDbContext<AppDbContext>(options =>
 //.AddScoped<>(); - create new one for every web request
 
 //builder.Services.AddScoped<IConfigRepository, ConfigRepositoryJson>();
-builder.Services.AddScoped<IConfigRepository, ConfigRepositoryDb>();
+builder.Services.AddScoped<IConfigRepository>(provider =>
+{
+    var username = "todo add username";
+    return new ConfigRepositoryDb(username);
+});
+builder.Services.AddScoped<IGameRepository, GameRepositoryDb>();
+
+
 
 builder.Services.AddDatabaseDeveloperPageExceptionFilter();
 
@@ -40,10 +47,9 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
-//app.MapStaticAssets(); todo: mis see on
+app.MapStaticAssets(); 
 app.UseStaticFiles(); 
 app.UseRouting();
 app.UseAuthorization();
-app.MapRazorPages();
-    //.WithStaticAssets();
+app.MapRazorPages().WithStaticAssets();
 app.Run();

@@ -114,11 +114,7 @@ public class ConfigRepositoryDb : IConfigRepository
             MaxPieces = config.MaxPieces
         };
     }
-
-    private User? GetUserByUserName()
-    {
-        return _context.Users.FirstOrDefault(u => u != null && u.UserName == _userName);
-    }
+    
     
     public bool DeleteConfiguration(string name)
     {
