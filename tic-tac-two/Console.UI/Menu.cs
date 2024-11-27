@@ -2,6 +2,7 @@
 {
     public class Menu
     {
+        public static string UserName;
         private string MenuHeader { get; set; }
         private static string _menuDivider = "~~~~~~~~~~~~~~~~~~~~";
         private List<MenuItem> MenuItems { get; set; }
@@ -30,6 +31,7 @@
 
         public Menu(EMenuLevel menuLevel, string menuHeader, List<MenuItem> menuItems, bool isCustomMenu = false)
         {
+
             if (string.IsNullOrWhiteSpace(menuHeader))
             {
                 throw new ApplicationException("Menu header cannot be empty.");
@@ -58,6 +60,7 @@
         public string Run()
         {
             Console.Clear();
+            
             do
             {
                 var menuItem = DisplayMenuGetUserChoice();
@@ -96,7 +99,7 @@
         {
             do
             {            
-                Console.Clear(); // do i need
+                Console.Clear();
 
                 DrawMenu();
 

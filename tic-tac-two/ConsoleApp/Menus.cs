@@ -1,17 +1,21 @@
+using Domain;
 using UI;
 
 namespace tic_tac_two
 {
     public class Menus
     {
+        private readonly string _userName;
+
         // Instance properties for menus
         public Menu ConfigurationsMenu { get; set; }
         public Menu MainMenu { get; set; }
         
 
-        public Menus()
+        public Menus(string user)
         {
-            var configManager = new ConfigurationManager();
+            _userName = user;
+            var configManager = new ConfigurationManager(_userName);
 
             ConfigurationsMenu = new Menu(
                 EMenuLevel.Secondary,
@@ -47,6 +51,8 @@ namespace tic_tac_two
                 ]
             );
 
+            var controller = new GameController(_userName);
+            
             MainMenu = new Menu(
                 EMenuLevel.Main,
                 "TIC-TAC-TWOOOOO",
@@ -55,14 +61,14 @@ namespace tic_tac_two
                     {
                         Shortcut = "N",
                         Title = "New game",
-                        MenuItemAction = GameController.MainLoop,
+                        MenuItemAction = controller.MainLoop,
                     },
 
                     new MenuItem
                     {
                         Shortcut = "L",
                         Title = "Load game",
-                        MenuItemAction = GameController.LoadGames
+                        MenuItemAction = controller.LoadGames
                     },
 
                     new MenuItem

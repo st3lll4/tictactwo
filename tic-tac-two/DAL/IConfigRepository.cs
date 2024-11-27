@@ -9,6 +9,8 @@ public interface IConfigRepository
     bool DeleteConfiguration(string selectedConfig);
 
     void SaveConfiguration(GameConfiguration newConfig);
+    public GameConfiguration GetConfigurationByName(string name);
+
     GameConfiguration DefaultConfiguration { get; set; }
     GameConfiguration DefaultConfiguration2 { get; set; } 
     GameConfiguration DefaultConfiguration3 { get; set; }

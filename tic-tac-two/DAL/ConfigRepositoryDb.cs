@@ -1,3 +1,4 @@
+using System.ComponentModel.Design;
 using Domain;
 using GameLogic;
 using Microsoft.EntityFrameworkCore;
@@ -7,6 +8,7 @@ namespace DAL;
 public class ConfigRepositoryDb : IConfigRepository
 {
     private readonly AppDbContext _context = new AppDbContext(_contextOptions);
+    private readonly string _userName;
     private static string _connectionString = $"Data Source={FileHelper.BasePath}app.db";
 
     private static DbContextOptions<AppDbContext> _contextOptions = new DbContextOptionsBuilder<AppDbContext>()
@@ -18,14 +20,17 @@ public class ConfigRepositoryDb : IConfigRepository
     public GameConfiguration DefaultConfiguration { get; set; }
     public GameConfiguration DefaultConfiguration2 { get; set; }
     public GameConfiguration DefaultConfiguration3 { get; set; }
+    
 
-    public ConfigRepositoryDb()
+    public ConfigRepositoryDb(string username)
     {
         DefaultConfiguration = DefaultConfigurations.DefaultConfiguration;
         DefaultConfiguration2 = DefaultConfigurations.DefaultConfiguration2;
         DefaultConfiguration3 = DefaultConfigurations.DefaultConfiguration3;
-
+        _userName = username;
+       
         CheckAndCreateInitialDirectory();
+        
     }
 
     private void InitializeDefaultConfigurations()
@@ -66,12 +71,15 @@ public class ConfigRepositoryDb : IConfigRepository
 
     public void SaveConfiguration(GameConfiguration config)
     {
-        var domainConfig = ConvertToDomainConfiguration(config);
+        var user = _context.Users.FirstOrDefault(u => u.UserName == _userName) ?? new User { UserName = _userName };
+        
+        var domainConfig = ConvertToDomainConfiguration(config, user);
+        Console.WriteLine($"UserId for {_userName}: {user.Id}");
         _context.Configurations.Add(domainConfig);
         _context.SaveChanges();
     }
 
-    private Configuration ConvertToDomainConfiguration(GameConfiguration gameConfig)
+    private Configuration ConvertToDomainConfiguration(GameConfiguration gameConfig, User user)
     {
         return new Configuration
         {
@@ -84,7 +92,9 @@ public class ConfigRepositoryDb : IConfigRepository
             MovableGridSize = gameConfig.MovableGridSize,
             WinningCondition = gameConfig.WinningCondition,
             InitialMoves = gameConfig.InitialMoves,
-            MaxPieces = gameConfig.MaxPieces
+            MaxPieces = gameConfig.MaxPieces,
+            UserId = user.Id,
+            User = user
         };
     }
     
@@ -104,6 +114,11 @@ public class ConfigRepositoryDb : IConfigRepository
             MaxPieces = config.MaxPieces
         };
     }
+
+    private User? GetUserByUserName()
+    {
+        return _context.Users.FirstOrDefault(u => u != null && u.UserName == _userName);
+    }
     
     public bool DeleteConfiguration(string name)
     {
@@ -113,5 +128,18 @@ public class ConfigRepositoryDb : IConfigRepository
         _context.Configurations.Remove(config);
         _context.SaveChanges();
         return true;
+    }
+
+    public List<string> GetConfigsByUser()
+    {
+        var result = _context.Configurations.Where(c => c.User.UserName == _userName).Select(c => c.ConfigName)
+            .ToList();
+        if (result.Contains(DefaultConfiguration.ConfigName) || result.Contains(DefaultConfiguration2.ConfigName) ||
+            result.Contains(DefaultConfiguration3.ConfigName)) return result;
+        result.Add(DefaultConfiguration.ConfigName);
+        result.Add(DefaultConfiguration2.ConfigName);
+        result.Add(DefaultConfiguration3.ConfigName);
+
+        return result;
     }
 }

@@ -48,7 +48,6 @@ public class GameRepositoryJson : IGameRepository
             var primaryName = Path.GetFileNameWithoutExtension(Path.GetFileNameWithoutExtension(file));
             result.Add(primaryName);
         }
-
         return result;
     }
 

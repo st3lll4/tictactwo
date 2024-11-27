@@ -1,21 +1,23 @@
 using System.Text.Json;
-using Domain;
 using GameLogic;
 
 namespace DAL
 {
     public class ConfigRepositoryJson : IConfigRepository
     {
+        private readonly string _userName;
         public GameConfiguration DefaultConfiguration { get; set; }
         public GameConfiguration DefaultConfiguration2 { get; set; }
         public GameConfiguration DefaultConfiguration3 { get; set; }
 
-        public ConfigRepositoryJson()
+        public ConfigRepositoryJson(string userName)
         {
             DefaultConfiguration = DefaultConfigurations.DefaultConfiguration;
             DefaultConfiguration2 = DefaultConfigurations.DefaultConfiguration2;
             DefaultConfiguration3 = DefaultConfigurations.DefaultConfiguration3;
+            _userName = userName;
             CheckAndCreateInitialDirectory();
+            Console.WriteLine("repo " + _userName); // todo: delete
         }
 
 
@@ -54,31 +56,49 @@ namespace DAL
             return result;
         }
 
+        // public List<GameConfiguration> GetAllConfigurations()
+        // {
+        //     var configurations = new List<GameConfiguration>();
+        //
+        //     foreach (var fullFileName in Directory.GetFiles(FileHelper.BasePath, "*" + FileHelper.ConfigExtension))
+        //     {
+        //         try
+        //         {
+        //             var configJsonStr = File.ReadAllText(fullFileName);
+        //             var config = JsonSerializer.Deserialize<GameConfiguration>(configJsonStr);
+        //             if (config != null)
+        //             {
+        //                 configurations.Add(config);
+        //             }
+        //         }
+        //         catch (Exception ex)
+        //         {
+        //             Console.WriteLine($"Error reading configuration file: {ex.Message}");
+        //         }
+        //     }
+        //
+        //     return configurations;
+        // }
 
-        public List<GameConfiguration> GetAllConfigurations()
+        public List<string> GetConfigsByUser()
         {
-            var configurations = new List<GameConfiguration>();
-
-            foreach (var fullFileName in Directory.GetFiles(FileHelper.BasePath, "*" + FileHelper.ConfigExtension))
+            var result = new List<string>
             {
-                try
-                {
-                    var configJsonStr = File.ReadAllText(fullFileName);
-                    var config = JsonSerializer.Deserialize<GameConfiguration>(configJsonStr);
-                    if (config != null)
-                    {
-                        configurations.Add(config);
-                    }
-                }
-                catch (Exception ex)
-                {
-                    Console.WriteLine($"Error reading configuration file: {ex.Message}");
-                }
+                DefaultConfiguration.ConfigName,
+                DefaultConfiguration2.ConfigName,
+                DefaultConfiguration3.ConfigName
+            };
+
+            var files = Directory.GetFiles(FileHelper.BasePath, _userName + "*" + FileHelper.ConfigExtension);
+            
+            foreach (var file in files)
+            {
+                var primaryName = Path.GetFileNameWithoutExtension(Path.GetFileNameWithoutExtension(file));
+                result.Add(primaryName);
             }
-
-            return configurations;
+            return result;
         }
-
+        
 
         public GameConfiguration GetConfigurationByName(string name)
         {
@@ -95,7 +115,7 @@ namespace DAL
                 WriteIndented = true
             });
             var safeFileName = string.Join("_", config.ConfigName.Split(Path.GetInvalidFileNameChars()));
-            File.WriteAllText(FileHelper.BasePath + safeFileName + FileHelper.ConfigExtension, configJsonStr);
+            File.WriteAllText(FileHelper.BasePath + _userName + "_" + safeFileName + FileHelper.ConfigExtension, configJsonStr);
         }
 
 

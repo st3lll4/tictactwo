@@ -334,17 +334,6 @@
         {
             GameState = gameState;
         }
-
-        public int CreateGameWassPord()
-        {
-            var rnd = new Random();
-            var password = rnd.Next(1, 999999999);
-            return password;
-        }
-
-        public bool ValidateGameWassPord(string? password)
-        {
-            
-        }
+        
     }
 }

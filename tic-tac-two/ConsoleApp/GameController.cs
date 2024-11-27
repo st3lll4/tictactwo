@@ -1,27 +1,31 @@
 using DAL;
 using GameLogic;
-using DTO;
 
 namespace tic_tac_two
 {
-    public static class GameController
+    public class GameController
     {
+        
         private static readonly GameConfiguration CurrentConfig = ConfigurationManager.CurrentConfiguration;
         
         private static readonly GameBrain Brain = new(new GameState(CurrentConfig));
         
         private static readonly IGameRepository GameRepository = new GameRepositoryDb(); // change here between json and db
         // how to inject this in the brain?
-        
+        private static string _userName;
         private static bool _quit = false;
-
-
-        public static string MainLoop()
+        
+        public GameController(string userName)
         {
-            DirectGame();
+            _userName = userName;
+        }
+
+        public string MainLoop()
+        {
+
             var gameState = Brain.GameState;
             
-            GameIntro();
+            GameIntro(); // 
 
             do
             {
@@ -71,39 +75,15 @@ namespace tic_tac_two
 
             return "";
         }
+        
 
-        private static void DirectGame()
-        {
-            Console.WriteLine("Create password for a new game? y/n");
-            Console.WriteLine("y - new password will be generated which your homeboy can use for joining");
-            Console.WriteLine("n - you ARE the homeboy and you wanna enter a password to join");
-            var input = Console.ReadLine();
-            
-            if (input == "y") {
-                var password = Brain.CreateGameWassPord();
-                Console.WriteLine($"Your dumbass password is: {password}");
-            }
-
-            if (input == "n")
-            {
-                Console.WriteLine("Enter the password to join the game:");
-                var password = Console.ReadLine();
-
-                while (!Brain.ValidateGameWassPord(password))
-                {
-                    Console.WriteLine("no such game boy.");
-                }
-                
-            }
-        }
-
-        private static void ResetGame()
+        private void ResetGame()
         {
             Brain.SetGameState(new GameState(CurrentConfig));
         }
 
 
-        private static void TicTacToeMove(GameState gameState) // todo: test
+        private void TicTacToeMove(GameState gameState) // todo: test
         {
             var validMoveMade = false;
             while (!validMoveMade)
@@ -154,23 +134,22 @@ namespace tic_tac_two
             }
         }
 
-        private static void SaveAndQuit()
+        private void SaveAndQuit()
         {
-            var userName = GetUserName();
             Console.WriteLine("Enter a name for the game to continue later, or if u don't care just press enter:");
             var input = Console.ReadLine();
             if (string.IsNullOrWhiteSpace(input))
             {
                 input = DateTime.Now.ToString("dd-MMMM-yyyy_HH-mm-ss");
             }
-            GameRepository.SaveGame(Brain.GameState, CurrentConfig.ConfigName, input, userName);
+            GameRepository.SaveGame(Brain.GameState, CurrentConfig.ConfigName, input, _userName);
             Console.WriteLine("Game saved. Press enter to run away to main menu..");
             Console.ReadLine();
             _quit = true;
         }
 
 
-        private static void AdvancedMove(GameState gameState)
+        private void AdvancedMove(GameState gameState)
         {
             var validMoveMade = false;
             while (!validMoveMade)
@@ -221,7 +200,7 @@ namespace tic_tac_two
             }
         }
 
-        private static bool MovePiece()
+        private bool MovePiece()
         {
             int oldX, oldY;
 
@@ -286,7 +265,7 @@ namespace tic_tac_two
             }
         }
 
-        private static bool MoveGrid()
+        private bool MoveGrid()
         {
             while (true)
             {
@@ -319,7 +298,7 @@ namespace tic_tac_two
             }
         }
 
-        private static void SimpleMove(GameState gameState)
+        private void SimpleMove(GameState gameState)
         {
             var validMoveMade = false;
             while (!validMoveMade)
@@ -356,7 +335,7 @@ namespace tic_tac_two
             }
         }
 
-        private static void GameIntro()
+        private void GameIntro()
         {
             Console.WriteLine("Welcome to this ratchet ass console game!");
             Console.WriteLine($"You are playing with configuration {CurrentConfig.ConfigName} :)");
@@ -372,13 +351,10 @@ namespace tic_tac_two
             Console.WriteLine("Type X at any point to save the game and return to main menu.");
             Console.WriteLine("Good luck nerds!");
             Console.WriteLine();
-            Console.WriteLine("Press enter to continue, genius... ");
-            Console.WriteLine();
-
-            Console.ReadLine();
+            
         }
 
-        private static void DrawBoard(GameState gameState)
+        private void DrawBoard(GameState gameState)
         {
             Console.Write("  ");
             for (int i = 0; i < gameState.Config.Width; i++)
@@ -406,11 +382,10 @@ namespace tic_tac_two
             }
         }
 
-        public static string LoadGames()
+        public string LoadGames()
         {
-            var userName = GetUserName();
 
-            var games = GameRepository.GetGamesByUser(userName);
+            var games = GameRepository.GetGamesByUser(_userName);
 
             if (games.Count == 0)
             {
@@ -420,7 +395,7 @@ namespace tic_tac_two
             }
 
             Console.WriteLine(
-                $"Pick a game to continue then, {userName}, if a new game is not good enough for you...:");
+                $"Pick a game to continue then, {_userName}, if a new game is not good enough for you...:");
             for (int i = 0; i < games.Count; i++)
             {
                 Console.WriteLine($"{i + 1}. {games[i]}");
@@ -449,16 +424,6 @@ namespace tic_tac_two
             return "";
         }
 
-        private static string GetUserName()
-        {
-            var userName = "";
-            while (string.IsNullOrWhiteSpace(userName))
-            {
-                Console.WriteLine("Who are you??");
-                userName = Console.ReadLine();
-            }
-
-            return userName;
-        }
+     
     }
 }
