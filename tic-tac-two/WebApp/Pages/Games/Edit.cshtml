@@ -1,0 +1,108 @@
+@page
+@model WebApp.Pages.Games.EditModel
+
+@{
+    ViewData["Title"] = "Edit";
+}
+
+<h1>Edit</h1>
+
+<h4>Game</h4>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form method="post">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="form-group">
+                
+                <label asp-for="Game.GameName" class="control-label"></label>
+                <input asp-for="Game.GameName" class="form-control" />
+                <span asp-validation-for="Game.GameName" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                
+                <label asp-for="Game.BoardData" class="control-label"></label>
+                <input asp-for="Game.BoardData" class="form-control" />
+                <span asp-validation-for="Game.BoardData" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                
+                <label asp-for="Game.MovingPlayer" class="control-label"></label>
+                <input asp-for="Game.MovingPlayer" class="form-control" />
+                <span asp-validation-for="Game.MovingPlayer" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                
+                <label asp-for="Game.Config" class="control-label"></label>
+                <input asp-for="Game.Config" class="form-control" />
+                <span asp-validation-for="Game.Config" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                
+                <label asp-for="Game.Player1PiecesPlaced" class="control-label"></label>
+                <input asp-for="Game.Player1PiecesPlaced" class="form-control" />
+                <span asp-validation-for="Game.Player1PiecesPlaced" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                
+                <label asp-for="Game.Player2PiecesPlaced" class="control-label"></label>
+                <input asp-for="Game.Player2PiecesPlaced" class="form-control" />
+                <span asp-validation-for="Game.Player2PiecesPlaced" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                
+                <label asp-for="Game.GridStartRow" class="control-label"></label>
+                <input asp-for="Game.GridStartRow" class="form-control" />
+                <span asp-validation-for="Game.GridStartRow" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                
+                <label asp-for="Game.GridStartCol" class="control-label"></label>
+                <input asp-for="Game.GridStartCol" class="form-control" />
+                <span asp-validation-for="Game.GridStartCol" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                
+                <label asp-for="Game.GridCenterRow" class="control-label"></label>
+                <input asp-for="Game.GridCenterRow" class="form-control" />
+                <span asp-validation-for="Game.GridCenterRow" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                
+                <label asp-for="Game.GridCenterCol" class="control-label"></label>
+                <input asp-for="Game.GridCenterCol" class="form-control" />
+                <span asp-validation-for="Game.GridCenterCol" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                
+                <label asp-for="Game.UserId" class="control-label"></label>
+                <select asp-for="Game.UserId" class="form-control" asp-items="ViewBag.UserId"></select>
+                <span asp-validation-for="Game.UserId" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                
+                <label asp-for="Game.ConfigurationId" class="control-label"></label>
+                <select asp-for="Game.ConfigurationId" class="form-control" asp-items="ViewBag.ConfigurationId"></select>
+                <span asp-validation-for="Game.ConfigurationId" class="text-danger"></span>
+            </div>
+            <input type="hidden" asp-for="Game.Id" />
+            <div class="form-group">
+                
+                <label asp-for="Game.CreatedAt" class="control-label"></label>
+                <input asp-for="Game.CreatedAt" class="form-control" />
+                <span asp-validation-for="Game.CreatedAt" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <input type="submit" value="Save" class="btn btn-primary" />
+            </div>
+        </form>
+    </div>
+</div>
+
+<div>
+    <a asp-page="./Index">Back to List</a>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

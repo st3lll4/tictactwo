@@ -1,0 +1,91 @@
+@page
+@model WebApp.Pages.Configs.DetailsModel
+
+@{
+    ViewData["Title"] = "Details";
+}
+
+<h1>Details</h1>
+
+<div>
+    <h4>Configuration</h4>
+    <hr />
+    <dl class="row">
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.Configuration.ConfigName)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.Configuration.ConfigName)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.Configuration.Width)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.Configuration.Width)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.Configuration.Height)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.Configuration.Height)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.Configuration.Player1Symbol)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.Configuration.Player1Symbol)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.Configuration.Player2Symbol)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.Configuration.Player2Symbol)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.Configuration.StartingPlayer)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.Configuration.StartingPlayer)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.Configuration.MovableGridSize)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.Configuration.MovableGridSize)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.Configuration.WinningCondition)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.Configuration.WinningCondition)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.Configuration.InitialMoves)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.Configuration.InitialMoves)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.Configuration.MaxPieces)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.Configuration.MaxPieces)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.Configuration.User)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.Configuration.User.UserName)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.Configuration.CreatedAt)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.Configuration.CreatedAt)
+        </dd>
+    </dl>
+</div>
+<div>
+    <a asp-page="./Edit" asp-route-id="@Model.Configuration.Id">Edit</a> |
+    <a asp-page="./Index">Back to List</a>
+</div>

@@ -1,0 +1,108 @@
+@page
+@model WebApp.Pages.Games.IndexModel
+
+@{
+    ViewData["Title"] = "Index";
+}
+
+<h1>Index</h1>
+
+<p>
+    <a asp-page="Create">Create New</a>
+</p>
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.Game[0].GameName)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Game[0].BoardData)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Game[0].MovingPlayer)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Game[0].Config)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Game[0].Player1PiecesPlaced)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Game[0].Player2PiecesPlaced)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Game[0].GridStartRow)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Game[0].GridStartCol)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Game[0].GridCenterRow)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Game[0].GridCenterCol)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Game[0].User)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Game[0].Configuration)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Game[0].CreatedAt)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model.Game) {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.GameName)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.BoardData)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.MovingPlayer)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Config)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Player1PiecesPlaced)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Player2PiecesPlaced)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.GridStartRow)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.GridStartCol)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.GridCenterRow)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.GridCenterCol)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.User.UserName)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Configuration.ConfigName)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.CreatedAt)
+            </td>
+            <td>
+                <a asp-page="./Edit" asp-route-id="@item.Id">Edit</a> |
+                <a asp-page="./Details" asp-route-id="@item.Id">Details</a> |
+                <a asp-page="./Delete" asp-route-id="@item.Id">Delete</a>
+            </td>
+        </tr>
+}
+    </tbody>
+</table>
