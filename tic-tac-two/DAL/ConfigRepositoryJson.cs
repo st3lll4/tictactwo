@@ -17,7 +17,6 @@ namespace DAL
             DefaultConfiguration3 = DefaultConfigurations.DefaultConfiguration3;
             _userName = userName;
             CheckAndCreateInitialDirectory();
-            Console.WriteLine("repo " + _userName); // todo: delete
         }
 
 

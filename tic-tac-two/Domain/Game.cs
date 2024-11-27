@@ -16,9 +16,6 @@ public class Game : BaseEntity
     public int GridStartCol { get; set; }
     public int GridCenterRow { get; set; }
     public int GridCenterCol { get; set; }
-    public int GridSize { get; set; } // todo: miks mul pole see confist voetav????:
-    public int WinCondition { get; set; } //todo: miks mul pole see confist voetav????
-    public bool IsStandardTicTacToe { get; set; } //todo: miks mul pole see confist voetav????
     
 
     public int UserId { get; set; }

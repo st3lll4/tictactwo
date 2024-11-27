@@ -8,11 +8,11 @@ namespace tic_tac_two
         
         private static readonly GameConfiguration CurrentConfig = ConfigurationManager.CurrentConfiguration;
         
-        private static readonly GameBrain Brain = new(new GameState(CurrentConfig));
+        private static GameBrain _brain = new(new GameState(CurrentConfig));
         
         private static readonly IGameRepository GameRepository = new GameRepositoryDb(); // change here between json and db
         // how to inject this in the brain?
-        private static string _userName;
+        private static string _userName = default!;
         private static bool _quit = false;
         
         public GameController(string userName)
@@ -22,17 +22,16 @@ namespace tic_tac_two
 
         public string MainLoop()
         {
-
-            var gameState = Brain.GameState;
+            var gameState = _brain.GameState; // miskiprst null
             
-            GameIntro(); // 
+            GameIntro(); 
 
             do
             {
                 DrawBoard(gameState);
                 Console.WriteLine($"Player {gameState.MovingPlayer}, it's your turn!");
 
-                if (Brain.GetMovingPlayerPiecesPlaced() < CurrentConfig.InitialMoves)
+                if (_brain.GetMovingPlayerPiecesPlaced() < CurrentConfig.InitialMoves)
                 {
                     SimpleMove(gameState);
                 }
@@ -46,7 +45,7 @@ namespace tic_tac_two
                 }
 
 
-                if (Brain.CheckTie())
+                if (_brain.CheckTie())
                 {
                     DrawBoard(gameState);
                     Console.WriteLine(
@@ -56,7 +55,7 @@ namespace tic_tac_two
                     break;
                 }
 
-                if (Brain.CheckWin(gameState.MovingPlayer))
+                if (_brain.CheckWin(gameState.MovingPlayer))
                 {
                     DrawBoard(gameState);
                     Console.WriteLine($"Player {gameState.MovingPlayer} wins! Winner winner, chicken dinner!");
@@ -65,7 +64,7 @@ namespace tic_tac_two
                     break;
                 }
 
-                Brain.SwitchPlayer();
+                _brain.SwitchPlayer();
                 if (_quit)
                 {
                     ResetGame();
@@ -79,7 +78,7 @@ namespace tic_tac_two
 
         private void ResetGame()
         {
-            Brain.SetGameState(new GameState(CurrentConfig));
+            _brain.SetGameState(new GameState(CurrentConfig));
         }
 
 
@@ -90,11 +89,11 @@ namespace tic_tac_two
             {
                 Console.WriteLine("Enter the number for your next action:");
                 
-                if (Brain.GetMovingPlayerPiecesPlaced() != 0) {
+                if (_brain.GetMovingPlayerPiecesPlaced() != 0) {
                     Console.WriteLine("1. Move your existing piece");
                 }
 
-                if (Brain.GetMovingPlayerPiecesPlaced() < CurrentConfig.MaxPieces)
+                if (_brain.GetMovingPlayerPiecesPlaced() < CurrentConfig.MaxPieces)
                 {
                     Console.WriteLine("2. Place a piece");
                 }
@@ -111,7 +110,7 @@ namespace tic_tac_two
                         break;
 
                     case "2":
-                        if (Brain.GetMovingPlayerPiecesPlaced() < CurrentConfig.MaxPieces)
+                        if (_brain.GetMovingPlayerPiecesPlaced() < CurrentConfig.MaxPieces)
                         {
                             SimpleMove(gameState);
                             validMoveMade = true;
@@ -142,7 +141,7 @@ namespace tic_tac_two
             {
                 input = DateTime.Now.ToString("dd-MMMM-yyyy_HH-mm-ss");
             }
-            GameRepository.SaveGame(Brain.GameState, CurrentConfig.ConfigName, input, _userName);
+            GameRepository.SaveGame(_brain.GameState, CurrentConfig.ConfigName, input, _userName);
             Console.WriteLine("Game saved. Press enter to run away to main menu..");
             Console.ReadLine();
             _quit = true;
@@ -157,7 +156,7 @@ namespace tic_tac_two
                 Console.WriteLine("Enter the number of your next action:");
                 Console.WriteLine("1. Move your existing piece");
                 Console.WriteLine("2. Move the griddy");
-                if (Brain.GetMovingPlayerPiecesPlaced() < CurrentConfig.MaxPieces)
+                if (_brain.GetMovingPlayerPiecesPlaced() < CurrentConfig.MaxPieces)
                 {
                     Console.WriteLine("3. Place a new piece");
                 }
@@ -177,7 +176,7 @@ namespace tic_tac_two
                         break;
 
                     case "3":
-                        if (Brain.GetMovingPlayerPiecesPlaced() < CurrentConfig.MaxPieces)
+                        if (_brain.GetMovingPlayerPiecesPlaced() < CurrentConfig.MaxPieces)
                         {
                             SimpleMove(gameState);
                             validMoveMade = true; // ?????
@@ -218,7 +217,7 @@ namespace tic_tac_two
                     continue;
                 }
 
-                if (Brain.GameState.Board[oldX - 1, oldY - 1] != Brain.GameState.MovingPlayer)
+                if (_brain.GameState.Board[oldX - 1, oldY - 1] != _brain.GameState.MovingPlayer)
                     // checkib meetodi sees ka aga siin oluline sest siis kysib vanad koodrinaadid kohe uuesti
                 {
                     Console.WriteLine("Are you blind? Pick a coordinate with your own piece.");
@@ -243,7 +242,7 @@ namespace tic_tac_two
                 }
 
                 //error check siin ka et ma saaks normaalset tagasisidet anda, aga gamebrain checkib ka
-                if (Brain.GameState.Board[newX - 1, newY - 1] != '\0' || !Brain.IsInGrid(newX - 1, newY - 1))
+                if (_brain.GameState.Board[newX - 1, newY - 1] != '\0' || !_brain.IsInGrid(newX - 1, newY - 1))
                 {
                     Console.WriteLine(
                         "Try again... Is it really that hard to pick a free coordinate inside the grid?");
@@ -256,7 +255,7 @@ namespace tic_tac_two
                 newX--;
                 newY--;
 
-                if (Brain.MovePiece(oldX, oldY, newX, newY))
+                if (_brain.MovePiece(oldX, oldY, newX, newY))
                 {
                     return true;
                 }
@@ -289,7 +288,7 @@ namespace tic_tac_two
                     continue;
                 }
 
-                if (Brain.MoveGrid(direction))
+                if (_brain.MoveGrid(direction))
                 {
                     return true;
                 }
@@ -319,7 +318,7 @@ namespace tic_tac_two
                 {
                     var x = int.Parse(coords[0]) - 1;
                     var y = int.Parse(coords[1]) - 1;
-                    if (Brain.PlacePiece(x, y, gameState.MovingPlayer))
+                    if (_brain.PlacePiece(x, y, gameState.MovingPlayer))
                     {
                         validMoveMade = true;
                     }
@@ -370,7 +369,7 @@ namespace tic_tac_two
 
                 for (var j = 0; j < gameState.Config.Width; j++)
                 {
-                    Console.BackgroundColor = Brain.IsInGrid(i, j) ? ConsoleColor.Black : ConsoleColor.Gray;
+                    Console.BackgroundColor = _brain.IsInGrid(i, j) ? ConsoleColor.Black : ConsoleColor.Gray;
 
                     var toWrite = gameState.Board[i, j] == '\0' ? " " : $"{gameState.Board[i, j]}";
                     Console.Write($" {toWrite} ");
@@ -412,7 +411,7 @@ namespace tic_tac_two
                     return "";
                 }
                 var gameState = GameRepository.GetGameByName(chosenGame);
-                Brain.SetGameState(gameState);
+                _brain.SetGameState(gameState);
                 Console.WriteLine($"Enjoy playing your loaded game '{chosenGame}'!");
                 MainLoop();
             }

@@ -8,7 +8,7 @@ namespace DAL;
 public class GameRepositoryDb : IGameRepository
 {
     private readonly AppDbContext _context = new (_contextOptions);
-    private static string _connectionString = $"Data Source={FileHelper.BasePath}app.db";
+    private static string _connectionString = $"Data Source={FileHelper.BasePath}app.db"; //todo: change
 
     private static DbContextOptions<AppDbContext> _contextOptions = new DbContextOptionsBuilder<AppDbContext>()
         .UseSqlite(_connectionString)
@@ -50,9 +50,7 @@ public class GameRepositoryDb : IGameRepository
             GridStartCol = gameState.GridStartCol,
             GridCenterRow = gameState.GridCenterRow,
             GridCenterCol = gameState.GridCenterCol,
-            GridSize = gameState.GridSize,
-            WinCondition = gameState.WinCondition,
-            IsStandardTicTacToe = gameState.IsStandardTicTacToe
+            
         };
     }
 
@@ -73,9 +71,6 @@ public class GameRepositoryDb : IGameRepository
             GridStartCol = game.GridStartCol,
             GridCenterRow = game.GridCenterRow,
             GridCenterCol = game.GridCenterCol,
-            GridSize = game.GridSize,
-            WinCondition = game.WinCondition,
-            IsStandardTicTacToe = game.IsStandardTicTacToe
         };
     }
 

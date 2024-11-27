@@ -2,7 +2,7 @@
 {
     public class Menu
     {
-        public static string UserName;
+        public static string UserName = default!;
         private string MenuHeader { get; set; }
         private static string _menuDivider = "~~~~~~~~~~~~~~~~~~~~";
         private List<MenuItem> MenuItems { get; set; }

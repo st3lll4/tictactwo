@@ -8,7 +8,7 @@ namespace tic_tac_two
     {
         //private readonly ConfigRepositoryJson _configRepository; // change here between json and db
 
-        private static string _userName;
+        private static string _userName = default!;
 
         private ConfigRepositoryDb _configRepository;
         public static GameConfiguration CurrentConfiguration { get; private set; } = default!;
