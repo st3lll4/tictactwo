@@ -24,7 +24,7 @@ builder.Services.AddDbContext<AppDbContext>(options =>
 //builder.Services.AddScoped<IConfigRepository, ConfigRepositoryJson>();
 builder.Services.AddScoped<IConfigRepository>(provider =>
 {
-    var username = "todo add username";
+    var username = "stella";
     return new ConfigRepositoryDb(username);
 });
 builder.Services.AddScoped<IGameRepository, GameRepositoryDb>();

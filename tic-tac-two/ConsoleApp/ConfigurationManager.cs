@@ -10,21 +10,20 @@ namespace tic_tac_two
 
         private static string _userName = default!;
 
-        private ConfigRepositoryDb _configRepository;
+        private ConfigRepositoryDb _configRepository = new ConfigRepositoryDb(); // change here between json and db
         public static GameConfiguration CurrentConfiguration { get; private set; } = default!;
 
         public ConfigurationManager(string username)
         {
             CurrentConfiguration = DefaultConfigurations.DefaultConfiguration;
             _userName = username;
-            _configRepository = new ConfigRepositoryDb(_userName); // change here between json and db
         }
 
 
         public string SelectConfiguration()
         {
             var configMenuItems = new List<MenuItem>();
-            var configNames = _configRepository.GetConfigsByUser();
+            var configNames = _configRepository.GetConfigsByUser(_userName);
 
             for (int i = 0; i < configNames.Count; i++)
             {
@@ -59,7 +58,7 @@ namespace tic_tac_two
 
         public string SeeConfigurations()
         {
-            var savedConfigs = _configRepository.GetConfigsByUser();
+            var savedConfigs = _configRepository.GetConfigsByUser(_userName);
 
             while (true)
             {
@@ -125,9 +124,10 @@ namespace tic_tac_two
         {
             var newConfig = CreateConfiguration();
 
-            _configRepository.SaveConfiguration(newConfig);
+            _configRepository.SaveConfiguration(newConfig, _userName);
 
             Console.WriteLine($"Configuration '{newConfig.ConfigName}' has been created and saved.");
+            Console.ReadLine();
 
             return "";
         }
@@ -135,12 +135,11 @@ namespace tic_tac_two
         private GameConfiguration CreateConfiguration()
         {
             Console.Clear();
-            Console.WriteLine("Game configuration creation:");
 
             var config = new GameConfiguration();
 
             Console.WriteLine("Name your configuration:");
-            var name = Console.ReadLine() ?? $"Config nr {_configRepository.GetConfigsByUser().Count + 1}";
+            var name = Console.ReadLine() ?? $"Config nr {_configRepository.GetConfigsByUser(_userName).Count + 1}";
             config.ConfigName = name;
 
             const int min = 3;
@@ -194,7 +193,7 @@ namespace tic_tac_two
 
         public string DeleteConfiguration()
         {
-            var configNames = _configRepository.GetConfigsByUser();
+            var configNames = _configRepository.GetConfigsByUser(_userName);
 
             Console.WriteLine("Saved Configurations:");
             for (int i = 0; i < configNames.Count; i++)

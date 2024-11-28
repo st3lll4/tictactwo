@@ -53,7 +53,7 @@ namespace DAL.Migrations
                         .IsRequired()
                         .HasColumnType("TEXT");
 
-                    b.Property<int>("UserId")
+                    b.Property<int?>("UserId")
                         .HasColumnType("INTEGER");
 
                     b.Property<int>("Width")
@@ -150,9 +150,7 @@ namespace DAL.Migrations
                 {
                     b.HasOne("Domain.User", "User")
                         .WithMany("Configurations")
-                        .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("UserId");
 
                     b.Navigation("User");
                 });

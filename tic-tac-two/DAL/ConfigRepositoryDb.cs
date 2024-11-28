@@ -8,7 +8,6 @@ namespace DAL;
 public class ConfigRepositoryDb : IConfigRepository
 {
     private readonly AppDbContext _context = new AppDbContext(_contextOptions);
-    private readonly string _userName;
     private static string _connectionString = $"Data Source={FileHelper.BasePath}app.db";
 
     private static DbContextOptions<AppDbContext> _contextOptions = new DbContextOptionsBuilder<AppDbContext>()
@@ -22,15 +21,13 @@ public class ConfigRepositoryDb : IConfigRepository
     public GameConfiguration DefaultConfiguration3 { get; set; }
     
 
-    public ConfigRepositoryDb(string username)
+    public ConfigRepositoryDb()
     {
         DefaultConfiguration = DefaultConfigurations.DefaultConfiguration;
         DefaultConfiguration2 = DefaultConfigurations.DefaultConfiguration2;
         DefaultConfiguration3 = DefaultConfigurations.DefaultConfiguration3;
-        _userName = username;
        
         CheckAndCreateInitialDirectory();
-        
     }
 
     private void InitializeDefaultConfigurations()
@@ -38,6 +35,13 @@ public class ConfigRepositoryDb : IConfigRepository
         SaveConfiguration(DefaultConfigurations.DefaultConfiguration);
         SaveConfiguration(DefaultConfigurations.DefaultConfiguration2);
         SaveConfiguration(DefaultConfigurations.DefaultConfiguration3);
+    }
+
+    public void SaveConfiguration(GameConfiguration config)
+    {
+        var domainConfig = ConvertToDomainConfiguration(config);
+        _context.Configurations.Add(domainConfig);
+        _context.SaveChanges();
     }
 
     private void CheckAndCreateInitialDirectory()
@@ -69,12 +73,11 @@ public class ConfigRepositoryDb : IConfigRepository
         return ConvertToGameConfiguration(_context.Configurations.FirstOrDefault(c => c.ConfigName == name)!);
     }
 
-    public void SaveConfiguration(GameConfiguration config)
+    public void SaveConfiguration(GameConfiguration config, string userName)
     {
-        var user = _context.Users.FirstOrDefault(u => u.UserName == _userName) ?? new User { UserName = _userName };
+        var user = _context.Users.FirstOrDefault(u => u.UserName == userName) ?? new User { UserName = userName };
         
         var domainConfig = ConvertToDomainConfiguration(config, user);
-        Console.WriteLine($"UserId for {_userName}: {user.Id}");
         _context.Configurations.Add(domainConfig);
         _context.SaveChanges();
     }
@@ -95,6 +98,23 @@ public class ConfigRepositoryDb : IConfigRepository
             MaxPieces = gameConfig.MaxPieces,
             UserId = user.Id,
             User = user
+        };
+    }
+    
+    private Configuration ConvertToDomainConfiguration(GameConfiguration gameConfig)
+    {
+        return new Configuration
+        {
+            ConfigName = gameConfig.ConfigName,
+            Width = gameConfig.Width,
+            Height = gameConfig.Height,
+            Player1Symbol = gameConfig.Player1Symbol,
+            Player2Symbol = gameConfig.Player2Symbol,
+            StartingPlayer = gameConfig.StartingPlayer,
+            MovableGridSize = gameConfig.MovableGridSize,
+            WinningCondition = gameConfig.WinningCondition,
+            InitialMoves = gameConfig.InitialMoves,
+            MaxPieces = gameConfig.MaxPieces
         };
     }
     
@@ -126,9 +146,9 @@ public class ConfigRepositoryDb : IConfigRepository
         return true;
     }
 
-    public List<string> GetConfigsByUser()
+    public List<string> GetConfigsByUser(string userName)
     {
-        var result = _context.Configurations.Where(c => c.User.UserName == _userName).Select(c => c.ConfigName)
+        var result = _context.Configurations.Where(c => c.User.UserName == userName).Select(c => c.ConfigName)
             .ToList();
         if (result.Contains(DefaultConfiguration.ConfigName) || result.Contains(DefaultConfiguration2.ConfigName) ||
             result.Contains(DefaultConfiguration3.ConfigName)) return result;

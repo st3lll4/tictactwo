@@ -27,6 +27,6 @@ public class Configuration : BaseEntity
     public int MaxPieces { get; set; }
 
     public ICollection<Game>? Games { get; set; }
-    public int UserId { get; set; }
-    public User User { get; set; } = default!;
+    public int? UserId { get; set; }
+    public User? User { get; set; }
 }

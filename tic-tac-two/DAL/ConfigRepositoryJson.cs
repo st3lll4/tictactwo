@@ -5,17 +5,15 @@ namespace DAL
 {
     public class ConfigRepositoryJson : IConfigRepository
     {
-        private readonly string _userName;
         public GameConfiguration DefaultConfiguration { get; set; }
         public GameConfiguration DefaultConfiguration2 { get; set; }
         public GameConfiguration DefaultConfiguration3 { get; set; }
 
-        public ConfigRepositoryJson(string userName)
+        public ConfigRepositoryJson()
         {
             DefaultConfiguration = DefaultConfigurations.DefaultConfiguration;
             DefaultConfiguration2 = DefaultConfigurations.DefaultConfiguration2;
             DefaultConfiguration3 = DefaultConfigurations.DefaultConfiguration3;
-            _userName = userName;
             CheckAndCreateInitialDirectory();
         }
 
@@ -40,6 +38,16 @@ namespace DAL
             SaveConfiguration(DefaultConfigurations.DefaultConfiguration);
             SaveConfiguration(DefaultConfigurations.DefaultConfiguration2);
             SaveConfiguration(DefaultConfigurations.DefaultConfiguration3);
+        }
+
+        public void SaveConfiguration(GameConfiguration config)
+        {
+            var configJsonStr = JsonSerializer.Serialize(config, new JsonSerializerOptions
+            {
+                WriteIndented = true
+            });
+            var safeFileName = string.Join("_", config.ConfigName.Split(Path.GetInvalidFileNameChars()));
+            File.WriteAllText(FileHelper.BasePath + safeFileName + FileHelper.ConfigExtension, configJsonStr);
         }
 
 
@@ -79,7 +87,7 @@ namespace DAL
         //     return configurations;
         // }
 
-        public List<string> GetConfigsByUser()
+        public List<string> GetConfigsByUser(string userName)
         {
             var result = new List<string>
             {
@@ -88,7 +96,7 @@ namespace DAL
                 DefaultConfiguration3.ConfigName
             };
 
-            var files = Directory.GetFiles(FileHelper.BasePath, _userName + "*" + FileHelper.ConfigExtension);
+            var files = Directory.GetFiles(FileHelper.BasePath, userName + "*" + FileHelper.ConfigExtension);
             
             foreach (var file in files)
             {
@@ -107,14 +115,14 @@ namespace DAL
         }
 
 
-        public void SaveConfiguration(GameConfiguration config)
+        public void SaveConfiguration(GameConfiguration config, string userName)
         {
             var configJsonStr = JsonSerializer.Serialize(config, new JsonSerializerOptions
             {
                 WriteIndented = true
             });
             var safeFileName = string.Join("_", config.ConfigName.Split(Path.GetInvalidFileNameChars()));
-            File.WriteAllText(FileHelper.BasePath + _userName + "_" + safeFileName + FileHelper.ConfigExtension, configJsonStr);
+            File.WriteAllText(FileHelper.BasePath + userName + "_" + safeFileName + FileHelper.ConfigExtension, configJsonStr);
         }
 
 

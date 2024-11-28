@@ -10,7 +10,8 @@ public interface IConfigRepository
 
     void SaveConfiguration(GameConfiguration newConfig);
     public GameConfiguration GetConfigurationByName(string name);
-
+    public List<string> GetConfigsByUser(string userName);
+ 
     GameConfiguration DefaultConfiguration { get; set; }
     GameConfiguration DefaultConfiguration2 { get; set; } 
     GameConfiguration DefaultConfiguration3 { get; set; }
