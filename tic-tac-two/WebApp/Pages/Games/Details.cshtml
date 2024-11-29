@@ -72,16 +72,22 @@
             @Html.DisplayFor(model => model.Game.GridCenterCol)
         </dd>
         <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.Game.User)
+            @Html.DisplayNameFor(model => model.Game.User1)
         </dt>
         <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.Game.User.UserName)
+            @Html.DisplayFor(model => model.Game.User1!.UserName)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.Game.User2)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.Game.User2!.UserName)
         </dd>
         <dt class="col-sm-2">
             @Html.DisplayNameFor(model => model.Game.Configuration)
         </dt>
         <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.Game.Configuration.ConfigName)
+            @Html.DisplayFor(model => model.Game.Configuration!.ConfigName)
         </dd>
         <dt class="col-sm-2">
             @Html.DisplayNameFor(model => model.Game.CreatedAt)

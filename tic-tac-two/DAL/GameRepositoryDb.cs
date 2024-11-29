@@ -37,8 +37,10 @@ public class GameRepositoryDb : IGameRepository
         return new Game
         {
             GameName = gameName,
-            User = user,
-            UserId = user.Id,
+            User1 = user, //todo: wtf i do w the users
+            User1Id = user.Id,
+            User2 = null, //todo: wtf i do w the users
+            User2Id = 0, //todo: wtf i do w the users
             Configuration = config,
             ConfigurationId = config?.Id ?? 0,
             BoardData = boardDataJson,
@@ -50,7 +52,6 @@ public class GameRepositoryDb : IGameRepository
             GridStartCol = gameState.GridStartCol,
             GridCenterRow = gameState.GridCenterRow,
             GridCenterCol = gameState.GridCenterCol,
-            
         };
     }
 

@@ -92,6 +92,11 @@
 
         public bool PlacePiece(int x, int y, char playerSymbol)
         {
+            if (playerSymbol != GameState.MovingPlayer)
+            {
+                return false;
+            }
+            
             if (!IsInGrid(x, y) || GameState.Board[x, y] != '\0' || playerSymbol != GameState.MovingPlayer)
             {
                 return false;
