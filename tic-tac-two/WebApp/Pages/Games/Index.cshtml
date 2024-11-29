@@ -44,7 +44,10 @@
                 @Html.DisplayNameFor(model => model.Game[0].GridCenterCol)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.Game[0].User)
+                @Html.DisplayNameFor(model => model.Game[0].User1)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Game[0].User2)
             </th>
             <th>
                 @Html.DisplayNameFor(model => model.Game[0].Configuration)
@@ -89,10 +92,13 @@
                 @Html.DisplayFor(modelItem => item.GridCenterCol)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.User.UserName)
+                @Html.DisplayFor(modelItem => item.User1!.UserName)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.Configuration.ConfigName)
+                @Html.DisplayFor(modelItem => item.User2!.UserName)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Configuration!.ConfigName)
             </td>
             <td>
                 @Html.DisplayFor(modelItem => item.CreatedAt)

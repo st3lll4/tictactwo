@@ -7,6 +7,8 @@ using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.EntityFrameworkCore;
 using DAL;
 using Domain;
+using Humanizer;
+using Microsoft.EntityFrameworkCore.Query;
 
 namespace WebApp.Pages.Games
 {
@@ -19,13 +21,15 @@ namespace WebApp.Pages.Games
             _context = context;
         }
 
-        public IList<Game> Game { get;set; } = default!;
+        public IList<Game> Game { get; set; } = default!;
 
         public async Task OnGetAsync()
         {
             Game = await _context.Games
                 .Include(g => g.Configuration)
-                .Include(g => g.User).ToListAsync();
+                .Include(g => g.User1)
+                .Include(g => g.User2)
+                .ToListAsync();
         }
     }
 }

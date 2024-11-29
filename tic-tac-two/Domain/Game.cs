@@ -18,8 +18,12 @@ public class Game : BaseEntity
     public int GridCenterCol { get; set; }
     
 
-    public int UserId { get; set; }
-    public User User { get; set; } = default!;
+    public int User1Id { get; set; }
+    public User? User1 { get; set; }
+
+    public int? User2Id { get; set; }
+    public User? User2 { get; set; }
+    
     public int ConfigurationId { get; set; }
     public Configuration? Configuration { get; set; }
 }

@@ -75,9 +75,15 @@
             </div>
             <div class="form-group">
                 
-                <label asp-for="Game.UserId" class="control-label"></label>
-                <select asp-for="Game.UserId" class="form-control" asp-items="ViewBag.UserId"></select>
-                <span asp-validation-for="Game.UserId" class="text-danger"></span>
+                <label asp-for="Game.User1Id" class="control-label"></label>
+                <select asp-for="Game.User1Id" class="form-control" asp-items="ViewBag.User1Id"></select>
+                <span asp-validation-for="Game.User1Id" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+
+                <label asp-for="Game.User2Id" class="control-label"></label>
+                <select asp-for="Game.User2Id" class="form-control" asp-items="ViewBag.User2Id"></select>
+                <span asp-validation-for="Game.User2Id" class="text-danger"></span>
             </div>
             <div class="form-group">
                 

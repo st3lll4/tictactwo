@@ -1,10 +1,8 @@
 using DAL;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Add services to the container.
 
 var connectionString = builder.Configuration.GetConnectionString("DefaultConnection") ??
                        throw new InvalidOperationException("Connection string 'DefaultConnection' not found.");
@@ -12,7 +10,6 @@ var connectionString = builder.Configuration.GetConnectionString("DefaultConnect
 connectionString = connectionString.Replace("<%location%>", FileHelper.BasePath);
 
 
-// register "how to create a db when somebody asks for it"
 builder.Services.AddDbContext<AppDbContext>(options =>
     options.UseSqlite(connectionString));
 
@@ -22,11 +19,7 @@ builder.Services.AddDbContext<AppDbContext>(options =>
 //.AddScoped<>(); - create new one for every web request
 
 //builder.Services.AddScoped<IConfigRepository, ConfigRepositoryJson>();
-builder.Services.AddScoped<IConfigRepository>(provider =>
-{
-    var username = "stella";
-    return new ConfigRepositoryDb(username);
-});
+builder.Services.AddScoped<IConfigRepository, ConfigRepositoryDb>();
 builder.Services.AddScoped<IGameRepository, GameRepositoryDb>();
 
 

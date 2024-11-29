@@ -37,7 +37,8 @@ namespace WebApp.Pages.Games
             }
             Game = game;
            ViewData["ConfigurationId"] = new SelectList(_context.Configurations, "Id", "ConfigName");
-           ViewData["UserId"] = new SelectList(_context.Users, "Id", "UserName");
+           ViewData["User1Id"] = new SelectList(_context.Users, "Id", "User1Name");
+           ViewData["User2Id"] = new SelectList(_context.Users, "Id", "User2Name");
             return Page();
         }
 

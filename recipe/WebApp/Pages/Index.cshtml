@@ -1,0 +1,23 @@
+﻿@page
+@model IndexModel
+@{
+    ViewData["Title"] = "Home page";
+}
+
+<div>
+    <form method="post">
+        <input type="text" name="search">
+        <button type="submit">SEARCH</button>
+    </form>
+</div>
+
+<div>
+    @foreach (var recipe in Model.Recipes)
+    {
+        <div>
+            @recipe.RecipeName (
+            @string.Join(", ", recipe.IngredientsInRecipe!.Select(i => i.Ingredient!.IngredientName).ToList())
+            )
+        </div>
+    }
+</div>

@@ -1,7 +1,5 @@
 ﻿using tic_tac_two;
 
-
-Console.WriteLine("enter your username:");
 var user = GetUserName();
 
 

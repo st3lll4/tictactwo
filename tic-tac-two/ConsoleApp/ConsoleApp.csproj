@@ -10,7 +10,6 @@
 
     <ItemGroup>
       <ProjectReference Include="..\Console.UI\Console.UI.csproj" />
-      <ProjectReference Include="..\DTO\DTO.csproj" />
     </ItemGroup>
 
     <ItemGroup>

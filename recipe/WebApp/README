@@ -1,0 +1,3 @@
+dotnet aspnet-codegenerator razorpage -m Ingredient -dc AppDbContext -udl -outDir Pages/Ingredients --referenceScriptLibraries
+dotnet aspnet-codegenerator razorpage -m IngredientInRecipe -dc AppDbContext -udl -outDir Pages/IngredientsInRecipes --referenceScriptLibraries
+dotnet aspnet-codegenerator razorpage -m Recipe -dc AppDbContext -udl -outDir Pages/Recipes --referenceScriptLibraries

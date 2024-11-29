@@ -1,0 +1,54 @@
+@page
+@model WebApp.Pages.IngredientsInRecipes.IndexModel
+
+@{
+    ViewData["Title"] = "Index";
+}
+
+<h1>Index</h1>
+
+<p>
+    <a asp-page="Create">Create New</a>
+</p>
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.IngredientInRecipe[0].Amount)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.IngredientInRecipe[0].Recipe)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.IngredientInRecipe[0].Ingredient)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.IngredientInRecipe[0].CreatedAt)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model.IngredientInRecipe) {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.Amount)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Recipe!.RecipeName)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Ingredient!.IngredientName)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.CreatedAt)
+            </td>
+            <td>
+                <a asp-page="./Edit" asp-route-id="@item.Id">Edit</a> |
+                <a asp-page="./Details" asp-route-id="@item.Id">Details</a> |
+                <a asp-page="./Delete" asp-route-id="@item.Id">Delete</a>
+            </td>
+        </tr>
+}
+    </tbody>
+</table>

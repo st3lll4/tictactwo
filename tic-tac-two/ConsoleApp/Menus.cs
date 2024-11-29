@@ -1,3 +1,4 @@
+using DAL;
 using Domain;
 using UI;
 
@@ -50,8 +51,7 @@ namespace tic_tac_two
                     }
                 ]
             );
-
-            var controller = new GameController(_userName);
+            
             
             MainMenu = new Menu(
                 EMenuLevel.Main,
@@ -61,14 +61,14 @@ namespace tic_tac_two
                     {
                         Shortcut = "N",
                         Title = "New game",
-                        MenuItemAction = controller.MainLoop,
+                        MenuItemAction = () => new GameController(_userName).MainLoop(),
                     },
 
                     new MenuItem
                     {
                         Shortcut = "L",
                         Title = "Load game",
-                        MenuItemAction = controller.LoadGames
+                        MenuItemAction = () => new GameController(_userName).MainLoop(),
                     },
 
                     new MenuItem
