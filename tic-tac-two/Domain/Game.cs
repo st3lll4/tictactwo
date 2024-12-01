@@ -17,12 +17,12 @@ public class Game : BaseEntity
     public int GridCenterRow { get; set; }
     public int GridCenterCol { get; set; }
     
-
+    // [foreignkey]
     public int User1Id { get; set; }
-    public User? User1 { get; set; }
+    public User? User1 { get; set; } // navigation property
 
     public int? User2Id { get; set; }
-    public User? User2 { get; set; }
+    public User? User2 { get; set; } // navigation property
     
     public int ConfigurationId { get; set; }
     public Configuration? Configuration { get; set; }

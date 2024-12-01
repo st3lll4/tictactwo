@@ -1,38 +1,26 @@
 ﻿@page
 @model IndexModel
 @{
-    ViewData["Title"] = "New Game";
+    ViewData["Title"] = "TicTac";
 }
 
 <div class="container-fluid p-5 bg-primary text-white text-center">
-    <h1>Start a new game</h1>
+    <h1>WELCOME, BITCH</h1>
 </div>
 
-<div class="container-sm-">
-<div class="row">
-    <div class="col-sm-4">
-
-        @if (!string.IsNullOrWhiteSpace(Model.Error))
-        {
-            <div class="alert alert-danger" role="alert">
-                @Model.Error
-            </div>
-        }
-            
-        <div class="col-md-4">
-            <form method="post">
-                <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-                <div class="form-group">
-                    <label asp-for="UserName" class="control-label"></label>
-                    <input asp-for="UserName" class="form-control"/>
-                    <span asp-validation-for="UserName" class="text-danger"></span>
-                </div>
-                <div class="form-group">
-                    <input type="submit" value="Create" class="btn btn-primary"/>
-                </div>
-            </form>
-
-        </div>
+<form method="post">
+    <div class="form-group">
+        <select asp-for="GameMode">
+            <option></option>
+            <option value="Single player">Single player</option>
+            <option value="Multiplayer">Multiplayer</option>
+            <option value="Bots">Bots</option>
+        </select>
+        <span asp-validation-for="GameMode" class="text-danger"></span>
     </div>
-</div>
-</div>
+    <div class="form-group">
+        <input type="submit" class="btn btn-primary"/>
+    </div>
+</form>
+
+        

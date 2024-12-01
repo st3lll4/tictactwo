@@ -16,31 +16,35 @@ public class GameRepositoryDb : IGameRepository
         .EnableSensitiveDataLogging()
         .Options;
 
-    public void SaveGame(GameState gameState, string gameConfigName, string saveName, string userName)
+    public void SaveGame(GameState gameState, string gameConfigName, string saveName, string user1Name, string? user2Name)
     {
-        var user = _context.Users.FirstOrDefault(u => u.UserName == userName) ?? new User { UserName = userName };
+        var user1 = _context.Users.FirstOrDefault(u => u.UserName == user1Name) ?? new User { UserName = user1Name };
+        User? user2 = null;
+        if (user2Name != null) {
+            user2 = _context.Users.FirstOrDefault(u => u.UserName == user2Name) ??
+                        new User { UserName = user2Name };
+        }
+        
         var config = _context.Configurations.FirstOrDefault(c => c.ConfigName == gameConfigName);
 
-        var game = ConvertToGame(gameState, saveName, user, config); 
+        var game = ConvertToGame(gameState, saveName, user1, config, user2); 
         
         _context.Games.Add(game);
         _context.SaveChanges();
     }
     
-    private Game ConvertToGame(GameState gameState, string gameName, User user, Configuration? config)
+    private Game ConvertToGame(GameState gameState, string gameName, User user1, Configuration? config, User? user2)
     {
-        // Serialize GameConfiguration to JSON string
         var configString = JsonSerializer.Serialize(gameState.Config);
         var boardDataJson = JsonSerializer.Serialize(gameState.BoardData);
-
-
+        
         return new Game
         {
             GameName = gameName,
-            User1 = user, //todo: wtf i do w the users
-            User1Id = user.Id,
-            User2 = null, //todo: wtf i do w the users
-            User2Id = 0, //todo: wtf i do w the users
+            User1 = user1, // todo: wtf i do w the users
+            User1Id = user1.Id,
+            User2 = user2 ?? null,
+            User2Id = user2?.Id, // kas siin hakkab errorit viskama
             Configuration = config,
             ConfigurationId = config?.Id ?? 0,
             BoardData = boardDataJson,
@@ -59,8 +63,7 @@ public class GameRepositoryDb : IGameRepository
     {
         var configObject = JsonSerializer.Deserialize<GameConfiguration>(game.Config);
         var boardData = JsonSerializer.Deserialize<List<List<char>>>(game.BoardData);
-
-
+        
         return new GameState(configObject)
         {
             BoardData = boardData,
@@ -90,5 +93,9 @@ public class GameRepositoryDb : IGameRepository
 
     public List<string> GetGamesByUser(string user)
     {
-        return _context.Games.Where(g => g.User.UserName == user).Select(g => g.GameName).ToList();    }
+        return _context.Games.Where(
+                g => g.User1.UserName == user || 
+                     (g.User2 != null && g.User2.UserName == user))
+            .Select(g => g.GameName).ToList();    
+    }
 }

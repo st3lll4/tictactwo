@@ -1,0 +1,20 @@
+@page
+@model WebApp.Pages.StartGame
+
+<div class="container-fluid p-5 bg-primary text-white text-center">
+    <h1>PICK A CONFIG</h1>
+</div>
+
+<div class="row">
+    <div class="col-md-4">
+        <form method="post">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="form-group">
+                <button type="submit" name="action" value="new" class="btn btn-primary">New game</button>
+            </div>
+            <div class="form-group">
+                <button type="submit" name="action" value="saved" class="btn btn-primary">Saved game</button>
+            </div>
+        </form>
+    </div>
+</div>

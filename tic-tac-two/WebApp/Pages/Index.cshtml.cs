@@ -1,5 +1,6 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
+using System.ComponentModel.DataAnnotations;
 
 namespace WebApp.Pages;
 
@@ -7,23 +8,26 @@ public class IndexModel : PageModel
 {
     private readonly ILogger<IndexModel> _logger;
 
-    [BindProperty] public string UserName { get; set; }
+    [Required(ErrorMessage = "Select a gamemode!")]
+    [BindProperty]
+    public string GameMode { get; set; } = default!;
 
-    [BindProperty(SupportsGet = true)] public string Error { get; set; }
 
     public IndexModel(ILogger<IndexModel> logger)
     {
         _logger = logger;
     }
 
-    public IActionResult OnGet()
+    public void OnGet()
     {
-        if (!String.IsNullOrWhiteSpace(UserName))
-        {
-            return RedirectToPage("./Home", new { userName = UserName });
-        }
+    }
 
-        Error = "please enter an username or something!";
+    public IActionResult OnPost()
+    {
+        if (ModelState.IsValid)
+        {
+            return RedirectToPage("./Username", new { gamemode = GameMode });
+        }
         
         return Page();
     }

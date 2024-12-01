@@ -68,7 +68,7 @@ namespace tic_tac_two
                     {
                         Shortcut = "L",
                         Title = "Load game",
-                        MenuItemAction = () => new GameController(_userName).MainLoop(),
+                        MenuItemAction = () => new GameController(_userName).LoadGames(),
                     },
 
                     new MenuItem

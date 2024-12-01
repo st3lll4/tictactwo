@@ -1,0 +1,21 @@
+@page
+@model Username
+@{
+    ViewData["Title"] = "New Game";
+}
+
+<div class="container-fluid p-5 bg-primary text-white text-center">
+    <h1>WHO ARE YOU?</h1>
+</div>
+
+<form method="post">
+    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+    <div class="form-group">
+        <input asp-for="UserName" class="form-control"/>
+        <span asp-validation-for="UserName" class="text-danger"></span>
+    </div>
+    <div class="form-group">
+        <input type="submit" value="Enter" class="btn btn-primary"/>
+    </div>
+</form>
+           

@@ -139,7 +139,12 @@ namespace tic_tac_two
             var config = new GameConfiguration();
 
             Console.WriteLine("Name your configuration:");
-            var name = Console.ReadLine() ?? $"Config nr {_configRepository.GetConfigsByUser(_userName).Count + 1}";
+
+            var name = Console.ReadLine();
+            if (string.IsNullOrWhiteSpace(name))
+            {
+                name = $"{_userName}'s config nr {_configRepository.GetConfigsByUser(_userName).Count + 1}";
+            }
             config.ConfigName = name;
 
             const int min = 3;
@@ -178,16 +183,14 @@ namespace tic_tac_two
             var maxWinningCondition = Convert.ToInt32(config.MovableGridSize * Math.Sqrt(2));
             
             config.WinningCondition = GetValidInput(
-                "Enter the winning condition of the game (more than 3):", 4, maxWinningCondition);
+                "Enter the winning condition of the game (more than 3):", min, maxWinningCondition);
 
             config.InitialMoves = GetValidInput(
                 "Enter the number of moves have to made before moving the pieces or the grid:", 0, boardCapacity);
 
             config.MaxPieces = GetValidInput(
                 "Enter the number of pieces every player has:", config.WinningCondition, boardCapacity);
-
-            Console.WriteLine($"Configuration '{name}' created successfully. Press Enter to return to menu.");
-            Console.ReadLine();
+            
             return config;
         }
 
