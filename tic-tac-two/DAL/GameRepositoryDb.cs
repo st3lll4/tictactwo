@@ -44,7 +44,7 @@ public class GameRepositoryDb : IGameRepository
             User1 = user1, // todo: wtf i do w the users
             User1Id = user1.Id,
             User2 = user2 ?? null,
-            User2Id = user2?.Id, // kas siin hakkab errorit viskama
+            User2Id = user2?.Id,
             Configuration = config,
             ConfigurationId = config?.Id ?? 0,
             BoardData = boardDataJson,
@@ -82,6 +82,11 @@ public class GameRepositoryDb : IGameRepository
     public GameState GetGameByName(string name)
     {
         return ConvertToGameState(_context.Games.FirstOrDefault(g => g.GameName == name)!);
+    }
+
+    public bool CheckIfGameExists(string name)
+    {
+        return _context.Games.Any(g => g.GameName == name);
     }
     
 

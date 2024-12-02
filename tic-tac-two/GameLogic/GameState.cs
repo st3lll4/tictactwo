@@ -30,12 +30,15 @@ namespace GameLogic
         
         public bool IsStandardTicTacToe { get; set; }
         
-        public int Password { get; set;  }
-        
         private readonly JsonSerializerOptions _options = new()
         {
             WriteIndented = true
         };
+
+        public GameState()
+        {
+            
+        }
 
         public GameState(GameConfiguration config)
         {

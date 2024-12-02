@@ -8,6 +8,7 @@ public interface IGameRepository
     public GameState GetGameByName(string name);
     public List<string> GetGameNames();
     public List<string> GetGamesByUser(string user);
+    public bool CheckIfGameExists(string name);
 
 
 }

@@ -5,7 +5,8 @@ namespace DAL;
 
 public class GameRepositoryJson : IGameRepository
 {
-    public void SaveGame(GameState gameState, string gameConfigName, string saveName, string userName, string? user2Name)
+    public void SaveGame(GameState gameState, string gameConfigName, string saveName, string userName,
+        string? user2Name)
     {
         string fileName;
         if (saveName != "")
@@ -15,9 +16,9 @@ public class GameRepositoryJson : IGameRepository
         else
         {
             fileName = FileHelper.BasePath + userName + "_" + user2Name + "_" +
-                           gameConfigName + "_" +
-                           saveName +
-                           FileHelper.GameExtension;
+                       gameConfigName + "_" +
+                       saveName +
+                       FileHelper.GameExtension;
         }
 
         var jsonStateString = JsonSerializer.Serialize(gameState, new JsonSerializerOptions
@@ -39,16 +40,18 @@ public class GameRepositoryJson : IGameRepository
 
         return result;
     }
-    
-    public List<string> GetGamesByUser(string user) {
+
+    public List<string> GetGamesByUser(string user)
+    {
         var files = Directory.GetFiles(FileHelper.BasePath, "*" + user + "_*" + FileHelper.GameExtension);
-        
+
         var result = new List<string>();
         foreach (var file in files)
         {
             var primaryName = Path.GetFileNameWithoutExtension(Path.GetFileNameWithoutExtension(file));
             result.Add(primaryName);
         }
+
         return result;
     }
 
@@ -58,5 +61,15 @@ public class GameRepositoryJson : IGameRepository
         var gameJsonStr = File.ReadAllText(filePath);
         var gameState = JsonSerializer.Deserialize<GameState>(gameJsonStr);
         return gameState ?? throw new InvalidOperationException();
+    }
+
+    public bool CheckIfGameExists(string name)
+    {
+        var filePath = FileHelper.BasePath + name + FileHelper.GameExtension;
+        if (File.Exists(filePath))
+        {
+            return true;
+        }
+        return false; 
     }
 }

@@ -1,0 +1,18 @@
+@page
+@model WebApp.Pages.JoinGame
+
+<div class="container-fluid p-5 bg-primary text-white text-center">
+    <h1>PICK AN ID</h1>
+</div>
+
+<div class="row">
+    <div class="col-md-4">
+        <form method="post">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            Enter Game ID to join
+            <div>
+                <input type="text" asp-for="GameId" class="form-control"></input>
+            </div>
+        </form>
+    </div>
+</div>
