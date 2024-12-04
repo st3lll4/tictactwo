@@ -46,27 +46,7 @@ public class PlayGame : PageModel
     {
         
         var game = _gameRepository.GetGameByName(GameName);
-
-        if (GameMode == "Multiplayer" &&
-            (string.IsNullOrEmpty(game.Player1Name) || string.IsNullOrEmpty(game.Player2Name)))
-        {
-            IsGameReady = false;
-            Message = "Waiting for the second player to join................";
-            return Page();
-        }
-
-        if (GameMode == "Single player")
-        {
-            User2Name = "other dude";
-            //use playertypes? put ai here
-        }
-
-        if (GameMode == "Bots")
-        {
-            // not sure what to do here rn 
-        }
-
-        IsGameReady = true;
+        
 
         GameState = new GameState(game.Config)
         {
@@ -93,6 +73,38 @@ public class PlayGame : PageModel
         {
             MovingPlayer = User2Name;
         }
+        
+        if (GameMode == "Multiplayer" &&
+            (string.IsNullOrEmpty(GameState.Player1Name) || string.IsNullOrEmpty(GameState.Player2Name)))
+        { 
+            IsGameReady = false;
+            Message = "Waiting for the second player to join................";
+            if (GameState.Player2Name == null) 
+            {
+                Message = "Player2Name not set; breaking potential redirect loop.";
+                return Page();
+            }
+            return RedirectToPage(new
+            {
+                username = game.Player1Name,
+                user2name = game.Player2Name, 
+                gamemode = GameMode,
+                gameName = GameName,
+                message = Message,
+            });
+        }
+
+        if (GameMode == "Single player")
+        {
+            User2Name = "other dude";
+        }
+
+        if (GameMode == "Bots")
+        {
+            // not sure what to do here rn 
+        }
+
+        IsGameReady = true;
         
         if (direction != null && !GameState.IsGameOver)
         {
@@ -140,11 +152,11 @@ public class PlayGame : PageModel
             }
 
             SkipToEnd:
-            _gameRepository.UpdateGame(GameState, game.Config.ConfigName, GameName, UserName, null);
+            _gameRepository.UpdateGame(GameState, game.Config.ConfigName, GameName, UserName, User2Name);
             return RedirectToPage(new
             {
-                username = UserName,
-                user2name = User2Name,
+                username = game.Player1Name,
+                user2name = game.Player2Name, // doesnt get player 2 for player 1
                 gamemode = GameMode,
                 gameName = GameName,
                 message = Message,

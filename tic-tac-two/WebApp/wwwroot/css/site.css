@@ -12,6 +12,7 @@ html {
     background: linear-gradient(90deg, rgba(255, 197, 222, 1) 0%, rgba(218, 189, 254, 1) 100%);
     border-radius: 1rem;
     margin-bottom: 2rem;
+    height: 12rem;
 }
 
 .btn:focus, .btn:active:focus, .btn-link.nav-link:focus, .form-control:focus, .form-check-input:focus {

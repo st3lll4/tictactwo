@@ -43,12 +43,11 @@ public class JoinGame : PageModel
             && _gameRepository.IsGameJoinable(GameName))
         {
             var game = _gameRepository.GetGameByName(GameName);
-            var user1 = game.Player1Name;
-            _gameRepository.JoinMultiplayerGame(GameName, user1 ,UserName);
+            _gameRepository.JoinMultiplayerGame(GameName, game.Player1Name, UserName);
             return RedirectToPage("./PlayGame", new
             {
-                userName = user1,
-                user2Name = UserName,
+                userName = game.Player1Name,
+                user2Name = UserName, 
                 gameMode = GameMode,
                 gameName = GameName
             });

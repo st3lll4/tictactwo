@@ -1,6 +1,8 @@
 @page
 @model WebApp.Pages.PlayGame
 
+<meta http-equiv="refresh" content="5">
+
 <div class="container-fluid p-3 text-white text-center" id="header">
     @if (@Model.Message == null)
     {
@@ -24,7 +26,6 @@
 
 <div class="wrapper">
     <div class="sidebar">
-
     </div>
     <div class="board">
         @for (int y = 0; y < Model.Board.GetLength(1); y++)
@@ -36,7 +37,7 @@
                     var cellClass = isInGrid ? "square-movable" : "square";
 
                     <div class="@cellClass">
-                        @if (!Model.GameState.IsGameOver)
+                        @if (!Model.GameState.IsGameOver || @Model.IsGameReady)
                         {
                             @if (Model.Board[x, y] != '\0')
                             {

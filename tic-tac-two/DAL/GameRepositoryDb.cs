@@ -76,6 +76,7 @@ public class GameRepositoryDb : IGameRepository
         }
         
         User? user1 = _context.Users.FirstOrDefault(u => u.Id == game.User1Id);
+        User? user2 = game.User2Id == null? null : _context.Users.FirstOrDefault(u => u.Id == game.User2Id);
         
         return new GameState(configObject!)
         {
@@ -89,7 +90,8 @@ public class GameRepositoryDb : IGameRepository
             GridCenterRow = game.GridCenterRow,
             GridCenterCol = game.GridCenterCol,
             IsGameOver = game.IsGameOver,
-            Player1Name = user1?.UserName!
+            Player1Name = user1?.UserName!,
+            Player2Name = user2?.UserName!
         };
     }
 
@@ -121,6 +123,7 @@ public class GameRepositoryDb : IGameRepository
         game.GridCenterRow = gameState.GridCenterRow;
         game.GridCenterCol = gameState.GridCenterCol;
         game.IsGameOver = gameState.IsGameOver;
+        
 
         if (game.User1!.UserName != userName)
         {
@@ -131,7 +134,7 @@ public class GameRepositoryDb : IGameRepository
 
         if (user2Name != null && (game.User2 == null || game.User2.UserName != user2Name))
         {
-            var user2 = _context.Users.FirstOrDefault(u => u.UserName == user2Name) ?? new User { UserName = user2Name };
+            var user2 = _context.Users.FirstOrDefault(u => u.UserName == user2Name) ?? new User { UserName = user2Name, PlayerType = EPlayerType.Player};
             game.User2 = user2;
             game.User2Id = user2.Id;
         }
