@@ -1,26 +1,28 @@
 ﻿@page
 @model IndexModel
 @{
-    ViewData["Title"] = "TicTac";
+    ViewData["Title"] = "TicTacTWUH";
 }
 
-<div class="container-fluid p-5 bg-primary text-white text-center">
-    <h1>WELCOME, BITCH</h1>
+<div class="container-fluid p-5 bg-primary text-white text-center" id="header">
+    <h1>WELCOME!</h1>
+    <h5>Choose a gamemode to play dick dack tuah</h5>
 </div>
 
-<form method="post">
-    <div class="form-group">
-        <select asp-for="GameMode">
-            <option></option>
-            <option value="Single player">Single player</option>
-            <option value="Multiplayer">Multiplayer</option>
-            <option value="Bots">Bots</option>
-        </select>
-        <span asp-validation-for="GameMode" class="text-danger"></span>
-    </div>
-    <div class="form-group">
-        <input type="submit" class="btn btn-primary"/>
-    </div>
-</form>
-
+<div class="wrapper">
+    <form method="post">
+        <div class="form-group">
+            <select asp-for="GameMode" class="form-control" style="width:auto;">
+                <option></option>
+                <option value="Single player">Single player</option>
+                <option value="Multiplayer">Multiplayer</option>
+                <option value="Bots">Bots</option>
+            </select>
+            <span asp-validation-for="GameMode" class="text-danger"></span>
+        </div>
+        <div class="form-group">
+            <button type="submit" class="submit-button">GO</button>
+        </div>
+    </form>
+</div>
         

@@ -1,27 +1,215 @@
 @page
 @model WebApp.Pages.PlayGame
 
-<div class="container-fluid p-3 text-white text-center"
-     style="background: linear-gradient(to bottom, pink, lightpink);">
-    <h1>PLAY!</h1>
-</div>
-
-<div class="board">
-    @for (int i = 0; i < Model.Board.GetLength(0); i++)
+<div class="container-fluid p-3 text-white text-center" id="header">
+    @if (@Model.Message == null)
     {
-        @for (int j = 0; j < Model.Board.GetLength(1); j++) 
-        {
-            <div class="square" id="square">
-                @if (@Model.Board[i, j] != '\0')
-                {
-                <div>@Model.Board[i, j]</div>
-                }
-                else
-                {
-                    <div>   </div>
-                }
-            </div>
-        }
+        <h1>PLAY!</h1>
+    }
+    else
+    {
+        <h1>@Model.Message</h1>
     }
 </div>
 
+<div class="menu">
+    <div class="menuitem">
+        Make your move, @Model.GameState.MovingPlayer
+    </div>
+    @if (@Model.GameMode == "Multiplayer" || Model.GameMode == "Bots") {
+        <button id="refreshButton" class="menuitem" onclick="refreshPage()">Bot move</button>
+    }
+</div>
+
+
+<div class="wrapper">
+    <div class="sidebar">
+
+    </div>
+    <div class="board">
+        @for (int y = 0; y < Model.Board.GetLength(1); y++)
+        {
+            <div class="col">
+                @for (int x = 0; x < Model.Board.GetLength(0); x++)
+                {
+                    var isInGrid = Model.Brain.IsInGrid(x, y);
+                    var cellClass = isInGrid ? "square-movable" : "square";
+
+                    <div class="@cellClass">
+                        @if (!Model.GameState.IsGameOver)
+                        {
+                            @if (Model.Board[x, y] != '\0')
+                            {
+                                <a
+                                    asp-route-x="@x"
+                                    asp-route-y="@y"
+                                    asp-route-gamename="@Model.GameName"
+                                    asp-route-username="@Model.UserName"
+                                    asp-route-gamemode="@Model.GameMode"
+                                    class="text-in-square">
+                                    @Model.Board[x, y]
+                                </a>
+                            }
+                            else
+                            {
+                                <a
+                                    asp-route-x="@x"
+                                    asp-route-y="@y"
+                                    asp-route-gamename="@Model.GameName"
+                                    asp-route-username="@Model.UserName"
+                                    asp-route-gamemode="@Model.GameMode"
+                                    class="text-in-square">
+                                </a>
+                            }
+                        }
+                        else
+                        {
+                            @if (Model.Board[x, y] != '\0')
+                            {
+                                <div class="text-in-square">@Model.Board[x, y]</div>
+                            }
+                            else
+                            {
+                                <div class="text-in-square"></div>
+                            }
+                        }
+                    </div>
+                }
+            </div>
+        }
+    </div>
+    <div class="sidebar">
+        @if (Model.Brain.GetMovingPlayerPiecesPlaced() >= Model.GameState.Config.InitialMoves)
+        {
+            <div class="control-panel">
+                @for (int y = 0; y < 3; y++)
+                {
+                    @for (int x = 0; x < 3; x++)
+                    {
+                        <div class="small-square">
+                            <div class="text-in-small-square">
+                                @if (x == 0 && y == 0)
+                                {
+                                    <a class="text-in-small-square"
+                                       asp-route-direction="ul"
+                                       asp-route-gamename="@Model.GameName"
+                                       asp-route-username="@Model.UserName"
+                                       asp-route-gamemode="@Model.GameMode">
+                                        &#8598;
+                                    </a>
+                                }
+                                else if (x == 1 && y == 0)
+                                {
+                                    <a class="text-in-small-square"
+                                       asp-route-direction="u"
+                                       asp-route-gamename="@Model.GameName"
+                                       asp-route-username="@Model.UserName"
+                                       asp-route-gamemode="@Model.GameMode">
+                                        &#8593;
+                                    </a>
+                                }
+                                else if (x == 2 && y == 0)
+                                {
+                                    <a class="text-in-small-square"
+                                       asp-route-direction="ur"
+                                       asp-route-gamename="@Model.GameName"
+                                       asp-route-username="@Model.UserName"
+                                       asp-route-gamemode="@Model.GameMode">
+                                        &#8599;
+                                    </a>
+                                }
+                                else if (x == 0 && y == 1)
+                                {
+                                    <a class="text-in-small-square"
+                                       asp-route-direction="l"
+                                       asp-route-gamename="@Model.GameName"
+                                       asp-route-username="@Model.UserName"
+                                       asp-route-gamemode="@Model.GameMode">
+                                        &#8592;
+                                    </a>
+                                }
+                                else if (x == 2 && y == 1)
+                                {
+                                    <a class="text-in-small-square"
+                                       asp-route-direction="r"
+                                       asp-route-gamename="@Model.GameName"
+                                       asp-route-username="@Model.UserName"
+                                       asp-route-gamemode="@Model.GameMode">
+                                        &#8594;
+                                    </a>
+                                }
+                                else if (x == 0 && y == 2)
+                                {
+                                    <a class="text-in-small-square"
+                                       asp-route-direction="dl"
+                                       asp-route-gamename="@Model.GameName"
+                                       asp-route-username="@Model.UserName"
+                                       asp-route-gamemode="@Model.GameMode">
+                                        &#8601;
+                                    </a>
+                                }
+                                else if (x == 1 && y == 2)
+                                {
+                                    <a class="text-in-small-square"
+                                       asp-route-direction="d"
+                                       asp-route-gamename="@Model.GameName"
+                                       asp-route-username="@Model.UserName"
+                                       asp-route-gamemode="@Model.GameMode">
+                                        &#8595;
+                                    </a>
+                                }
+                                else if (x == 2 && y == 2)
+                                {
+                                    <a class="text-in-small-square"
+                                       asp-route-direction="dr"
+                                       asp-route-gamename="@Model.GameName"
+                                       asp-route-username="@Model.UserName"
+                                       asp-route-gamemode="@Model.GameMode">
+                                        &#8600;
+                                    </a>
+                                }
+                                else if (x == 1 && y == 1)
+                                {
+                                    <div class="text-in-small-square">
+                                        <img src="images/dino.jpg" alt="">
+                                    </div>
+                                }
+                            </div>
+                        </div>
+                    }
+                }
+            </div>
+        }
+    </div>
+</div>
+
+
+@section Scripts {
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script>
+        @if (Model.ShowSweetAlert)
+        {
+            <text>
+                Swal.fire({
+                    title: "Game over!",
+                    text: '@Model.SweetAlertMessage',
+                    width: 600,
+                    padding: "3em",
+                    color: "#ff7ace",
+                    background: "#fff url(/images/happy.png)",
+                    confirmButtonText: "Bye-bye!",
+                    confirmButtonColor: "#a6056b",
+                    backdrop: `
+    rgba(0,0,123,0.4)
+    url("/images/nyan-cat.gif")
+    left top
+    no-repeat
+  `
+                });
+            </text>
+        }
+        function refreshPage() {
+            window.location.reload(); // not sure if works
+        }
+    </script>
+}

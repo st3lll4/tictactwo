@@ -41,7 +41,7 @@ public class GameRepositoryDb : IGameRepository
         return new Game
         {
             GameName = gameName,
-            User1 = user1, // todo: wtf i do w the users
+            User1 = user1,
             User1Id = user1.Id,
             User2 = user2 ?? null,
             User2Id = user2?.Id,
@@ -56,6 +56,7 @@ public class GameRepositoryDb : IGameRepository
             GridStartCol = gameState.GridStartCol,
             GridCenterRow = gameState.GridCenterRow,
             GridCenterCol = gameState.GridCenterCol,
+            IsGameOver = gameState.IsGameOver
         };
     }
 
@@ -64,17 +65,20 @@ public class GameRepositoryDb : IGameRepository
         var configObject = JsonSerializer.Deserialize<GameConfiguration>(game.Config);
         var boardData = JsonSerializer.Deserialize<List<List<char>>>(game.BoardData);
         
-        return new GameState(configObject)
+        return new GameState(configObject!)
         {
-            BoardData = boardData,
+            BoardData = boardData!,
             MovingPlayer = game.MovingPlayer,
-            Config = configObject,
+            Config = configObject!,
             Player1PiecesPlaced = game.Player1PiecesPlaced,
             Player2PiecesPlaced = game.Player2PiecesPlaced,
             GridStartRow = game.GridStartRow,
             GridStartCol = game.GridStartCol,
             GridCenterRow = game.GridCenterRow,
             GridCenterCol = game.GridCenterCol,
+            IsGameOver = game.IsGameOver,
+            Player1Name = game.User1.UserName,
+            Player2Name = game.User2?.UserName ?? "",
         };
     }
 
@@ -88,7 +92,69 @@ public class GameRepositoryDb : IGameRepository
     {
         return _context.Games.Any(g => g.GameName == name);
     }
-    
+
+    public void UpdateGame(GameState gameState, string configName, string gameName, string userName, string? user2Name)
+    {
+        var game = _context.Games
+            .Include(g => g.User1)
+            .Include(g => g.User2)
+            .FirstOrDefault(g => g.GameName == gameName);
+
+        game!.BoardData = JsonSerializer.Serialize(gameState.BoardData);
+        game.MovingPlayer = gameState.MovingPlayer;
+        game.Config = JsonSerializer.Serialize(gameState.Config);
+        game.Player1PiecesPlaced = gameState.Player1PiecesPlaced;
+        game.Player2PiecesPlaced = gameState.Player2PiecesPlaced;
+        game.GridStartRow = gameState.GridStartRow;
+        game.GridStartCol = gameState.GridStartCol;
+        game.GridCenterRow = gameState.GridCenterRow;
+        game.GridCenterCol = gameState.GridCenterCol;
+        game.IsGameOver = gameState.IsGameOver;
+
+        if (game.User1!.UserName != userName)
+        {
+            var user1 = _context.Users.FirstOrDefault(u => u.UserName == userName) ?? new User { UserName = userName };
+            game.User1 = user1;
+            game.User1Id = user1.Id;
+        }
+
+        if (user2Name != null && (game.User2 == null || game.User2.UserName != user2Name))
+        {
+            var user2 = _context.Users.FirstOrDefault(u => u.UserName == user2Name) ?? new User { UserName = user2Name };
+            game.User2 = user2;
+            game.User2Id = user2.Id;
+        }
+        else if (user2Name == null && game.User2 != null)
+        {
+            game.User2 = null;
+            game.User2Id = null;
+        }
+
+        _context.Games.Update(game);
+        _context.SaveChanges();
+    }
+
+    public bool IsGameJoinable(string name)
+    {
+        var game = _context.Games.FirstOrDefault(g => g.GameName == name);
+        return game!.User2Id == null; // returns false if game is not joinable
+    }
+
+    public void JoinMultiplayerGame(string gameName, string player1Name ,string player2Name)
+    {
+            var game = GetGameByName(gameName);
+            if (string.IsNullOrEmpty(game.Player2Name))
+            {
+                game.Player2Name = player2Name;
+                UpdateGame(game, game.Config.ConfigName, gameName, player1Name, player2Name);
+            }
+    }
+
+    public void DeleteGame(string name)
+    {
+        _context.Remove(_context.Games.Where(g => g.GameName == name));
+        _context.SaveChanges();
+    }
 
     public List<string> GetGameNames()
     {

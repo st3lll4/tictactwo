@@ -106,6 +106,9 @@ namespace DAL.Migrations
                     b.Property<int>("GridStartRow")
                         .HasColumnType("INTEGER");
 
+                    b.Property<bool>("IsGameOver")
+                        .HasColumnType("INTEGER");
+
                     b.Property<char>("MovingPlayer")
                         .HasColumnType("TEXT");
 

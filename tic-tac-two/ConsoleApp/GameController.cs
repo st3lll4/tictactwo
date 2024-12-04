@@ -12,14 +12,14 @@ namespace tic_tac_two
         
         private static string _userName = default!;
         
-        private static bool _quit = false;
+        private static bool _quit = false; // todo: can use gamestates isgameover
         
         public GameController(string userName)
         {
             _userName = userName;
             _currentConfig = ConfigurationManager.CurrentConfiguration;
             _brain = new GameBrain(new GameState(_currentConfig));
-            _gameRepository = new GameRepositoryDb(); // change here between json and db
+            _gameRepository = new GameRepositoryJson(); // change here between json and db
         }
 
         public string MainLoop()

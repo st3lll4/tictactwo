@@ -34,7 +34,7 @@ public class Username : PageModel
         {
             var userExists = _context.Users.Any(u => u.UserName == UserName); // todo: what if i use json
 
-            if (!userExists)
+            if (!userExists) // todo: siia tuleb juurde lisada mis teha kui kasutab json
             {
                 _context.Users.Add(new User { UserName = UserName, PlayerType = EPlayerType.Player });
                 _context.SaveChanges();

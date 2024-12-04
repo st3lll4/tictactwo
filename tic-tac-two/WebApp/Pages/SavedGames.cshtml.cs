@@ -1,3 +1,4 @@
+using System.Text.Json;
 using DAL;
 using Domain;
 using GameLogic;
@@ -20,7 +21,7 @@ public class SavedGames : PageModel
 
     public SelectList GameSelectList { get; set; } = default!;
 
-    [BindProperty] public Game SelectedGame { get; set; }
+    [BindProperty] public string SelectedGame { get; set; }
 
 
     public SavedGames(IGameRepository gameRepository, IConfigRepository configRepository)
@@ -34,7 +35,7 @@ public class SavedGames : PageModel
         ViewData["UserName"] = UserName;
 
         var selectListData = _gameRepository.GetGamesByUser(UserName)
-            .Select(name => new { value = name })
+            .Select(name => name)
             .ToList();
 
         if (selectListData.Count == 0)
@@ -49,9 +50,7 @@ public class SavedGames : PageModel
 
     public IActionResult OnPost()
     {
-        var config = _configRepository.GetConfigurationByName(SelectedGame.Config);
-        var gameState = new GameState(config);
-        return RedirectToPage("./PlayGame", new { username = UserName, gamemode = GameMode, gamestate = gameState });
+        return RedirectToPage("./PlayGame", new { username = UserName, gamemode = GameMode, gameName = SelectedGame });
     }
     
     public IActionResult OnPostBack()

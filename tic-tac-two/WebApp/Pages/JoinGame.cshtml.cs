@@ -1,28 +1,58 @@
+using DAL;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
+using Microsoft.AspNetCore.Mvc.Rendering;
 
 namespace WebApp.Pages;
 
 public class JoinGame : PageModel
 {
+    private readonly IGameRepository _gameRepository;
     [BindProperty(SupportsGet = true)] public required string UserName { get; set; }
 
     [BindProperty(SupportsGet = true)] public required string GameMode { get; set; }
-    
-    [BindProperty] public string GameId { get; set; }
-    
+
+    [BindProperty] public required string GameName { get; set; }
+    [BindProperty(SupportsGet = true)] public string? Error { get; set; }
+    public SelectList GameSelectList { get; set; }
+
+    [BindProperty(SupportsGet = true)] public required string User2Name { get; set; }
+
+    public JoinGame(IGameRepository gameRepository)
+    {
+        _gameRepository = gameRepository;
+    }
+
     public IActionResult OnGet()
     {
+        var selectListData = _gameRepository.GetGameNames()
+            .Where(n =>
+            {
+                var game = _gameRepository.GetGameByName(n);
+                return !game.IsGameOver && _gameRepository.IsGameJoinable(n);
+            })
+            .Select(name => name)
+            .ToList();
+
+        GameSelectList = new SelectList(selectListData);
         return Page();
     }
 
+
     public IActionResult OnPost(string action)
     {
-        if (action == "join")
+        if (_gameRepository.CheckIfGameExists(GameName)
+            && _gameRepository.IsGameJoinable(GameName))
         {
-            return RedirectToPage("./PlayGame", new { username = UserName, gamemode = GameMode, gameid = GameId });
+            return RedirectToPage("./PlayGame", new
+            {
+                username = UserName,
+                user2name = User2Name,
+                gamemode = GameMode,
+                gameName = GameName
+            });
         }
-
+        Error = "cant join this game";
         return Page();
     }
 }

@@ -1,23 +1,24 @@
 @page
 @model WebApp.Pages.StartGame
 
-<div class="container-fluid p-5 bg-primary text-white text-center">
+@{
+    ViewData["Title"] = "Game settings";
+}
+
+<div class="container-fluid p-5 bg-primary text-white text-center" id="header">
     <h1>PICK A THING</h1>
 </div>
 
-<div class="row">
-    <div class="col-md-4">
-        <form method="post">
-            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-            <div class="form-group">
-                <button type="submit" name="action" value="new" class="btn btn-primary">New game</button>
-            </div>
-            <div class="form-group">
-                <button type="submit" name="action" value="saved" class="btn btn-primary">Saved game</button>
-            </div>
-            <div class="form-group">
-                <button type="submit" name="action" value="join" class="btn btn-primary">Join game</button>
-            </div>
-        </form>
-    </div>
+<div class="wrapper">
+    <form method="post">
+        <div class="form-group">
+            <button type="submit" name="action" value="new" class="submit-button">New game</button>
+        </div>
+        <div class="form-group">
+            <button type="submit" name="action" value="saved" class="submit-button">Saved game</button>
+        </div>
+        <div class="form-group">
+            <button type="submit" name="action" value="join" class="submit-button">Join game</button>
+        </div>
+    </form>
 </div>

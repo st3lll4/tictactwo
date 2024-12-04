@@ -16,7 +16,8 @@ public class Game : BaseEntity
     public int GridStartCol { get; set; }
     public int GridCenterRow { get; set; }
     public int GridCenterCol { get; set; }
-    
+    public bool IsGameOver { get; set; }
+
     // [foreignkey]
     public int User1Id { get; set; }
     public User? User1 { get; set; } // navigation property

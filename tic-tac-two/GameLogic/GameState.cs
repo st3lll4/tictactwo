@@ -29,11 +29,15 @@ namespace GameLogic
         public int WinCondition { get; set; }
         
         public bool IsStandardTicTacToe { get; set; }
-        
+        public bool IsGameOver { get; set; }
+
         private readonly JsonSerializerOptions _options = new()
         {
             WriteIndented = true
         };
+        
+        public string Player1Name { get; set; }
+        public string Player2Name { get; set; }
 
         public GameState()
         {
@@ -54,7 +58,6 @@ namespace GameLogic
             
             GridStartRow = GridCenterRow - (GridSize / 2);
             GridStartCol = GridCenterCol - (GridSize / 2);
-
 
             IsStandardTicTacToe = config.MovableGridSize == config.Width && config.MovableGridSize == config.Height;
             

@@ -72,4 +72,45 @@ public class GameRepositoryJson : IGameRepository
         }
         return false; 
     }
+
+    public void UpdateGame(GameState gameState, string configName, string gameName, string userName, string? user2Name) //todo: check if works
+    {
+        var existingFile = FileHelper.BasePath + $"*{gameName}*{FileHelper.GameExtension}";
+
+        File.Delete(existingFile);
+        
+        var fileName = FileHelper.BasePath + userName + "_" + user2Name + "_" +
+                       configName + "_" +
+                       gameName +
+                       FileHelper.GameExtension;
+        var jsonStateString = JsonSerializer.Serialize(gameState, new JsonSerializerOptions
+        {
+            WriteIndented = true
+        });
+        File.WriteAllText(fileName, jsonStateString);
+    }
+
+    public bool IsGameJoinable(string name) // todo: test
+    {
+        var filePath = FileHelper.BasePath + $"*__{name}*{FileHelper.GameExtension}";
+        return File.Exists(filePath);// returns true if game is joinable
+    }
+
+    public void JoinMultiplayerGame(string gameName, string player1Name, string player2Name)
+    {
+        var game = GetGameByName(gameName);
+        
+        if (string.IsNullOrEmpty(game.Player2Name))
+        {
+            game.Player2Name = player2Name;
+            UpdateGame(game, game.Config.ConfigName, gameName, player1Name, player2Name);
+        }
+    }
+
+    public void DeleteGame(string name) //todo: check if works 
+    {
+        var existingFile = FileHelper.BasePath + $"*{name}*{FileHelper.GameExtension}";
+
+        File.Delete(existingFile);
+    }
 }

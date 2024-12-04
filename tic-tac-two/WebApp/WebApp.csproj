@@ -51,4 +51,11 @@
       <Folder Include="Pages\Users\" />
     </ItemGroup>
 
+
+
+
+    <ItemGroup>
+      <None Include="wwwroot\images\dino.jpg" />
+    </ItemGroup>
+
 </Project>

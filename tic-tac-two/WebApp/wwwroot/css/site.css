@@ -8,6 +8,12 @@ html {
     }
 }
 
+#header {
+    background: linear-gradient(90deg, rgba(255, 197, 222, 1) 0%, rgba(218, 189, 254, 1) 100%);
+    border-radius: 1rem;
+    margin-bottom: 2rem;
+}
+
 .btn:focus, .btn:active:focus, .btn-link.nav-link:focus, .form-control:focus, .form-check-input:focus {
     box-shadow: 0 0 0 0.1rem white, 0 0 0 0.25rem #258cfb;
 }
@@ -18,59 +24,178 @@ html {
 }
 
 body {
-    margin-bottom: 60px;
+    margin: 0;
+    background: rgb(255, 240, 246);
+    background: linear-gradient(180deg, rgba(255, 240, 246, 1) 0%, rgba(236, 221, 255, 1) 100%) fixed;
+    font-size: 1rem;
+    font-family: "Gill Sans MT", sans-serif;
+}
+
+main {
+    width: 100%;
+    min-height: 75%;
+    margin: 0 auto; /* align to center */
 }
 
 footer {
     position: absolute;
-    bottom: 0;
     left: 0;
-    margin: auto;
+    margin: 0 auto;
     width: 100%;
     height: 3rem;
 }
 
-.board {
-    width: 33rem;
-    height: 31rem;
-    margin: auto;
-    border: 1px solid
-    white;
+.nav-link:hover {
+    color: lightpink; 
+}
+
+.menu {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, 10rem);
+    justify-content: center;
+    align-items: center;
+}
+
+.menuitem {
+    margin: 1rem;
+    border-radius: 0.3rem;
+    background-color: hotpink;
+    padding: 1rem;
+    color: white;
+    text-align: center;
+    border: white;
+}
+
+.col {
+    display: grid;
+}
+
+.wrapper {
     display: flex;
-    flex-wrap: wrap;
+    justify-content: center;
+    width: 100%;
+}
+
+.wrapper form {
+    display: grid;
+    justify-content: center;
+    padding: 0.5rem
+}
+
+.wrapper form div {
+    margin: 0 auto 1rem
+}
+
+.message { 
+    font-size: 20px;
+    color: rebeccapurple;
+}
+
+.sidebar {
+    flex: 1;
+    display: flex;
+    justify-content: center;
+}
+
+.board {
+    flex: 5;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, 4rem);
+    justify-content: center;
 }
 
 .square {
-    width: 5rem;
-    height: 5rem;
-    border: 1px solid
-    white;
-    margin-right: 4px;
-    border-radius: 30px;
-    background:
-            hotpink;
-    opacity: 80;
-}
-
-.square div {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    font-size: 3rem;
+    width: 4rem;
+    height: 4rem;
+    border: 1px solid;
+    border-radius: 0.7rem;
+    background: hotpink;
+    display: grid;
     color: white;
-}
-
-.square:hover {
-    background:
-            lightpink;
     cursor: pointer;
 }
 
-.char {
+.control-panel {
+    display: grid;
+    grid-template-columns: repeat(3, 3rem);
+    grid-template-rows: repeat(3, 3rem);
+    vertical-align: top;
+}
+
+.small-square {
+    width: 3rem;
+    height: 3rem;
+    border: 1px solid;
+    border-radius: 0.5rem;
+    background: pink;
+    display: grid;
+    color: white;
+    cursor: pointer;
+}
+
+.text-in-small-square {
+    display: grid;
+    justify-content: center;
+    align-items: center;
+    font-size: 2rem;
+    color: white;
+    text-decoration: none;
+}
+
+.text-in-small-square:hover {
+    color: hotpink;
+    transition: ease-in-out 0.1s;
+}
+
+.text-in-small-square div img {
+    width: 3rem;
+    height: 3rem;
+    object-fit: fill;
+    border-radius: 0.5rem;
+}
+
+.square:hover {
+    background: cornflowerblue;
+    transition: ease-in-out 0.1s;
+}
+
+.text-in-square {
+    display: grid;
+    justify-content: center;
+    align-items: center;
     font-size: 5rem;
+    color: white;
+    text-decoration: none;
+}
+
+.square-movable {
+    width: 4rem;
+    height: 4rem;
+    border: 1px solid;
+    border-radius: 0.7rem;
+    background: lightpink;
+    display: grid;
+    color: white;
+    cursor: pointer;
+}
+
+.square-movable:hover {
+    background: lightskyblue;
+    transition: ease-in-out 0.1s;
+}
+
+.text-in-square {
+    font-size: 2rem;
     text-align: center;
-    font-weight: 800;
-    margin-top: 15%;
-    color:
-            #dc685a;
+    transition: ease-in 1ms; /* ei tea kas tootab, test kui game tootab */
+    color: whitesmoke;
+}
+
+.submit-button { 
+    padding: 0.5rem; 
+    width: 6rem;
+    color: white;
+    background-color: lightcoral;
+    border: none;
+    border-radius: 0.5rem;
 }
