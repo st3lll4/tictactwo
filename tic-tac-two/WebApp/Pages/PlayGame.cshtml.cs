@@ -53,6 +53,16 @@ public class PlayGame : PageModel
             return Page();
         }
 
+        if (GameMode == "Single player")
+        {
+            // use playertypes 
+        }
+
+        if (GameMode == "Bots")
+        {
+            
+        }
+        
         IsGameReady = true;
         
         GameState = new GameState(game.Config)
@@ -66,6 +76,8 @@ public class PlayGame : PageModel
             Player1PiecesPlaced = game.Player1PiecesPlaced,
             Player2PiecesPlaced = game.Player2PiecesPlaced,
             MovingPlayer = game.MovingPlayer,
+            Player1Name = UserName,
+            Player2Name = User2Name
         };
         Board = GameState.Board;
         Brain = new GameBrain(GameState);
@@ -129,7 +141,6 @@ public class PlayGame : PageModel
                 sweetAlertMessage = SweetAlertMessage 
             });
         }
-
         return Page();
     }
 

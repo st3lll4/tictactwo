@@ -61,6 +61,6 @@ public class Config : PageModel
 
         _gameRepository.SaveGame(gameState, config.ConfigName, SaveName, UserName, null);
 
-        return RedirectToPage("./PlayGame", new { username = UserName, gamemode = GameMode, gameName = SaveName });
+        return RedirectToPage("./PlayGame", new { userName = UserName, gameMode = GameMode, gameName = SaveName });
     }
 }

@@ -15,9 +15,7 @@ public class JoinGame : PageModel
     [BindProperty] public required string GameName { get; set; }
     [BindProperty(SupportsGet = true)] public string? Error { get; set; }
     public SelectList GameSelectList { get; set; }
-
-    [BindProperty(SupportsGet = true)] public required string User2Name { get; set; }
-
+    
     public JoinGame(IGameRepository gameRepository)
     {
         _gameRepository = gameRepository;
@@ -44,11 +42,14 @@ public class JoinGame : PageModel
         if (_gameRepository.CheckIfGameExists(GameName)
             && _gameRepository.IsGameJoinable(GameName))
         {
+            var game = _gameRepository.GetGameByName(GameName);
+            var user1 = game.Player1Name;
+            _gameRepository.JoinMultiplayerGame(GameName, user1 ,UserName);
             return RedirectToPage("./PlayGame", new
             {
-                username = UserName,
-                user2name = User2Name,
-                gamemode = GameMode,
+                userName = user1,
+                user2Name = UserName,
+                gameMode = GameMode,
                 gameName = GameName
             });
         }

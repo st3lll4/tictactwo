@@ -62,8 +62,20 @@ public class GameRepositoryDb : IGameRepository
 
     private GameState ConvertToGameState(Game game)
     {
-        var configObject = JsonSerializer.Deserialize<GameConfiguration>(game.Config);
-        var boardData = JsonSerializer.Deserialize<List<List<char>>>(game.BoardData);
+        GameConfiguration? configObject = null;
+        List<List<char>>? boardData = null;
+
+        try 
+        {
+            configObject = JsonSerializer.Deserialize<GameConfiguration>(game.Config);
+            boardData = JsonSerializer.Deserialize<List<List<char>>>(game.BoardData);
+        }
+        catch (JsonException ex)
+        {
+            throw new InvalidOperationException("Failed to deserialize game data", ex);
+        }
+        
+        User? user1 = _context.Users.FirstOrDefault(u => u.Id == game.User1Id);
         
         return new GameState(configObject!)
         {
@@ -77,8 +89,7 @@ public class GameRepositoryDb : IGameRepository
             GridCenterRow = game.GridCenterRow,
             GridCenterCol = game.GridCenterCol,
             IsGameOver = game.IsGameOver,
-            Player1Name = game.User1.UserName,
-            Player2Name = game.User2?.UserName ?? "",
+            Player1Name = user1?.UserName!
         };
     }
 
