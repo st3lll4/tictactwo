@@ -14,7 +14,7 @@
 
 <div class="menu">
     <div class="menuitem">
-        Make your move, @Model.GameState.MovingPlayer
+        Make your move, @Model.MovingPlayer
     </div>
     @if (@Model.GameMode == "Multiplayer" || Model.GameMode == "Bots") {
         <button id="refreshButton" class="menuitem" onclick="refreshPage()">Bot move</button>

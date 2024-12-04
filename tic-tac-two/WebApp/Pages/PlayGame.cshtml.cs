@@ -23,16 +23,17 @@ public class PlayGame : PageModel
 
     [BindProperty(SupportsGet = true)] public string? Message { get; set; }
 
-    public char[,] Board { get; set; } = default!;
+    public char[,] Board { get; set; } = default!;    
+    public string MovingPlayer { get; set; }
+
 
     [BindProperty(SupportsGet = true)] public bool ShowSweetAlert { get; set; }
 
     [BindProperty(SupportsGet = true)] public string SweetAlertMessage { get; set; }
 
     public bool IsCurrentPlayerTurn { get; private set; } //todo
-    
-    [BindProperty(SupportsGet = true)] 
-    public bool IsGameReady { get; set; } = false;
+
+    [BindProperty(SupportsGet = true)] public bool IsGameReady { get; set; } = false;
 
 
     public PlayGame(IGameRepository gameRepository, AppDbContext context, IConfigRepository configRepository)
@@ -43,9 +44,10 @@ public class PlayGame : PageModel
 
     public IActionResult OnGet(int? x, int? y, string? direction)
     {
-        var game = _gameRepository.GetGameByName(GameName);
         
-        if (GameMode == "Multiplayer" && 
+        var game = _gameRepository.GetGameByName(GameName);
+
+        if (GameMode == "Multiplayer" &&
             (string.IsNullOrEmpty(game.Player1Name) || string.IsNullOrEmpty(game.Player2Name)))
         {
             IsGameReady = false;
@@ -55,16 +57,17 @@ public class PlayGame : PageModel
 
         if (GameMode == "Single player")
         {
-            // use playertypes 
+            User2Name = "other dude";
+            //use playertypes? put ai here
         }
 
         if (GameMode == "Bots")
         {
-            
+            // not sure what to do here rn 
         }
-        
+
         IsGameReady = true;
-        
+
         GameState = new GameState(game.Config)
         {
             BoardData = game.BoardData,
@@ -81,8 +84,16 @@ public class PlayGame : PageModel
         };
         Board = GameState.Board;
         Brain = new GameBrain(GameState);
-
-
+        
+        if (GameState.MovingPlayer == GameState.Config.Player1Symbol)
+        {
+            MovingPlayer = UserName;
+        }
+        else
+        {
+            MovingPlayer = User2Name;
+        }
+        
         if (direction != null && !GameState.IsGameOver)
         {
             if (!Brain.MoveGrid(direction))
@@ -136,13 +147,15 @@ public class PlayGame : PageModel
                 user2name = User2Name,
                 gamemode = GameMode,
                 gameName = GameName,
-                message = Message, 
+                message = Message,
                 showSweetAlert = ShowSweetAlert,
-                sweetAlertMessage = SweetAlertMessage 
+                sweetAlertMessage = SweetAlertMessage
             });
         }
+
         return Page();
     }
+
 
 
     private void CheckGameOver()
