@@ -23,12 +23,12 @@ public class StartGame : PageModel
             return RedirectToPage("./Config", new { username = UserName, gamemode = GameMode });
         }
         
-        if (action == "saved")
+        if (action == "saved") // todo: test fot bot vs bot
         {
             return RedirectToPage("./SavedGames", new { username = UserName, gamemode = GameMode });
         }
 
-        if (action == "join")
+        if (action == "join" || GameMode != "Bots")
         {
             return RedirectToPage("./JoinGame", new { username = UserName, gamemode = GameMode });
         }

@@ -9,6 +9,7 @@ public interface IConfigRepository
     bool DeleteConfiguration(string selectedConfig);
 
     void SaveConfiguration(GameConfiguration newConfig);
+    public void SaveConfiguration(GameConfiguration config, string userName);
     public GameConfiguration GetConfigurationByName(string name);
     public List<string> GetConfigsByUser(string userName);
  

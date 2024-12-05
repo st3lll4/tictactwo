@@ -1,3 +1,12 @@
+:root {
+    --lightest-pink: #ffc8dd;
+    --lavender: #cdb4db;
+    --darker-pink: #ffafcc;
+    --darkest-pink: #ffa6c6;
+    --darker-blue: #bde0fe;
+    --lighter-blue: #a2d2ff;
+}
+
 html {
     font-size: 14px;
 }
@@ -13,7 +22,13 @@ html {
     border-radius: 1rem;
     margin-bottom: 2rem;
     height: 12rem;
+    box-shadow: rgba(0, 0, 0, 0.1) 0px 4px 6px -1px, rgba(0, 0, 0, 0.06) 0px 2px 4px -1px;
 }
+
+#header hgroup {
+    margin: 0 auto;
+}
+
 
 .btn:focus, .btn:active:focus, .btn-link.nav-link:focus, .form-control:focus, .form-check-input:focus {
     box-shadow: 0 0 0 0.1rem white, 0 0 0 0.25rem #258cfb;
@@ -30,41 +45,35 @@ body {
     background: linear-gradient(180deg, rgba(255, 240, 246, 1) 0%, rgba(236, 221, 255, 1) 100%) fixed;
     font-size: 1rem;
     font-family: "Gill Sans MT", sans-serif;
+    min-height:100%
 }
 
 main {
     width: 100%;
-    min-height: 75%;
-    margin: 0 auto; /* align to center */
+    margin: 0 auto;
+    min-height: calc(100vh - 60px); /* Account for the footer height */
+    box-sizing: border-box;
 }
 
 footer {
-    position: absolute;
-    left: 0;
-    margin: 0 auto;
+    position: relative;
+    bottom: 0;
     width: 100%;
-    height: 3rem;
+    height: 60px;
+    background: transparent;
 }
 
-.nav-link:hover {
-    color: lightpink; 
-}
-
-.menu {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, 10rem);
-    justify-content: center;
-    align-items: center;
-}
 
 .menuitem {
     margin: 1rem;
     border-radius: 0.3rem;
-    background-color: hotpink;
+    background-color: var(--darker-pink);
     padding: 1rem;
+    height: 5rem;
     color: white;
     text-align: center;
-    border: white;
+    border: none;
+    box-shadow: rgba(14, 63, 126, 0.06) 0px 0px 0px 1px, rgba(42, 51, 70, 0.03) 0px 1px 1px -0.5px, rgba(42, 51, 70, 0.04) 0px 2px 2px -1px, rgba(42, 51, 70, 0.04) 0px 3px 3px -1.5px, rgba(42, 51, 70, 0.03) 0px 5px 5px -2.5px, rgba(42, 51, 70, 0.03) 0px 10px 10px -5px, rgba(42, 51, 70, 0.03) 0px 24px 24px -8px;
 }
 
 .col {
@@ -77,25 +86,47 @@ footer {
     width: 100%;
 }
 
-.wrapper form {
+.form-base {
     display: grid;
     justify-content: center;
-    padding: 0.5rem
+    align-items: center;
+    padding: 3rem;
+    grid-template-rows: repeat(auto-fit, 3rem);
+    width: 30rem;
+    min-height: 15rem;
+    border-radius: 0.3rem;
+    box-shadow: rgba(0, 0, 0, 0.1) 0 4px 12px;
+    background-color: #fbedff;
+}
+
+.regular-form {
+    grid-row-gap: 3rem;
+}
+
+.create-config-form {
+    grid-row-gap: 1rem;
+    
+}
+
+.form-control {
+    width: 14rem;
+    box-sizing: border-box; 
 }
 
 .wrapper form div {
     margin: 0 auto 1rem
 }
 
-.message { 
+.message {
     font-size: 20px;
     color: rebeccapurple;
 }
 
 .sidebar {
     flex: 1;
-    display: flex;
+    display: grid;
     justify-content: center;
+    align-items: center;
 }
 
 .board {
@@ -103,6 +134,7 @@ footer {
     display: grid;
     grid-template-columns: repeat(auto-fit, 4rem);
     justify-content: center;
+
 }
 
 .square {
@@ -110,10 +142,11 @@ footer {
     height: 4rem;
     border: 1px solid;
     border-radius: 0.7rem;
-    background: hotpink;
+    background: var(--darkest-pink);
     display: grid;
     color: white;
     cursor: pointer;
+    box-shadow: rgba(0, 0, 0, 0.1) 0px 4px 12px;
 }
 
 .control-panel {
@@ -144,7 +177,7 @@ footer {
 }
 
 .text-in-small-square:hover {
-    color: hotpink;
+    color: var(--darker-pink);
     transition: ease-in-out 0.1s;
 }
 
@@ -156,7 +189,7 @@ footer {
 }
 
 .square:hover {
-    background: cornflowerblue;
+    background: var(--darker-blue);
     transition: ease-in-out 0.1s;
 }
 
@@ -174,29 +207,29 @@ footer {
     height: 4rem;
     border: 1px solid;
     border-radius: 0.7rem;
-    background: lightpink;
+    background: var(--lightest-pink);
     display: grid;
     color: white;
     cursor: pointer;
 }
 
 .square-movable:hover {
-    background: lightskyblue;
+    background: var(--lighter-blue);
     transition: ease-in-out 0.1s;
 }
 
 .text-in-square {
     font-size: 2rem;
     text-align: center;
-    transition: ease-in 1ms; /* ei tea kas tootab, test kui game tootab */
+    transition: ease-in 0.1s;
     color: whitesmoke;
 }
 
-.submit-button { 
-    padding: 0.5rem; 
-    width: 6rem;
+.submit-button {
+    padding: 0.5rem;
+    width: 14rem;
     color: white;
-    background-color: lightcoral;
-    border: none;
+    background-color: var(--lavender);
+    border: 1px solid white;
     border-radius: 0.5rem;
 }

@@ -1,7 +1,6 @@
 using System.ComponentModel.DataAnnotations;
 using DAL;
 using Domain;
-using GameLogic;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 
@@ -30,13 +29,13 @@ public class Username : PageModel
 
     public IActionResult OnPost()
     {
-        if (ModelState.IsValid)
+        if (ModelState.IsValid) //todo: add error handling everywhere in inputs
         {
-            var userExists = _context.Users.Any(u => u.UserName == UserName); // todo: what if i use json
+            var userExists = _context.Users.Any(u => u.UserName == UserName); 
 
-            if (!userExists) // todo: siia tuleb juurde lisada mis teha kui kasutab json
+            if (!userExists)
             {
-                _context.Users.Add(new User { UserName = UserName, PlayerType = EPlayerType.Player });
+                _context.Users.Add(new User { UserName = UserName });
                 _context.SaveChanges();
             }
 

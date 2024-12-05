@@ -23,7 +23,6 @@ public class Config : PageModel
 
     public SelectList ConfigSelectList { get; set; } = default!;
 
-
     public Config(IConfigRepository configRepository, IGameRepository gameRepository)
     {
         _configRepository = configRepository;

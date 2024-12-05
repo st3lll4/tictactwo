@@ -62,30 +62,7 @@ namespace DAL
 
             return result;
         }
-
-        // public List<GameConfiguration> GetAllConfigurations()
-        // {
-        //     var configurations = new List<GameConfiguration>();
-        //
-        //     foreach (var fullFileName in Directory.GetFiles(FileHelper.BasePath, "*" + FileHelper.ConfigExtension))
-        //     {
-        //         try
-        //         {
-        //             var configJsonStr = File.ReadAllText(fullFileName);
-        //             var config = JsonSerializer.Deserialize<GameConfiguration>(configJsonStr);
-        //             if (config != null)
-        //             {
-        //                 configurations.Add(config);
-        //             }
-        //         }
-        //         catch (Exception ex)
-        //         {
-        //             Console.WriteLine($"Error reading configuration file: {ex.Message}");
-        //         }
-        //     }
-        //
-        //     return configurations;
-        // }
+        
 
         public List<string> GetConfigsByUser(string userName)
         {

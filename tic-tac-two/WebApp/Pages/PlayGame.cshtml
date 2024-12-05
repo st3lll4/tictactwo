@@ -1,9 +1,11 @@
 @page
 @model WebApp.Pages.PlayGame
 
-<meta http-equiv="refresh" content="5">
+@{
+    ViewData["Title"] = "Play";
+}
 
-<div class="container-fluid p-3 text-white text-center" id="header">
+<div class="container-fluid p-5 bg-primary text-white text-center" id="header">
     @if (@Model.Message == null)
     {
         <h1>PLAY!</h1>
@@ -14,18 +16,16 @@
     }
 </div>
 
-<div class="menu">
-    <div class="menuitem">
-        Make your move, @Model.MovingPlayer
-    </div>
-    @if (@Model.GameMode == "Multiplayer" || Model.GameMode == "Bots") {
-        <button id="refreshButton" class="menuitem" onclick="refreshPage()">Bot move</button>
-    }
-</div>
-
 
 <div class="wrapper">
     <div class="sidebar">
+        <div class="menuitem">
+            Make your move, @Model.MovingPlayer
+        </div>
+        @if (Model.GameMode == "Single player" || Model.GameMode == "Bots")
+        {
+            <button id="refreshButton" class="menuitem" onclick="refreshPage()">Bot move</button>
+        }
     </div>
     <div class="board">
         @for (int y = 0; y < Model.Board.GetLength(1); y++)
@@ -45,7 +45,8 @@
                                     asp-route-x="@x"
                                     asp-route-y="@y"
                                     asp-route-gamename="@Model.GameName"
-                                    asp-route-username="@Model.UserName"
+                                    asp-route-user1="@Model.User1"
+                                    asp-route-user2="@Model.User2"
                                     asp-route-gamemode="@Model.GameMode"
                                     class="text-in-square">
                                     @Model.Board[x, y]
@@ -57,7 +58,8 @@
                                     asp-route-x="@x"
                                     asp-route-y="@y"
                                     asp-route-gamename="@Model.GameName"
-                                    asp-route-username="@Model.UserName"
+                                    asp-route-user1="@Model.User1"
+                                    asp-route-user2="@Model.User2"                                    
                                     asp-route-gamemode="@Model.GameMode"
                                     class="text-in-square">
                                 </a>
@@ -94,7 +96,8 @@
                                     <a class="text-in-small-square"
                                        asp-route-direction="ul"
                                        asp-route-gamename="@Model.GameName"
-                                       asp-route-username="@Model.UserName"
+                                       asp-route-user1="@Model.User1"
+                                       asp-route-user2="@Model.User2"                                       
                                        asp-route-gamemode="@Model.GameMode">
                                         &#8598;
                                     </a>
@@ -104,7 +107,8 @@
                                     <a class="text-in-small-square"
                                        asp-route-direction="u"
                                        asp-route-gamename="@Model.GameName"
-                                       asp-route-username="@Model.UserName"
+                                       asp-route-user1="@Model.User1"
+                                       asp-route-user2="@Model.User2"                                       
                                        asp-route-gamemode="@Model.GameMode">
                                         &#8593;
                                     </a>
@@ -114,7 +118,8 @@
                                     <a class="text-in-small-square"
                                        asp-route-direction="ur"
                                        asp-route-gamename="@Model.GameName"
-                                       asp-route-username="@Model.UserName"
+                                       asp-route-user1="@Model.User1"
+                                       asp-route-user2="@Model.User2"
                                        asp-route-gamemode="@Model.GameMode">
                                         &#8599;
                                     </a>
@@ -124,7 +129,8 @@
                                     <a class="text-in-small-square"
                                        asp-route-direction="l"
                                        asp-route-gamename="@Model.GameName"
-                                       asp-route-username="@Model.UserName"
+                                       asp-route-user1="@Model.User1"
+                                       asp-route-user2="@Model.User2"
                                        asp-route-gamemode="@Model.GameMode">
                                         &#8592;
                                     </a>
@@ -134,7 +140,8 @@
                                     <a class="text-in-small-square"
                                        asp-route-direction="r"
                                        asp-route-gamename="@Model.GameName"
-                                       asp-route-username="@Model.UserName"
+                                       asp-route-user1="@Model.User1"
+                                       asp-route-user2="@Model.User2"
                                        asp-route-gamemode="@Model.GameMode">
                                         &#8594;
                                     </a>
@@ -144,7 +151,8 @@
                                     <a class="text-in-small-square"
                                        asp-route-direction="dl"
                                        asp-route-gamename="@Model.GameName"
-                                       asp-route-username="@Model.UserName"
+                                       asp-route-user1="@Model.User1"
+                                       asp-route-user2="@Model.User2"                                       
                                        asp-route-gamemode="@Model.GameMode">
                                         &#8601;
                                     </a>
@@ -154,7 +162,8 @@
                                     <a class="text-in-small-square"
                                        asp-route-direction="d"
                                        asp-route-gamename="@Model.GameName"
-                                       asp-route-username="@Model.UserName"
+                                       asp-route-user1="@Model.User1"
+                                       asp-route-user2="@Model.User2"                                       
                                        asp-route-gamemode="@Model.GameMode">
                                         &#8595;
                                     </a>
@@ -164,7 +173,8 @@
                                     <a class="text-in-small-square"
                                        asp-route-direction="dr"
                                        asp-route-gamename="@Model.GameName"
-                                       asp-route-username="@Model.UserName"
+                                       asp-route-user1="@Model.User1"
+                                       asp-route-user2="@Model.User2"
                                        asp-route-gamemode="@Model.GameMode">
                                         &#8600;
                                     </a>

@@ -1,3 +1,4 @@
+using System.Diagnostics;
 using DAL;
 using GameLogic;
 using Microsoft.AspNetCore.Mvc;
@@ -14,8 +15,8 @@ public class PlayGame : PageModel
 
     [BindProperty] public GameState GameState { get; set; } = default!;
 
-    [BindProperty(SupportsGet = true)] public string UserName { get; set; } = default!;
-    [BindProperty(SupportsGet = true)] public string User2Name { get; set; } = default!;
+    [BindProperty(SupportsGet = true)] public string User1 { get; set; } = default!;
+    [BindProperty(SupportsGet = true)] public string User2 { get; set; } = default!;
 
     [BindProperty(SupportsGet = true)] public string GameMode { get; set; } = default!;
 
@@ -44,10 +45,8 @@ public class PlayGame : PageModel
 
     public IActionResult OnGet(int? x, int? y, string? direction)
     {
-        
         var game = _gameRepository.GetGameByName(GameName);
         
-
         GameState = new GameState(game.Config)
         {
             BoardData = game.BoardData,
@@ -59,52 +58,59 @@ public class PlayGame : PageModel
             Player1PiecesPlaced = game.Player1PiecesPlaced,
             Player2PiecesPlaced = game.Player2PiecesPlaced,
             MovingPlayer = game.MovingPlayer,
-            Player1Name = UserName,
-            Player2Name = User2Name
+            Player1Name = game.Player1Name,
+            Player2Name = game.Player2Name
         };
         Board = GameState.Board;
         Brain = new GameBrain(GameState);
         
         if (GameState.MovingPlayer == GameState.Config.Player1Symbol)
         {
-            MovingPlayer = UserName;
+            MovingPlayer = GameState.Player1Name;
         }
         else
         {
-            MovingPlayer = User2Name;
+            MovingPlayer = GameState.Player2Name ?? "";
         }
         
         if (GameMode == "Multiplayer" &&
             (string.IsNullOrEmpty(GameState.Player1Name) || string.IsNullOrEmpty(GameState.Player2Name)))
         { 
             IsGameReady = false;
-            Message = "Waiting for the second player to join................";
-            if (GameState.Player2Name == null) 
+            Message = "waiting for player 2 to join.........";
+            if (GameState.Player2Name == null)
             {
-                Message = "Player2Name not set; breaking potential redirect loop.";
                 return Page();
             }
             return RedirectToPage(new
             {
-                username = game.Player1Name,
-                user2name = game.Player2Name, 
+                user1 = GameState.Player1Name,
+                user2 = GameState.Player2Name,
                 gamemode = GameMode,
                 gameName = GameName,
                 message = Message,
-            });
+            }); //todo: mingi probleem jsonis
         }
-
+        
         if (GameMode == "Single player")
         {
-            User2Name = "other dude";
+            GameState.Player2Name = "Bot1";
         }
 
         if (GameMode == "Bots")
         {
-            // not sure what to do here rn 
+            GameState.Player1Name = "Bot1";
+            GameState.Player2Name = "Bot1";
         }
 
         IsGameReady = true;
+
+        if (MovingPlayer == "Bot1" || MovingPlayer == "Bot2")
+        {
+            Brain.MakeBotMove();
+            Brain.SwitchPlayer();
+            UpdateAndRedirect(game);
+        }
         
         if (direction != null && !GameState.IsGameOver)
         {
@@ -117,8 +123,7 @@ public class PlayGame : PageModel
                 CheckGameOver();
                 Brain.SwitchPlayer();
             }
-
-            _gameRepository.UpdateGame(GameState, game.Config.ConfigName, GameName, UserName, User2Name);
+            UpdateAndRedirect(game);
         }
 
         if (x.HasValue && y.HasValue)
@@ -152,22 +157,27 @@ public class PlayGame : PageModel
             }
 
             SkipToEnd:
-            _gameRepository.UpdateGame(GameState, game.Config.ConfigName, GameName, UserName, User2Name);
-            return RedirectToPage(new
-            {
-                username = game.Player1Name,
-                user2name = game.Player2Name, // doesnt get player 2 for player 1
-                gamemode = GameMode,
-                gameName = GameName,
-                message = Message,
-                showSweetAlert = ShowSweetAlert,
-                sweetAlertMessage = SweetAlertMessage
-            });
+            UpdateAndRedirect(game);
         }
 
         return Page();
     }
 
+    private IActionResult UpdateAndRedirect(GameState game)
+    {
+        _gameRepository.UpdateGame(GameState, game.Config.ConfigName, GameName, GameState.Player1Name, GameState.Player2Name);
+        return RedirectToPage(new
+        {
+            user1 = GameState.Player1Name, // ??
+            user2 = GameState.Player2Name, // necessary?
+            gamemode = GameMode,
+            gameName = GameName,
+            message = Message,
+            showSweetAlert = ShowSweetAlert,
+            sweetAlertMessage = SweetAlertMessage,
+            isgameover = GameState.IsGameOver
+        });
+    }
 
 
     private void CheckGameOver()
@@ -176,8 +186,8 @@ public class PlayGame : PageModel
         {
             ShowSweetAlert = true;
             SweetAlertMessage = "damn, a tie!";
-            GameState.IsGameOver = true;
-            Message = "Game over bros!";
+            GameState.IsGameOver = true; //todo: saab ikka kaia kui game on over
+            Message = "Game over bros!"; 
         }
 
         if (Brain.CheckWin(GameState.MovingPlayer))

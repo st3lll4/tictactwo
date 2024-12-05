@@ -8,7 +8,7 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using DAL;
 using Domain;
 
-namespace WebApp.Pages.Users
+namespace WebApp.Pages_Users
 {
     public class CreateModel : PageModel
     {

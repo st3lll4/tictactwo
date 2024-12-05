@@ -1,7 +1,12 @@
 @page
 @model WebApp.Pages.JoinGame
 
-<div class="container-fluid p-3 text-white text-center"
+
+@{
+    ViewData["Title"] = "Join a game";
+}
+
+<div class="container-fluid p-5 bg-primary text-white text-center"
      id="header">
     @if (@Model.Error == null)
     {
@@ -13,15 +18,11 @@
     }
 </div>
 
-<div class="row">
-    <div class="col-md-4">
-        <form method="post">
-            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-            <div class="message">Join a game:</div>
+<div class="wrapper">
+        <form method="post" class="form-base regular-form">
             <div>
                 <select asp-for="GameName" class="form-select" asp-items="Model.GameSelectList"></select>
             </div>
             <button type="submit" class="submit-button">JOIN</button>
         </form>
-    </div>
 </div>

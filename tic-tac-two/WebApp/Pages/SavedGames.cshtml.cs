@@ -17,17 +17,15 @@ public class SavedGames : PageModel
     [BindProperty] public string Error { get; set; } = default!;
 
     private readonly IGameRepository _gameRepository;
-    private readonly IConfigRepository _configRepository;
 
     public SelectList GameSelectList { get; set; } = default!;
 
     [BindProperty] public string SelectedGame { get; set; }
 
 
-    public SavedGames(IGameRepository gameRepository, IConfigRepository configRepository)
+    public SavedGames(IGameRepository gameRepository)
     {
         _gameRepository = gameRepository;
-        _configRepository = configRepository;
     }
 
     public IActionResult OnGet()

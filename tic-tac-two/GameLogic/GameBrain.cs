@@ -96,7 +96,7 @@
             {
                 return false;
             }
-            
+
             if (!IsInGrid(x, y) || GameState.Board[x, y] != '\0' || playerSymbol != GameState.MovingPlayer)
             {
                 return false;
@@ -339,6 +339,54 @@
         {
             GameState = gameState;
         }
-        
+
+        public void MakeBotMove()
+        {
+            var botSymbol = GameState.MovingPlayer;
+            var opponentSymbol = botSymbol == Config.Player1Symbol ? Config.Player2Symbol : Config.Player1Symbol;
+
+            // 1. Check for a winning move
+            if (TryMakeStrategicMove(botSymbol)) return;
+
+            // 2. Block opponent's winning move
+            if (TryMakeStrategicMove(opponentSymbol)) return;
+
+            // 3. Take the center if available
+            
+
+            // 4. Choose from the corners
+            
+            
+            // 5. Choose from the sides
+            
+            
+            // 6. Move grid if necessary (every 4 moves)
+            if ((GameState.Player1PiecesPlaced + GameState.Player2PiecesPlaced) % 4 == 0)
+            {
+                RandomlyMoveGrid();
+                return;
+            }
+
+            // 7. Randomly move own piece every 3rd to 5th move
+            if ((GameState.Player1PiecesPlaced + GameState.Player2PiecesPlaced) % new Random().Next(3, 6) == 0)
+            {
+                RandomlyMoveOwnPiece();
+            }
+        }
+
+        private bool TryMakeStrategicMove(char playerSymbol)
+        {
+            return false;
+        }
+
+        private void RandomlyMoveGrid()
+        {
+            // Logic to count pieces in different grid regions and move to the less occupied one
+        }
+
+        private void RandomlyMoveOwnPiece()
+        {
+            // Logic to randomly select one of the bot's pieces and move it to a valid position
+        }
     }
 }

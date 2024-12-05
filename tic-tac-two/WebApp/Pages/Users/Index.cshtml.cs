@@ -8,7 +8,7 @@ using Microsoft.EntityFrameworkCore;
 using DAL;
 using Domain;
 
-namespace WebApp.Pages.Users
+namespace WebApp.Pages_Users
 {
     public class IndexModel : PageModel
     {

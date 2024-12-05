@@ -134,7 +134,7 @@ public class GameRepositoryDb : IGameRepository
 
         if (user2Name != null && (game.User2 == null || game.User2.UserName != user2Name))
         {
-            var user2 = _context.Users.FirstOrDefault(u => u.UserName == user2Name) ?? new User { UserName = user2Name, PlayerType = EPlayerType.Player};
+            var user2 = _context.Users.FirstOrDefault(u => u.UserName == user2Name) ?? new User { UserName = user2Name };
             game.User2 = user2;
             game.User2Id = user2.Id;
         }
@@ -179,8 +179,8 @@ public class GameRepositoryDb : IGameRepository
     public List<string> GetGamesByUser(string user)
     {
         return _context.Games.Where(
-                g => g.User1.UserName == user || 
-                     (g.User2 != null && g.User2.UserName == user))
+                g => g.User1 != null && (g.User1.UserName == user || 
+                                         (g.User2 != null && g.User2.UserName == user)))
             .Select(g => g.GameName).ToList();    
     }
 }

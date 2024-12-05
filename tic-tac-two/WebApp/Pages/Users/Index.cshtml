@@ -1,5 +1,5 @@
 @page
-@model WebApp.Pages.Users.IndexModel
+@model WebApp.Pages_Users.IndexModel
 
 @{
     ViewData["Title"] = "Index";
@@ -17,9 +17,6 @@
                 @Html.DisplayNameFor(model => model.User[0].UserName)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.User[0].PlayerType)
-            </th>
-            <th>
                 @Html.DisplayNameFor(model => model.User[0].CreatedAt)
             </th>
             <th></th>
@@ -30,9 +27,6 @@
         <tr>
             <td>
                 @Html.DisplayFor(modelItem => item.UserName)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.PlayerType)
             </td>
             <td>
                 @Html.DisplayFor(modelItem => item.CreatedAt)

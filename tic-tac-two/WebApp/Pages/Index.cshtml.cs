@@ -26,7 +26,11 @@ public class IndexModel : PageModel
     {
         if (ModelState.IsValid)
         {
-            return RedirectToPage("./Username", new { gamemode = GameMode });
+            if (GameMode != "Bots")
+            {
+                return RedirectToPage("./Username", new { gamemode = GameMode });
+            }
+            return RedirectToPage("./StartGame", new { username = "Bot1", gamemode = GameMode });
         }
         
         return Page();

@@ -1,7 +1,7 @@
 ﻿@page
 @model IndexModel
 @{
-    ViewData["Title"] = "TicTacTWUH";
+    ViewData["Title"] = "Welcome";
 }
 
 <div class="container-fluid p-5 bg-primary text-white text-center" id="header">
@@ -10,7 +10,7 @@
 </div>
 
 <div class="wrapper">
-    <form method="post">
+    <form method="post" class="form-base regular-form">
         <div class="form-group">
             <select asp-for="GameMode" class="form-control" style="width:auto;">
                 <option></option>

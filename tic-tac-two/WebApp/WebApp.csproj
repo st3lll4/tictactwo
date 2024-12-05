@@ -48,7 +48,6 @@
     <ItemGroup>
       <Folder Include="Pages\Configs\" />
       <Folder Include="Pages\Games\" />
-      <Folder Include="Pages\Users\" />
     </ItemGroup>
 
 

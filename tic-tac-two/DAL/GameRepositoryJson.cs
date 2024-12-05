@@ -43,10 +43,11 @@ public class GameRepositoryJson : IGameRepository
 
     public List<string> GetGamesByUser(string user)
     {
-        var files = Directory.GetFiles(FileHelper.BasePath, "*" + user + "_*" + FileHelper.GameExtension);
-
+        var searchPattern = $"*{user}*{FileHelper.GameExtension}";
+        var matchingFiles = Directory.GetFiles(FileHelper.BasePath, searchPattern);
+        
         var result = new List<string>();
-        foreach (var file in files)
+        foreach (var file in matchingFiles)
         {
             var primaryName = Path.GetFileNameWithoutExtension(Path.GetFileNameWithoutExtension(file));
             result.Add(primaryName);
@@ -57,49 +58,65 @@ public class GameRepositoryJson : IGameRepository
 
     public GameState GetGameByName(string name)
     {
-        var filePath = FileHelper.BasePath + name + FileHelper.GameExtension;
+        var searchPattern = $"*{name}*{FileHelper.GameExtension}";
+        var matchingFiles = Directory.GetFiles(FileHelper.BasePath, searchPattern);
+
+        var filePath = matchingFiles[0];
         var gameJsonStr = File.ReadAllText(filePath);
         var gameState = JsonSerializer.Deserialize<GameState>(gameJsonStr);
-        return gameState ?? throw new InvalidOperationException();
+        return gameState ?? throw new InvalidOperationException("Failed to deserialize game state");
     }
 
     public bool CheckIfGameExists(string name)
     {
-        var filePath = FileHelper.BasePath + name + FileHelper.GameExtension;
-        if (File.Exists(filePath))
+        var searchPattern = $"*{name}*{FileHelper.GameExtension}";
+        var matchingFiles = Directory.GetFiles(FileHelper.BasePath, searchPattern);        
+        if (matchingFiles.Length > 0)
         {
             return true;
         }
-        return false; 
+
+        return false;
     }
 
-    public void UpdateGame(GameState gameState, string configName, string gameName, string userName, string? user2Name) //todo: check if works
+    public void UpdateGame(GameState gameState, string configName, string gameName, string userName, string? user2Name)
     {
-        var existingFile = FileHelper.BasePath + $"*{gameName}*{FileHelper.GameExtension}";
+        var searchPattern = $"*{gameName}*{FileHelper.GameExtension}";
+        var matchingFiles = Directory.GetFiles(FileHelper.BasePath, searchPattern);
 
-        File.Delete(existingFile);
-        
-        var fileName = FileHelper.BasePath + userName + "_" + user2Name + "_" +
-                       configName + "_" +
-                       gameName +
-                       FileHelper.GameExtension;
+        var existingFilePath = matchingFiles[0];
+
         var jsonStateString = JsonSerializer.Serialize(gameState, new JsonSerializerOptions
         {
             WriteIndented = true
         });
-        File.WriteAllText(fileName, jsonStateString);
+
+        File.WriteAllText(existingFilePath, jsonStateString);
     }
 
-    public bool IsGameJoinable(string name) // todo: test
+    public bool IsGameJoinable(string name)
     {
-        var filePath = FileHelper.BasePath + $"*__{name}*{FileHelper.GameExtension}";
-        return File.Exists(filePath);// returns true if game is joinable
+        var searchPattern = $"*{name}*{FileHelper.GameExtension}";
+        var matchingFiles = Directory.GetFiles(FileHelper.BasePath, searchPattern);
+
+        foreach (var file in matchingFiles)
+        {
+            var gameJsonStr = File.ReadAllText(file);
+            var gameState = JsonSerializer.Deserialize<GameState>(gameJsonStr);
+
+            if (gameState != null && string.IsNullOrEmpty(gameState.Player2Name))
+            {
+                return true;
+            }
+        }
+
+        return false;
     }
 
     public void JoinMultiplayerGame(string gameName, string player1Name, string player2Name)
     {
         var game = GetGameByName(gameName);
-        
+
         if (string.IsNullOrEmpty(game.Player2Name))
         {
             game.Player2Name = player2Name;
@@ -109,8 +126,8 @@ public class GameRepositoryJson : IGameRepository
 
     public void DeleteGame(string name) //todo: check if works 
     {
-        var existingFile = FileHelper.BasePath + $"*{name}*{FileHelper.GameExtension}";
-
-        File.Delete(existingFile);
+        var searchPattern = $"*{name}*{FileHelper.GameExtension}";
+        var matchingFiles = Directory.GetFiles(FileHelper.BasePath, searchPattern);
+        File.Delete(matchingFiles[0]);
     }
 }
