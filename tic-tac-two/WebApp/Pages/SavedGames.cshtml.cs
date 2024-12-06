@@ -30,8 +30,6 @@ public class SavedGames : PageModel
 
     public IActionResult OnGet()
     {
-        ViewData["UserName"] = UserName;
-
         var selectListData = _gameRepository.GetGamesByUser(UserName)
             .Select(name => name)
             .ToList();

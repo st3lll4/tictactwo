@@ -1,0 +1,25 @@
+﻿@page
+@model WebApp.Pages.ViewConfig
+
+@{
+    ViewData["Title"] = "View config";
+}
+
+<div class="container-fluid p-5 bg-primary text-white text-center" id="header">
+    <h1>LOOK!</h1>
+</div>
+
+<div class="wrapper">
+        <div class="container-fluid">
+            <h3>Configuration Name: @Model.ConfigurationName</h3>
+            <p>Board Width: @Model.Width</p>
+            <p>Board Height: @Model.Height</p>
+            <p>Player 1 Symbol: @Model.Player1Symbol</p>
+            <p>Player 2 Symbol: @Model.Player2Symbol</p>
+            <p>Starting Player: @Model.StartingPlayer</p>
+            <p>Movable Grid Size: @Model.MovableGridSize</p>
+            <p>Winning Condition: @Model.WinningCondition</p>
+            <p>Initial Moves: @Model.InitialMoves</p>
+            <p>Player Pieces: @Model.MaxPieces</p>
+        </div>
+</div>

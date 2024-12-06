@@ -53,6 +53,16 @@ public class JoinGame : PageModel
             });
         }
         Error = "cant join this game";
+        var selectListData = _gameRepository.GetGameNames()
+            .Where(n =>
+            {
+                var game = _gameRepository.GetGameByName(n);
+                return !game.IsGameOver && _gameRepository.IsGameJoinable(n);
+            })
+            .Select(name => name)
+            .ToList();
+
+        GameSelectList = new SelectList(selectListData);
         return Page();
     }
 }

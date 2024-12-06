@@ -115,14 +115,6 @@ public class CreateConfig : PageModel
                 MaxPieces = MaxPieces
             };
 
-            // var userExists = _context.Users.Any(u => u.UserName == UserName);
-            //
-            // if (!userExists)
-            // {
-            //     _context.Users.Add(new User { UserName = UserName });
-            //     _context.SaveChanges();
-            // }
-
             _configRepository.SaveConfiguration(config, UserName);
             Message = "Config saved successfully!";
         }

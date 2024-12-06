@@ -1,0 +1,21 @@
+﻿@page
+@model WebApp.Pages.ChooseViewConfig
+
+
+@{
+    ViewData["Title"] = "Join a game";
+}
+
+<div class="container-fluid p-5 bg-primary text-white text-center"
+     id="header">
+    <h1>PICK A CONFIG TO VIEW</h1>
+</div>
+
+<div class="wrapper">
+    <form method="post" class="form-base regular-form">
+        <div>
+            <select asp-for="ConfigurationName" class="form-select" asp-items="Model.ConfigSelectList"></select>
+        </div>
+        <button type="submit" class="submit-button">VIEW</button>
+    </form>
+</div>

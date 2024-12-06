@@ -31,8 +31,6 @@ public class Config : PageModel
 
     public IActionResult OnGet()
     {
-        ViewData["UserName"] = UserName;
-
         var selectListData = _configRepository.GetConfigsByUser(UserName)
             .Select(name => name)
             .ToList();
@@ -55,6 +53,11 @@ public class Config : PageModel
         if (_gameRepository.CheckIfGameExists(SaveName))
         {
             ModelState.AddModelError("SaveName", "Game with this name already exists");
+            var selectListData = _configRepository.GetConfigsByUser(UserName)
+                .Select(name => name)
+                .ToList();
+
+            ConfigSelectList = new SelectList(selectListData);
             return Page();
         }
 

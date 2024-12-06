@@ -27,7 +27,7 @@ public class ConfigManager : PageModel
         
         if (action == "view") 
         {
-            return RedirectToPage("./ViewConfig", new { username = UserName });
+            return RedirectToPage("./ChooseViewConfig", new { username = UserName });
         }
 
         if (action == "delete")
