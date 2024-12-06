@@ -16,31 +16,31 @@ public class ViewConfig : PageModel
         _context = context;
     }
     
-    [BindProperty(SupportsGet = true)] public string UserName { get; set; } = default!;
+    [BindProperty] public string UserName { get; set; } = default!;
     
     [BindProperty(SupportsGet = true)] public string ConfigurationName { get; set; } = default!;
     
-    [BindProperty(SupportsGet = true)] public int Width { get; set; }
+    [BindProperty] public int Width { get; set; }
     
-    [BindProperty(SupportsGet = true)] public int Height { get; set; }
+    [BindProperty] public int Height { get; set; }
     
-    [BindProperty(SupportsGet = true)] public char Player1Symbol { get; set; }
+    [BindProperty] public char Player1Symbol { get; set; }
     
-    [BindProperty(SupportsGet = true)] public char Player2Symbol { get; set; }
+    [BindProperty] public char Player2Symbol { get; set; }
 
-    [BindProperty(SupportsGet = true)] public string StartingPlayer { get; set; } = default!;
+    [BindProperty] public string StartingPlayer { get; set; } = default!;
     
-    [BindProperty(SupportsGet = true)] public int MovableGridSize { get; set; } 
-    [BindProperty(SupportsGet = true)] public int WinningCondition { get; set; }
+    [BindProperty] public int MovableGridSize { get; set; } 
+    [BindProperty] public int WinningCondition { get; set; }
 
-    [BindProperty(SupportsGet = true)] public int? InitialMoves { get; set; }
+    [BindProperty] public int? InitialMoves { get; set; }
 
-    [BindProperty(SupportsGet = true)] public int MaxPieces { get; set; } 
+    [BindProperty] public int MaxPieces { get; set; } 
     
     
     public IActionResult OnGet()
     {
-        var config = _configRepository.GetConfigurationByName(ConfigurationName); // todo: error
+        var config = _configRepository.GetConfigurationByName(ConfigurationName);
 
         ConfigurationName = config.ConfigName;
         Width = config.Width;

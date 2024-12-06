@@ -5,6 +5,7 @@
     --darkest-pink: #ffa6c6;
     --darker-blue: #bde0fe;
     --lighter-blue: #a2d2ff;
+    --red: #a80043
 }
 
 html {
@@ -232,4 +233,23 @@ footer {
     background-color: var(--lavender);
     border: 1px solid white;
     border-radius: 0.5rem;
+}
+
+.delete-button {
+    padding: 0.5rem;
+    width: 5rem;
+    color: white;
+    background-color: var(--red);
+    border: 1px solid white;
+    border-radius: 0.5rem;
+}
+
+.submit-button:hover {
+    background-color: var(--darker-pink);
+    transition: ease-in-out 0.1s;
+}
+
+.delete-button:hover {
+    background-color: #f7609d;
+    transition: ease-in-out 0.1s;
 }

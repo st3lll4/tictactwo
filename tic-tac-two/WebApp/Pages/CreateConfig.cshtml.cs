@@ -38,12 +38,10 @@ public class CreateConfig : PageModel
     public int Height { get; set; }
 
     [Required(ErrorMessage = "fill all fields!")]
-    [StringLength(1, ErrorMessage = "enter 1 character!")]
     [BindProperty(SupportsGet = true)]
     public char Player1Symbol { get; set; }
 
     [Required(ErrorMessage = "fill all fields!")]
-    [StringLength(1, ErrorMessage = "enter 1 character!")]
     [BindProperty(SupportsGet = true)]
     public char Player2Symbol { get; set; }
 
@@ -97,6 +95,24 @@ public class CreateConfig : PageModel
         {
             ModelState.AddModelError("MaxPieces",
                 "the amount of pieces each player has must be greater than or equal to the winning condition!");
+        }
+        
+        if (Player1Symbol.ToString().Length != 1)
+        {
+            ModelState.AddModelError("Player1Symbol", 
+                "Player 1 symbol must be exactly one character long!");
+        }
+
+        if (Player2Symbol.ToString().Length != 1)
+        {
+            ModelState.AddModelError("Player2Symbol", 
+                "Player 2 symbol must be exactly one character long!");
+        }
+
+        if (char.ToLower(Player1Symbol) == char.ToLower(Player2Symbol))
+        {
+            ModelState.AddModelError("Player2Symbol", 
+                "Player 1 and Player 2 symbols must be different!");
         }
         
         if (ModelState.IsValid)
