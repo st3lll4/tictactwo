@@ -1,12 +1,15 @@
-﻿<!DOCTYPE html>
+﻿@using Azure.Core
+@using Microsoft.AspNetCore.Mvc.TagHelpers
+
+<!DOCTYPE html>
 <html lang="en" xmlns="http://www.w3.org/1999/html">
 <head>
     <meta charset="utf-8"/>
     <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-    <title>@ViewData["Title"] - WebApp</title>
+    <title>@ViewData["Title"] - Tictactwo</title>
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css"/>
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true"/>
-    
+
 </head>
 <body>
 <header>
@@ -23,8 +26,9 @@
                         <a class="nav-link" asp-area="" asp-page="/Index">start</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" asp-area="" asp-page="/CreateConfig">new config</a>
-                    </li>
+                        <a class="nav-link" asp-area="" asp-route-username="@Context.Request.Query["userName"]" 
+                           asp-page="/ConfigManager">config manager</a> <!--- votab toorelt kaasa username kui see on olemas query stringis --->
+                        </li>
                 </ul>
             </div>
         </div>
@@ -51,7 +55,7 @@
 @section Scripts {
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.14.5/dist/sweetalert2.all.min.js"></script>
-    }
+}
 
 </body>
 </html>

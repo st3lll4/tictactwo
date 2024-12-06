@@ -10,10 +10,10 @@ public class Username : PageModel
 {
     [Required(ErrorMessage = "you have to pick something")]
     [StringLength(30, ErrorMessage = "username too long! stay humble - 30 chars max")]
-    [BindProperty]
+    [BindProperty(SupportsGet = true)]
     public required string UserName { get; set; }
 
-    [BindProperty(SupportsGet = true)] public required string GameMode { get; set; }
+    [BindProperty(SupportsGet = true)] public string? GameMode { get; set; } = default!;
 
     private readonly AppDbContext _context;
 
@@ -24,6 +24,7 @@ public class Username : PageModel
 
     public IActionResult OnGet()
     {
+        ModelState.Clear(); 
         return Page();
     }
 
@@ -39,7 +40,14 @@ public class Username : PageModel
                 _context.SaveChanges();
             }
 
-            return RedirectToPage("./StartGame", new { username = UserName, gamemode = GameMode });
+            if (GameMode != null)
+            {
+                return RedirectToPage("./StartGame", new { userName = UserName, gamemode = GameMode });
+            }
+            else
+            {
+                return RedirectToPage("./ConfigManager", new { userName = UserName });
+            }
         }
 
         return Page();

@@ -19,10 +19,13 @@
 
 <div class="wrapper">
     <form method="post" class="form-base create-config-form">
-        <div class="form-group">
+        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+      
+        <!---<div class="form-group">
             <input type="text" asp-for="UserName" placeholder="Your username" class="form-control"/>
             <span asp-validation-for="UserName" class="text-danger"></span>
-        </div>
+        </div> --->
+        
         <div class="form-group">
             <input type="text" asp-for="ConfigName" placeholder="Configuration name" class="form-control"/>
             <span asp-validation-for="ConfigName" class="text-danger"></span>
