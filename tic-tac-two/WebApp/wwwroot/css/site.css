@@ -70,7 +70,8 @@ footer {
     border-radius: 0.3rem;
     background-color: var(--darker-pink);
     padding: 1rem;
-    height: 5rem;
+    min-height: 5rem;
+    min-width: 9rem;
     color: white;
     text-align: center;
     border: none;
@@ -252,4 +253,15 @@ footer {
 .delete-button:hover {
     background-color: #f7609d;
     transition: ease-in-out 0.1s;
+}
+
+.btn-light {
+    border: 1px solid var(--darker-pink);
+    color: var(--darker-pink);
+}
+
+.btn-light:hover {
+    background-color: var(--lightest-pink);
+    transition: ease-in-out 0.1s;
+    color: white;
 }

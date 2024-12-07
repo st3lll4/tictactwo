@@ -27,7 +27,7 @@ public class JoinGame : PageModel
             .Where(n =>
             {
                 var game = _gameRepository.GetGameByName(n);
-                return !game.IsGameOver && _gameRepository.IsGameJoinable(n);
+                return !game.IsGameOver && _gameRepository.IsGameJoinable(n) && _gameRepository.GetGameByName(n).Player1Name != UserName;
             })
             .Select(name => name)
             .ToList();
@@ -57,7 +57,7 @@ public class JoinGame : PageModel
             .Where(n =>
             {
                 var game = _gameRepository.GetGameByName(n);
-                return !game.IsGameOver && _gameRepository.IsGameJoinable(n);
+                return !game.IsGameOver && _gameRepository.IsGameJoinable(n) && _gameRepository.GetGameByName(n).Player1Name != UserName;
             })
             .Select(name => name)
             .ToList();

@@ -104,7 +104,7 @@ public class GameRepositoryJson : IGameRepository
             var gameJsonStr = File.ReadAllText(file);
             var gameState = JsonSerializer.Deserialize<GameState>(gameJsonStr);
 
-            if (gameState != null && string.IsNullOrEmpty(gameState.Player2Name))
+            if (gameState != null && string.IsNullOrEmpty(gameState.Player2Name) && !gameState.IsGameOver)
             {
                 return true;
             }

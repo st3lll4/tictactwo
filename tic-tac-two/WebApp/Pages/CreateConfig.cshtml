@@ -6,7 +6,7 @@
 }
 
 <div class="container-fluid p-5 bg-primary text-white text-center" id="header">
-    @if (@Model.Message == null)
+    @if (Model.Message == null)
     {
         <h1>CREATE A NEW CONFIG</h1>
         <h5>Fill all fields</h5>
@@ -17,66 +17,84 @@
     }
 </div>
 
+<button onclick="history.back()" class="btn btn-light">Go back</button>
+
 <div class="wrapper">
     <form method="post" class="form-base create-config-form">
         <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-      
-        <!---<div class="form-group">
-            <input type="text" asp-for="UserName" placeholder="Your username" class="form-control"/>
-            <span asp-validation-for="UserName" class="text-danger"></span>
-        </div> --->
-        
         <div class="form-group">
             <input type="text" asp-for="ConfigName" placeholder="Configuration name" class="form-control"/>
             <span asp-validation-for="ConfigName" class="text-danger"></span>
         </div>
         <div class="form-group">
-            <input type="number" asp-for="Width" min="3" max="15" placeholder="Board width (3 to 15)"
-                   class="form-control" value=""/>
+            <input type="number" asp-for="Width" min="4" max="14" placeholder="Board width (3 to 14)"
+                   class="form-control"/>
             <span asp-validation-for="Width" class="text-danger"></span>
         </div>
         <div class="form-group">
-            <input type="number" asp-for="Height" min="3" max="15" placeholder="Board height (3 to 15)"
-                   class="form-control" value=""/>
+            <input type="number" asp-for="Height" min="4" max="100" placeholder="Board height (3 to 100)"
+                   class="form-control"/>
             <span asp-validation-for="Height" class="text-danger"></span>
         </div>
         <div class="form-group">
-            <input type="text" asp-for="Player1Symbol" placeholder="Player 1 symbol" class="form-control" width="1rem" value=""/>
+            <input type="text" asp-for="Player1Symbol" placeholder="Player 1 symbol" class="form-control"/>
             <span asp-validation-for="Player1Symbol" class="text-danger"></span>
         </div>
         <div class="form-group">
-            <input type="text" asp-for="Player2Symbol" placeholder="Player 2 symbol" class="form-control" width="1rem" value=""/>
+            <input type="text" asp-for="Player2Symbol" placeholder="Player 2 symbol" class="form-control"/>
             <span asp-validation-for="Player2Symbol" class="text-danger"></span>
         </div>
         <div class="form-group">
             <input type="number" min="1" max="2" asp-for="StartingPlayer" placeholder="Starting player (1 or 2)"
-                   class="form-control" value=""/>
+                   class="form-control"/>
             <span asp-validation-for="StartingPlayer" class="text-danger"></span>
         </div>
         <div class="form-group">
-            <input type="number" min="3" max="14" asp-for="MovableGridSize" placeholder="Movable grid size (3 or 14)"
-                   class="form-control" value=""/>
+            <input type="number" min="3" max="13" asp-for="MovableGridSize" placeholder="Movable grid size (3 to 13)"
+                   class="form-control"/>
             <span asp-validation-for="MovableGridSize" class="text-danger"></span>
         </div>
         <div class="form-group">
-            <input type="number" min="3" max="15" asp-for="WinningCondition" placeholder="Winning condition (3 to 15)"
-                   class="form-control" value=""/>
+            <input type="number" min="3" max="15" asp-for="WinningCondition" placeholder="Winning condition (3 to 14)"
+                   class="form-control"/>
             <span asp-validation-for="WinningCondition" class="text-danger"></span>
         </div>
         <div class="form-group">
             <input type="number" min="0" max="15" asp-for="InitialMoves" placeholder="Initial moves (0 to 15)"
-                   class="form-control" value=""/>
+                   class="form-control"/>
             <span asp-validation-for="InitialMoves" class="text-danger"></span>
         </div>
         <div class="form-group">
-            <input type="number" min="3" max="100" asp-for="MaxPieces" placeholder="Player pieces (3 to 15)"
-                   class="form-control" value=""/>
+            <input type="number" min="3" max="100" asp-for="MaxPieces" placeholder="Player pieces (3 to 100)"
+                   class="form-control"/>
             <span asp-validation-for="MaxPieces" class="text-danger"></span>
         </div>
 
-        <div class="form-group">
+        @if (!Model.ConfigCreated){<div class="form-group">
             <button type="submit" class="submit-button">CREATE</button>
-        </div>
+        </div>}
     </form>
 </div>
 
+@section Scripts {
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script>
+        @if (Model.ShowSweetAlert)
+        {
+            <text>
+                Swal.fire({
+                    title: "Config saved!",
+                    text: '@Model.SweetAlertMessage',
+                    width: 600,
+                    padding: "3em",
+                    color: "#ff7ace",
+                    confirmButtonText: "Bye-bye!",
+                    confirmButtonColor: "#a6056b"
+                });
+            </text>
+        }
+        function refreshPage() {
+            window.location.reload();
+        }
+    </script>
+}

@@ -4,6 +4,7 @@ using Domain;
 using GameLogic;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
+using Microsoft.EntityFrameworkCore.Metadata.Internal;
 
 namespace WebApp.Pages;
 
@@ -11,66 +12,70 @@ public class CreateConfig : PageModel
 
 {
     private IConfigRepository _configRepository;
-    private readonly AppDbContext _context;
 
-    public CreateConfig(IConfigRepository configRepository, AppDbContext context)
+    public CreateConfig(IConfigRepository configRepository)
     {
         _configRepository = configRepository;
-        _context = context;
     }
-    
-    [BindProperty(SupportsGet = true)]
-    public string UserName { get; set; } = default!;
+
+    [BindProperty(SupportsGet = true)] public string UserName { get; set; } = default!;
 
     [Required(ErrorMessage = "you have to pick something!")]
     [BindProperty(SupportsGet = true)]
     public string ConfigName { get; set; } = default!;
 
     [Required(ErrorMessage = "fill all fields!")]
-    [Range(3, 15, ErrorMessage = "width must be between {0} and {1}!")]
-    [BindProperty(SupportsGet = true)]
+    [Range(4, 14, ErrorMessage = "width must be between {0} and {1}!")]
+    [BindProperty]
     public int Width { get; set; }
 
-    [Required(ErrorMessage = "fill all fields!")]    
-    [Range(3, 15, ErrorMessage = "height must be between {0} and {1}!")]
-    [BindProperty(SupportsGet = true)]
+    [Required(ErrorMessage = "fill all fields!")]
+    [Range(4, 50, ErrorMessage = "height must be between {0} and {1}!")] 
+    [BindProperty]
 
     public int Height { get; set; }
 
     [Required(ErrorMessage = "fill all fields!")]
-    [BindProperty(SupportsGet = true)]
+    [BindProperty]
     public char Player1Symbol { get; set; }
 
     [Required(ErrorMessage = "fill all fields!")]
-    [BindProperty(SupportsGet = true)]
+    [BindProperty]
     public char Player2Symbol { get; set; }
 
     [Required(ErrorMessage = "fill all fields!")]
     [Range(1, 2, ErrorMessage = "starting player must be either 1 or 2!")]
-    [BindProperty(SupportsGet = true)]
+    [BindProperty]
     public string StartingPlayer { get; set; }
-    
+
     [Required(ErrorMessage = "fill all fields!")]
-    [Range(3, 15, ErrorMessage = "movable grid size must be at least 3")]
-    [BindProperty(SupportsGet = true)]
+    [Range(3, 14, ErrorMessage = "movable grid size must be at least 3")]
+    [BindProperty]
     public int MovableGridSize { get; set; }
 
     [Required(ErrorMessage = "fill all fields!")]
-    [Range(3, 15, ErrorMessage = "winning condition must be at least 3")]
-    [BindProperty(SupportsGet = true)]
+    [Range(3, 14, ErrorMessage = "winning condition must be at least 3")]
+    [BindProperty]
     public int WinningCondition { get; set; }
 
     [Required(ErrorMessage = "fill all fields!")]
-    [Range(0, 15, ErrorMessage = "initial moves must be between 0 and 15")]
-    [BindProperty(SupportsGet = true)]
+    [Range(0, 14, ErrorMessage = "initial moves must be between 0 and 15")]
+    [BindProperty]
     public int InitialMoves { get; set; }
 
     [Required(ErrorMessage = "fill all fields!")]
     [Range(3, 100, ErrorMessage = "max pieces have to be between 3 and 100")]
-    [BindProperty(SupportsGet = true)]
+    [BindProperty]
     public int MaxPieces { get; set; }
-    [BindProperty(SupportsGet = true)] public string? Message { get; set; }
+
+    [BindProperty] public string? Message { get; set; }
     
+    [BindProperty(SupportsGet = true)] public bool ShowSweetAlert { get; set; }
+
+    [BindProperty(SupportsGet = true)] public string? SweetAlertMessage { get; set; }
+
+    [BindProperty] public bool ConfigCreated { get; set; } = false;
+
     public IActionResult OnGet()
     {
         ModelState.Clear();
@@ -96,25 +101,19 @@ public class CreateConfig : PageModel
             ModelState.AddModelError("MaxPieces",
                 "the amount of pieces each player has must be greater than or equal to the winning condition!");
         }
-        
-        if (Player1Symbol.ToString().Length != 1)
-        {
-            ModelState.AddModelError("Player1Symbol", 
-                "Player 1 symbol must be exactly one character long!");
-        }
 
-        if (Player2Symbol.ToString().Length != 1)
+        if (Player1Symbol.ToString().Length != 1 || Player2Symbol.ToString().Length != 1)
         {
-            ModelState.AddModelError("Player2Symbol", 
-                "Player 2 symbol must be exactly one character long!");
+            ModelState.AddModelError("Player1Symbol",
+                "exactly one character please!");
         }
 
         if (char.ToLower(Player1Symbol) == char.ToLower(Player2Symbol))
         {
-            ModelState.AddModelError("Player2Symbol", 
-                "Player 1 and Player 2 symbols must be different!");
+            ModelState.AddModelError("Player2Symbol",
+                "Player 1 and Player 2 symbols have to be different!");
         }
-        
+
         if (ModelState.IsValid)
         {
             var config = new GameConfiguration
@@ -132,14 +131,21 @@ public class CreateConfig : PageModel
             };
 
             _configRepository.SaveConfiguration(config, UserName);
-            Message = "Config saved successfully!";
+            Message = "Config saved successfully! Details of your config are:";
+            ShowSweetAlert = true;
+            ConfigCreated = true;
+            return RedirectToPage("/CreateConfig", new
+            {
+                userName = UserName, 
+                message = Message,
+                showSweetAlert = ShowSweetAlert,
+                configCreated = ConfigCreated
+            } );
         }
         else
         {
             Message = "something went terribly, terribly wrong!";
         }
-
         return Page();
     }
 }
-

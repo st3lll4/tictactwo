@@ -30,7 +30,7 @@ public class Username : PageModel
 
     public IActionResult OnPost()
     {
-        if (ModelState.IsValid) //todo: add error handling everywhere in inputs
+        if (ModelState.IsValid) 
         {
             var userExists = _context.Users.Any(u => u.UserName == UserName); 
 

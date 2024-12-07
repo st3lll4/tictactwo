@@ -16,9 +16,16 @@
     }
 </div>
 
-
 <div class="wrapper">
     <div class="sidebar">
+        <form asp-page="/Index" method="post">
+            @{
+                var buttonText = Model.GameState.IsGameOver ? "Quit" : "Save and quit";
+            }
+            <button type="submit" class="menuitem">
+                @buttonText
+            </button>
+        </form>
         <div class="menuitem">
             Make your move, @Model.MovingPlayer
         </div>
@@ -59,7 +66,7 @@
                                     asp-route-y="@y"
                                     asp-route-gamename="@Model.GameName"
                                     asp-route-user1="@Model.User1"
-                                    asp-route-user2="@Model.User2"                                    
+                                    asp-route-user2="@Model.User2"
                                     asp-route-gamemode="@Model.GameMode"
                                     class="text-in-square">
                                 </a>
@@ -97,7 +104,7 @@
                                        asp-route-direction="ul"
                                        asp-route-gamename="@Model.GameName"
                                        asp-route-user1="@Model.User1"
-                                       asp-route-user2="@Model.User2"                                       
+                                       asp-route-user2="@Model.User2"
                                        asp-route-gamemode="@Model.GameMode">
                                         &#8598;
                                     </a>
@@ -108,7 +115,7 @@
                                        asp-route-direction="u"
                                        asp-route-gamename="@Model.GameName"
                                        asp-route-user1="@Model.User1"
-                                       asp-route-user2="@Model.User2"                                       
+                                       asp-route-user2="@Model.User2"
                                        asp-route-gamemode="@Model.GameMode">
                                         &#8593;
                                     </a>
@@ -152,7 +159,7 @@
                                        asp-route-direction="dl"
                                        asp-route-gamename="@Model.GameName"
                                        asp-route-user1="@Model.User1"
-                                       asp-route-user2="@Model.User2"                                       
+                                       asp-route-user2="@Model.User2"
                                        asp-route-gamemode="@Model.GameMode">
                                         &#8601;
                                     </a>
@@ -163,7 +170,7 @@
                                        asp-route-direction="d"
                                        asp-route-gamename="@Model.GameName"
                                        asp-route-user1="@Model.User1"
-                                       asp-route-user2="@Model.User2"                                       
+                                       asp-route-user2="@Model.User2"
                                        asp-route-gamemode="@Model.GameMode">
                                         &#8595;
                                     </a>
@@ -182,7 +189,7 @@
                                 else if (x == 1 && y == 1)
                                 {
                                     <div class="text-in-small-square">
-                                        <img src="images/dino.jpg" alt="">
+                                        <img src="images/flower.png" alt="">
                                     </div>
                                 }
                             </div>
@@ -220,7 +227,7 @@
             </text>
         }
         function refreshPage() {
-            window.location.reload(); // not sure if works
+            window.location.reload();
         }
     </script>
 }

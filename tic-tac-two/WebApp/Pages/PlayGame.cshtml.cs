@@ -1,4 +1,3 @@
-using System.Diagnostics;
 using DAL;
 using GameLogic;
 using Microsoft.AspNetCore.Mvc;
@@ -24,16 +23,13 @@ public class PlayGame : PageModel
 
     [BindProperty(SupportsGet = true)] public string? Message { get; set; }
 
-    public char[,] Board { get; set; } = default!;    
+    public char[,] Board { get; set; } = default!;
     public string MovingPlayer { get; set; }
-
-
+    
     [BindProperty(SupportsGet = true)] public bool ShowSweetAlert { get; set; }
 
     [BindProperty(SupportsGet = true)] public string SweetAlertMessage { get; set; }
-
-    public bool IsCurrentPlayerTurn { get; private set; } //todo
-
+    
     [BindProperty(SupportsGet = true)] public bool IsGameReady { get; set; } = false;
 
 
@@ -46,7 +42,7 @@ public class PlayGame : PageModel
     public IActionResult OnGet(int? x, int? y, string? direction)
     {
         var game = _gameRepository.GetGameByName(GameName);
-        
+
         GameState = new GameState(game.Config)
         {
             BoardData = game.BoardData,
@@ -61,9 +57,10 @@ public class PlayGame : PageModel
             Player1Name = game.Player1Name,
             Player2Name = game.Player2Name
         };
+        
         Board = GameState.Board;
         Brain = new GameBrain(GameState);
-        
+
         if (GameState.MovingPlayer == GameState.Config.Player1Symbol)
         {
             MovingPlayer = GameState.Player1Name;
@@ -72,26 +69,38 @@ public class PlayGame : PageModel
         {
             MovingPlayer = GameState.Player2Name ?? "";
         }
-        
+
+        if (GameState.IsGameOver)
+        {
+            ShowSweetAlert = true;
+            SweetAlertMessage = $"{GameState.MovingPlayer} wins!";
+            Message = "Game over bros!";
+            return Page();
+        }
+
         if (GameMode == "Multiplayer" &&
             (string.IsNullOrEmpty(GameState.Player1Name) || string.IsNullOrEmpty(GameState.Player2Name)))
-        { 
+        {
             IsGameReady = false;
             Message = "waiting for player 2 to join.........";
             if (GameState.Player2Name == null)
             {
                 return Page();
             }
+
             return RedirectToPage(new
             {
-                user1 = GameState.Player1Name,
-                user2 = GameState.Player2Name,
+                user1 = GameState.Player1Name, 
+                user2 = GameState.Player2Name, 
                 gamemode = GameMode,
                 gameName = GameName,
                 message = Message,
-            }); //todo: mingi probleem jsonis
+                showSweetAlert = ShowSweetAlert,
+                sweetAlertMessage = SweetAlertMessage,
+                isgameover = GameState.IsGameOver
+            });
         }
-        
+
         if (GameMode == "Single player")
         {
             GameState.Player2Name = "Bot1";
@@ -109,9 +118,21 @@ public class PlayGame : PageModel
         {
             Brain.MakeBotMove();
             Brain.SwitchPlayer();
-            UpdateAndRedirect(game);
+            _gameRepository.UpdateGame(GameState, game.Config.ConfigName, GameName, GameState.Player1Name,
+                GameState.Player2Name);
+            return RedirectToPage(new
+            {
+                user1 = GameState.Player1Name, 
+                user2 = GameState.Player2Name,
+                gamemode = GameMode,
+                gameName = GameName,
+                message = Message,
+                showSweetAlert = ShowSweetAlert,
+                sweetAlertMessage = SweetAlertMessage,
+                isgameover = GameState.IsGameOver
+            });
         }
-        
+
         if (direction != null && !GameState.IsGameOver)
         {
             if (!Brain.MoveGrid(direction))
@@ -123,7 +144,20 @@ public class PlayGame : PageModel
                 CheckGameOver();
                 Brain.SwitchPlayer();
             }
-            UpdateAndRedirect(game);
+
+            _gameRepository.UpdateGame(GameState, game.Config.ConfigName, GameName, GameState.Player1Name,
+                GameState.Player2Name);
+            return RedirectToPage(new
+            {
+                user1 = GameState.Player1Name, 
+                user2 = GameState.Player2Name, 
+                gamemode = GameMode,
+                gameName = GameName,
+                message = Message,
+                showSweetAlert = ShowSweetAlert,
+                sweetAlertMessage = SweetAlertMessage,
+                isgameover = GameState.IsGameOver
+            });
         }
 
         if (x.HasValue && y.HasValue)
@@ -157,26 +191,22 @@ public class PlayGame : PageModel
             }
 
             SkipToEnd:
-            UpdateAndRedirect(game);
+            _gameRepository.UpdateGame(GameState, game.Config.ConfigName, GameName, GameState.Player1Name,
+                GameState.Player2Name);
+            return RedirectToPage(new
+            {
+                user1 = GameState.Player1Name,
+                user2 = GameState.Player2Name,
+                gamemode = GameMode,
+                gameName = GameName,
+                message = Message,
+                showSweetAlert = ShowSweetAlert,
+                sweetAlertMessage = SweetAlertMessage,
+                isgameover = GameState.IsGameOver
+            });
         }
 
         return Page();
-    }
-
-    private IActionResult UpdateAndRedirect(GameState game)
-    {
-        _gameRepository.UpdateGame(GameState, game.Config.ConfigName, GameName, GameState.Player1Name, GameState.Player2Name);
-        return RedirectToPage(new
-        {
-            user1 = GameState.Player1Name, // ??
-            user2 = GameState.Player2Name, // necessary?
-            gamemode = GameMode,
-            gameName = GameName,
-            message = Message,
-            showSweetAlert = ShowSweetAlert,
-            sweetAlertMessage = SweetAlertMessage,
-            isgameover = GameState.IsGameOver
-        });
     }
 
 
@@ -186,8 +216,8 @@ public class PlayGame : PageModel
         {
             ShowSweetAlert = true;
             SweetAlertMessage = "damn, a tie!";
-            GameState.IsGameOver = true; //todo: saab ikka kaia kui game on over
-            Message = "Game over bros!"; 
+            GameState.IsGameOver = true;
+            Message = "Game over bros!";
         }
 
         if (Brain.CheckWin(GameState.MovingPlayer))
@@ -197,5 +227,17 @@ public class PlayGame : PageModel
             GameState.IsGameOver = true;
             Message = "Game over bros!";
         }
+    }
+    
+    public IActionResult OnPost()
+    {
+        SaveGameState();
+
+        return RedirectToPage("/Index");
+    }
+
+    private void SaveGameState()
+    {
+        _gameRepository.UpdateGame(GameState, GameState.Config.ConfigName, GameName, GameState.Player1Name, GameState.Player2Name);
     }
 }

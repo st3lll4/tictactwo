@@ -151,7 +151,7 @@ public class GameRepositoryDb : IGameRepository
     public bool IsGameJoinable(string name)
     {
         var game = _context.Games.FirstOrDefault(g => g.GameName == name);
-        return game!.User2Id == null; // returns false if game is not joinable
+        return game!.User2Id == null && !game.IsGameOver; // returns false if game is not joinable
     }
 
     public void JoinMultiplayerGame(string gameName, string player1Name ,string player2Name)
