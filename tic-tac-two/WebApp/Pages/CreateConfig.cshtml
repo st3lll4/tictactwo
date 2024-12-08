@@ -17,56 +17,73 @@
     }
 </div>
 
-<button onclick="history.back()" class="btn btn-light">Go back</button>
+<a asp-page="/ConfigManager" asp-route-username="@Model.UserName" class="btn btn-light">Go back</a>
 
 <div class="wrapper">
     <form method="post" class="form-base create-config-form">
         <div asp-validation-summary="ModelOnly" class="text-danger"></div>
         <div class="form-group">
-            <input type="text" asp-for="ConfigName" placeholder="Configuration name" class="form-control"/>
+            <input type="text" asp-for="ConfigName" id="ConfigName" placeholder="Configuration name"
+                   class="form-control" value="@(!string.IsNullOrEmpty(Model.ConfigName) ? Model.ConfigName : string.Empty)" />
             <span asp-validation-for="ConfigName" class="text-danger"></span>
         </div>
+
         <div class="form-group">
-            <input type="number" asp-for="Width" min="4" max="14" placeholder="Board width (3 to 14)"
-                   class="form-control"/>
+            <input type="number" asp-for="Width" id="Width" min="4" max="14" placeholder="Board width (4 to 14)"
+                   class="form-control" value="@(Model.Width != 0 ? Model.Width : (int?)null)" />
             <span asp-validation-for="Width" class="text-danger"></span>
         </div>
+
         <div class="form-group">
-            <input type="number" asp-for="Height" min="4" max="100" placeholder="Board height (3 to 100)"
-                   class="form-control"/>
+            <input type="number" asp-for="Height" id="Height" min="4" max="100" placeholder="Board height (4 to 100)"
+                   class="form-control" value="@(Model.Height != 0 ? Model.Height : (int?)null)" />
             <span asp-validation-for="Height" class="text-danger"></span>
         </div>
+
         <div class="form-group">
-            <input type="text" asp-for="Player1Symbol" placeholder="Player 1 symbol" class="form-control"/>
+            <input type="text" asp-for="Player1Symbol" id="Player1Symbol" placeholder="Player 1 symbol"
+                   class="form-control" value="@(Model.Player1Symbol != '\0' ? Model.Player1Symbol.ToString() : string.Empty)" />
             <span asp-validation-for="Player1Symbol" class="text-danger"></span>
         </div>
+
         <div class="form-group">
-            <input type="text" asp-for="Player2Symbol" placeholder="Player 2 symbol" class="form-control"/>
+            <input type="text" asp-for="Player2Symbol" id="Player2Symbol" placeholder="Player 2 symbol"
+                   class="form-control" value="@(Model.Player2Symbol != '\0' ? Model.Player2Symbol.ToString() : string.Empty)" />
             <span asp-validation-for="Player2Symbol" class="text-danger"></span>
         </div>
+
         <div class="form-group">
-            <input type="number" min="1" max="2" asp-for="StartingPlayer" placeholder="Starting player (1 or 2)"
-                   class="form-control"/>
+            <input type="number" asp-for="StartingPlayer" id="StartingPlayer" min="1" max="2"
+                   placeholder="Starting player (1 or 2)" class="form-control"
+                   value="@(!string.IsNullOrEmpty(Model.StartingPlayer) ? Model.StartingPlayer : string.Empty)" />
             <span asp-validation-for="StartingPlayer" class="text-danger"></span>
         </div>
+
         <div class="form-group">
-            <input type="number" min="3" max="13" asp-for="MovableGridSize" placeholder="Movable grid size (3 to 13)"
-                   class="form-control"/>
+            <input type="number" asp-for="MovableGridSize" id="MovableGridSize" min="3" max="13"
+                   placeholder="Movable grid size (3 to 13)" class="form-control"
+                   value="@(Model.MovableGridSize != 0 ? Model.MovableGridSize : (int?)null)" />
             <span asp-validation-for="MovableGridSize" class="text-danger"></span>
         </div>
+
         <div class="form-group">
-            <input type="number" min="3" max="15" asp-for="WinningCondition" placeholder="Winning condition (3 to 14)"
-                   class="form-control"/>
+            <input type="number" asp-for="WinningCondition" id="WinningCondition" min="3" max="15"
+                   placeholder="Winning condition (3 to 15)" class="form-control"
+                   value="@(Model.WinningCondition != 0 ? Model.WinningCondition : (int?)null)" />
             <span asp-validation-for="WinningCondition" class="text-danger"></span>
         </div>
+
         <div class="form-group">
-            <input type="number" min="0" max="15" asp-for="InitialMoves" placeholder="Initial moves (0 to 15)"
-                   class="form-control"/>
+            <input type="number" asp-for="InitialMoves" id="InitialMoves" min="0" max="15"
+                   placeholder="Initial moves (0 to 15)" class="form-control"
+                   value="@(Model.InitialMoves != 0 ? Model.InitialMoves : (int?)null)" />
             <span asp-validation-for="InitialMoves" class="text-danger"></span>
         </div>
+
         <div class="form-group">
-            <input type="number" min="3" max="100" asp-for="MaxPieces" placeholder="Player pieces (3 to 100)"
-                   class="form-control"/>
+            <input type="number" asp-for="MaxPieces" id="MaxPieces" min="3" max="100"
+                   placeholder="Player pieces (3 to 100)" class="form-control"
+                   value="@(Model.MaxPieces != 0 ? Model.MaxPieces : (int?)null)" />
             <span asp-validation-for="MaxPieces" class="text-danger"></span>
         </div>
 
@@ -93,8 +110,6 @@
                 });
             </text>
         }
-        function refreshPage() {
-            window.location.reload();
-        }
+    
     </script>
 }

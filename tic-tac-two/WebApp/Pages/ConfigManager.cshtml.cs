@@ -27,12 +27,12 @@ public class ConfigManager : PageModel
         
         if (action == "view") 
         {
-            return RedirectToPage("./ChooseViewConfig", new { username = UserName });
+            return RedirectToPage("./ChooseViewConfig", new { userName = UserName });
         }
 
         if (action == "delete")
         {
-            return RedirectToPage("./DeleteConfig", new { username = UserName });
+            return RedirectToPage("./DeleteConfig", new { userName = UserName });
         }
 
         return Page();

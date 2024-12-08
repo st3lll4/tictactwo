@@ -19,14 +19,14 @@ public class ConfigRepositoryDb : IConfigRepository
     public GameConfiguration DefaultConfiguration { get; set; }
     public GameConfiguration DefaultConfiguration2 { get; set; }
     public GameConfiguration DefaultConfiguration3 { get; set; }
-    
+
 
     public ConfigRepositoryDb()
     {
         DefaultConfiguration = DefaultConfigurations.DefaultConfiguration;
         DefaultConfiguration2 = DefaultConfigurations.DefaultConfiguration2;
         DefaultConfiguration3 = DefaultConfigurations.DefaultConfiguration3;
-       
+
         CheckAndCreateInitialDirectory();
     }
 
@@ -76,7 +76,7 @@ public class ConfigRepositoryDb : IConfigRepository
     public void SaveConfiguration(GameConfiguration config, string userName)
     {
         var user = _context.Users.FirstOrDefault(u => u.UserName == userName) ?? new User { UserName = userName };
-        
+
         var domainConfig = ConvertToDomainConfiguration(config, user);
         _context.Configurations.Add(domainConfig);
         _context.SaveChanges();
@@ -100,7 +100,7 @@ public class ConfigRepositoryDb : IConfigRepository
             User = user
         };
     }
-    
+
     private Configuration ConvertToDomainConfiguration(GameConfiguration gameConfig)
     {
         return new Configuration
@@ -117,7 +117,7 @@ public class ConfigRepositoryDb : IConfigRepository
             MaxPieces = gameConfig.MaxPieces
         };
     }
-    
+
     private GameConfiguration ConvertToGameConfiguration(Configuration config)
     {
         return new GameConfiguration
@@ -134,8 +134,8 @@ public class ConfigRepositoryDb : IConfigRepository
             MaxPieces = config.MaxPieces
         };
     }
-    
-    
+
+
     public bool DeleteConfiguration(string name)
     {
         var config = _context.Configurations.FirstOrDefault(c => c.ConfigName == name);
@@ -148,13 +148,27 @@ public class ConfigRepositoryDb : IConfigRepository
 
     public List<string> GetConfigsByUser(string userName)
     {
-        var result = _context.Configurations.Where(c => c.User.UserName == userName).Select(c => c.ConfigName)
+        var userConfigs = _context.Configurations
+            .Where(c => c.User != null && c.User.UserName == userName)
+            .Select(c => c.ConfigName)
             .ToList();
-        if (result.Contains(DefaultConfiguration.ConfigName) || result.Contains(DefaultConfiguration2.ConfigName) ||
-            result.Contains(DefaultConfiguration3.ConfigName)) return result;
-        result.Add(DefaultConfiguration.ConfigName);
-        result.Add(DefaultConfiguration2.ConfigName);
-        result.Add(DefaultConfiguration3.ConfigName);
+
+        var defaultConfigs = new List<string>
+        {
+            DefaultConfiguration.ConfigName,
+            DefaultConfiguration2.ConfigName,
+            DefaultConfiguration3.ConfigName
+        };
+
+        var result = new List<string>(userConfigs);
+
+        foreach (var defaultConfig in defaultConfigs)
+        {
+            if (!result.Contains(defaultConfig))
+            {
+                result.Add(defaultConfig);
+            }
+        }
 
         return result;
     }

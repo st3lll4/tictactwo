@@ -26,12 +26,16 @@
                 @buttonText
             </button>
         </form>
-        <div class="menuitem">
-            Make your move, @Model.MovingPlayer
+        <div>
+            <div class="menuitem">
+                Make your move, @Model.MovingPlayer
+            </div>
         </div>
         @if (Model.GameMode == "Single player" || Model.GameMode == "Bots")
         {
-            <button id="refreshButton" class="menuitem" onclick="refreshPage()">Bot move</button>
+            <div>
+                <button id="refreshButton" class="menuitem" onclick="refreshPage()">Bot move</button>
+            </div>
         }
     </div>
     <div class="board">

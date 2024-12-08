@@ -30,7 +30,7 @@ public class CreateConfig : PageModel
     public int Width { get; set; }
 
     [Required(ErrorMessage = "fill all fields!")]
-    [Range(4, 50, ErrorMessage = "height must be between {0} and {1}!")] 
+    [Range(4, 100, ErrorMessage = "height must be between {1} and {2}!")] 
     [BindProperty]
 
     public int Height { get; set; }
@@ -142,10 +142,7 @@ public class CreateConfig : PageModel
                 configCreated = ConfigCreated
             } );
         }
-        else
-        {
-            Message = "something went terribly, terribly wrong!";
-        }
+        Message = "something went terribly, terribly wrong!";
         return Page();
     }
 }
