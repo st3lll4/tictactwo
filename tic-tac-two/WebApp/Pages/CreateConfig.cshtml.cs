@@ -123,7 +123,7 @@ public class CreateConfig : PageModel
                 Height = Height,
                 Player1Symbol = Player1Symbol,
                 Player2Symbol = Player2Symbol,
-                StartingPlayer = StartingPlayer,
+                StartingPlayer = $"Player {StartingPlayer}",
                 MovableGridSize = MovableGridSize,
                 WinningCondition = WinningCondition,
                 InitialMoves = InitialMoves,

@@ -18,25 +18,12 @@
 
 <div class="wrapper">
     <div class="sidebar">
-        @if (Model.GameState.IsGameOver)
-        {
-            <div class="menuitem">
-            <a asp-page="/StartGame" 
-               asp-route-username="@Model.User1" 
+        <div class="menuitem">
+            <a asp-page="/StartGame"
+               asp-route-username="@Model.GameState.Player1Name"
                asp-route-gamemode="@Model.GameMode">Quit
-                </a></div>
-        }
-        else
-        {
-            <form asp-page="/StartGame"
-                  asp-route-username="@Model.User1"
-                  asp-route-gamemode="@Model.GameMode"
-                  method="post">
-                <button type="submit" class="menuitem">
-                    Save and quit
-                </button>
-            </form>
-        }
+            </a>
+        </div>
         <div>
             <div class="menuitem">
                 Make your move, @Model.MovingPlayer
@@ -45,7 +32,8 @@
         @if (Model.GameMode == "Single player" || Model.GameMode == "Bots")
         {
             <div>
-                <button id="refreshButton" class="menuitem" onclick="refreshPage()">Bot move</button>
+                <button id="refreshButton" class="menuitem" onclick="refreshPage()" asp-route-isbotmove=true>Bot move
+                </button>
             </div>
         }
     </div>
@@ -241,7 +229,7 @@
                 });
             </text>
         }
-        
+
         function refreshPage() {
             window.location.reload();
         }

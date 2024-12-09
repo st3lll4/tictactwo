@@ -5,9 +5,8 @@ namespace Domain;
 
 public class User : BaseEntity
 {
-    [MaxLength(128)] 
-    public string UserName { get; set; } = default!;
-    
+    [MaxLength(128)] public string UserName { get; set; } = default!;
+
     public ICollection<Game>? Games { get; set; }
     public ICollection<Configuration>? Configurations { get; set; }
 }

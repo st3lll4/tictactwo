@@ -31,6 +31,7 @@ public class SavedGames : PageModel
     public IActionResult OnGet()
     {
         var selectListData = _gameRepository.GetGamesByUser(UserName)
+            .Where(game => _gameRepository.GetGameByName(game).IsGameOver == false)
             .Select(name => name)
             .ToList();
 

@@ -9,7 +9,10 @@
     <h1>PICK A THING</h1>
 </div>
 
-<button onclick="history.back()" class="btn btn-light">Go back</button>
+<a asp-page="/Username"
+   asp-route-gamemode="@Model.GameMode" class="btn btn-light">Go back
+</a>
+
 
 <div class="wrapper">
     <form method="post" class="form-base regular-form">

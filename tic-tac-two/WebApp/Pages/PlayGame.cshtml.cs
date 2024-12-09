@@ -8,7 +8,6 @@ namespace WebApp.Pages;
 public class PlayGame : PageModel
 {
     private readonly IGameRepository _gameRepository;
-    private readonly IConfigRepository _configRepository;
 
     [BindProperty(SupportsGet = true)] public string GameName { get; set; }
 
@@ -33,10 +32,9 @@ public class PlayGame : PageModel
     [BindProperty(SupportsGet = true)] public bool IsGameReady { get; set; } = false;
 
 
-    public PlayGame(IGameRepository gameRepository, AppDbContext context, IConfigRepository configRepository)
+    public PlayGame(IGameRepository gameRepository, AppDbContext context)
     {
         _gameRepository = gameRepository;
-        _configRepository = configRepository;
     }
 
     public IActionResult OnGet(int? x, int? y, string? direction)
@@ -60,15 +58,6 @@ public class PlayGame : PageModel
 
         Board = GameState.Board;
         Brain = new GameBrain(GameState);
-
-        if (GameState.MovingPlayer == GameState.Config.Player1Symbol)
-        {
-            MovingPlayer = GameState.Player1Name;
-        }
-        else
-        {
-            MovingPlayer = GameState.Player2Name ?? "";
-        }
 
         if (GameState.IsGameOver)
         {
@@ -108,21 +97,32 @@ public class PlayGame : PageModel
 
         if (GameMode == "Bots")
         {
-            GameState.Player1Name = "Bot1"; 
+            GameState.Player1Name = "Bot1";
             GameState.Player2Name = "Bot2";
+        }
+
+        if (GameState.MovingPlayer == GameState.Config.Player1Symbol)
+        {
+            MovingPlayer = GameState.Player1Name;
+        }
+        else if (GameState.MovingPlayer == GameState.Config.Player2Symbol)
+        {
+            MovingPlayer = GameState.Player2Name;
         }
 
         IsGameReady = true;
 
-        if (MovingPlayer == "Bot1" || MovingPlayer == "Bot2")
+        if (MovingPlayer is "Bot1" or "Bot2")
         {
-            if (GameState.Player1PiecesPlaced == 0 && GameState.Player2PiecesPlaced == 0)
+            if (GameState is { Player1PiecesPlaced: 0, Player2PiecesPlaced: 0 } && GameMode == "Bots")
             {
                 Brain.MakeBotMove();
                 Brain.SwitchPlayer();
+                _gameRepository.UpdateGame(GameState, game.Config.ConfigName, GameName, GameState.Player1Name,
+                    GameState.Player2Name);
                 return Page();
             }
-            Thread.Sleep(2000); // 2-second delay (2000 milliseconds)
+            
             Brain.MakeBotMove();
             CheckGameOver();
             if (!GameState.IsGameOver)
@@ -132,20 +132,11 @@ public class PlayGame : PageModel
 
             _gameRepository.UpdateGame(GameState, game.Config.ConfigName, GameName, GameState.Player1Name,
                 GameState.Player2Name);
-            
-            return RedirectToPage(new
-            {
-                user1 = GameState.Player1Name,
-                user2 = GameState.Player2Name,
-                gamemode = GameMode,
-                gameName = GameName,
-                message = Message,
-                showSweetAlert = ShowSweetAlert,
-                sweetAlertMessage = SweetAlertMessage,
-                isgameover = GameState.IsGameOver
-            });
+
+            return Page();
         }
 
+        //moving grid part
         if (direction != null && !GameState.IsGameOver)
         {
             if (!Brain.MoveGrid(direction))
@@ -163,7 +154,7 @@ public class PlayGame : PageModel
 
             _gameRepository.UpdateGame(GameState, game.Config.ConfigName, GameName, GameState.Player1Name,
                 GameState.Player2Name);
-            
+
             return RedirectToPage(new
             {
                 user1 = GameState.Player1Name,
@@ -177,7 +168,8 @@ public class PlayGame : PageModel
             });
         }
 
-        if (x.HasValue && y.HasValue)
+        //placing piece part
+        if (x.HasValue && y.HasValue && MovingPlayer != "Bot1" && MovingPlayer != "Bot2")
         {
             if (!Brain.IsInGrid(x.Value, y.Value))
             {
@@ -188,6 +180,12 @@ public class PlayGame : PageModel
             if (Board[x.Value, y.Value] != GameState.MovingPlayer && Board[x.Value, y.Value] != '\0')
             {
                 Message = "this spot is taken already!";
+                goto SkipToEnd;
+            }
+
+            if (Brain.GetMovingPlayerPiecesPlaced() >= GameState.Config.MaxPieces)
+            {
+                Message = "you have already used all your pieces!";
                 goto SkipToEnd;
             }
 
@@ -246,9 +244,10 @@ public class PlayGame : PageModel
         }
     }
 
-    public void OnPost()
+    public IActionResult OnPost()
     {
         _gameRepository.UpdateGame(GameState, GameState.Config.ConfigName, GameName, GameState.Player1Name,
             GameState.Player2Name);
+        return RedirectToPage("/StartGame", new { userName = User1, gameMode = GameMode });
     }
 }

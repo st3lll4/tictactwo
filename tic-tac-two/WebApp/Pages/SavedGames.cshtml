@@ -5,7 +5,10 @@
     <h1>PICK A SAVED GAME</h1>
 </div>
 
-<button onclick="history.back()" class="btn btn-light">Go back</button>
+<a asp-page="/StartGame"
+   asp-route-username="@Model.UserName"
+   asp-route-gamemode="@Model.GameMode" class="btn btn-light">Go back 
+</a>
 
 <div class="wrapper">
     @if (!string.IsNullOrWhiteSpace(Model.Error))

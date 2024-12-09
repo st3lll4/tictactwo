@@ -204,8 +204,7 @@ namespace tic_tac_two
         private bool MovePiece()
         {
             int oldX, oldY;
-
-
+            
             while (true)
             {
                 Console.WriteLine("Enter the coordinates of the piece you want to move in the form of x,y: ");
