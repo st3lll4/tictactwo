@@ -18,14 +18,25 @@
 
 <div class="wrapper">
     <div class="sidebar">
-        <form asp-page="/Index" method="post">
-            @{
-                var buttonText = Model.GameState.IsGameOver ? "Quit" : "Save and quit";
-            }
-            <button type="submit" class="menuitem">
-                @buttonText
-            </button>
-        </form>
+        @if (Model.GameState.IsGameOver)
+        {
+            <div class="menuitem">
+            <a asp-page="/StartGame" 
+               asp-route-username="@Model.User1" 
+               asp-route-gamemode="@Model.GameMode">Quit
+                </a></div>
+        }
+        else
+        {
+            <form asp-page="/StartGame"
+                  asp-route-username="@Model.User1"
+                  asp-route-gamemode="@Model.GameMode"
+                  method="post">
+                <button type="submit" class="menuitem">
+                    Save and quit
+                </button>
+            </form>
+        }
         <div>
             <div class="menuitem">
                 Make your move, @Model.MovingPlayer
@@ -230,6 +241,7 @@
                 });
             </text>
         }
+        
         function refreshPage() {
             window.location.reload();
         }

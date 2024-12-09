@@ -16,9 +16,12 @@
         <div class="form-group">
             <button type="submit" name="action" value="new" class="submit-button">NEW</button>
         </div>
-        <div class="form-group">
-            <button type="submit" name="action" value="saved" class="submit-button">CONTINUE</button>
-        </div>
+        @if (Model.GameMode != "Bots")
+        {
+            <div class="form-group">
+                <button type="submit" name="action" value="saved" class="submit-button">CONTINUE</button>
+            </div>
+        }
         @if (@Model.GameMode == "Multiplayer")
         {
             <div class="form-group">

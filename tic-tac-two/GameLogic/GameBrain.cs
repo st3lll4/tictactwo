@@ -343,50 +343,185 @@
         public void MakeBotMove()
         {
             var botSymbol = GameState.MovingPlayer;
-            var opponentSymbol = botSymbol == Config.Player1Symbol ? Config.Player2Symbol : Config.Player1Symbol;
 
-            // 1. Check for a winning move
-            if (TryMakeStrategicMove(botSymbol)) return;
+            // Check for a winning move
+            if (TryToWin()) return;
 
-            // 2. Block opponent's winning move
-            if (TryMakeStrategicMove(opponentSymbol)) return;
+            // Take the center if available
+            if (GameState.Board[GameState.GridCenterCol, GameState.GridCenterRow] == '\0') 
+            {
+                PlacePiece(GameState.GridCenterCol, GameState.GridCenterRow, botSymbol);
+                return;
+            }
 
-            // 3. Take the center if available
+            var rnd = new Random();
+            var randomCorner = rnd.Next(0, 4);
             
+            // Choose from the corners
+            var leftUp = GameState.Board[GameState.GridStartRow, GameState.GridStartCol];
+            var rightUp = GameState.Board[GameState.GridStartRow, GameState.GridStartCol + Config.MovableGridSize - 1];
+            var leftDown = GameState.Board[GameState.GridStartRow + Config.MovableGridSize - 1, GameState.GridStartCol];
+            var rightDown = GameState.Board[GameState.GridStartRow + Config.MovableGridSize - 1,
+                GameState.GridStartCol + Config.MovableGridSize - 1];
+            if (leftUp == '\0' && randomCorner == 0)
+            {
+                PlacePiece(GameState.GridStartCol, GameState.GridStartCol, botSymbol);
+                return;
+            }
 
-            // 4. Choose from the corners
+            if (rightUp == '\0' && randomCorner == 1)
+            {
+                PlacePiece(GameState.GridStartCol, GameState.GridStartRow + Config.MovableGridSize - 1, botSymbol);
+                return;
+            }
+
+            if (leftDown == '\0'  && randomCorner == 2)
+            {
+                PlacePiece(GameState.GridStartRow + Config.MovableGridSize - 1, GameState.GridStartCol, botSymbol);
+                return;
+            }
+
+            if (rightDown == '\0'  && randomCorner == 3)
+            {
+                PlacePiece(GameState.GridStartRow + Config.MovableGridSize - 1,
+                    GameState.GridStartCol + Config.MovableGridSize - 1, botSymbol);
+                return;
+            }
+
+            var randomNumber = rnd.Next(0, 3);
             
-            
-            // 5. Choose from the sides
-            
-            
-            // 6. Move grid if necessary (every 4 moves)
-            if ((GameState.Player1PiecesPlaced + GameState.Player2PiecesPlaced) % 4 == 0)
+            // Randomly move grid
+            if (randomNumber == 2 && GetMovingPlayerPiecesPlaced() >= Config.InitialMoves)
             {
                 RandomlyMoveGrid();
                 return;
             }
-
-            // 7. Randomly move own piece every 3rd to 5th move
-            if ((GameState.Player1PiecesPlaced + GameState.Player2PiecesPlaced) % new Random().Next(3, 6) == 0)
+            
+            // Randomly move own piece
+            if (randomNumber == 1 && GetMovingPlayerPiecesPlaced() >= Config.InitialMoves)
             {
                 RandomlyMoveOwnPiece();
+                return;
+            }
+
+            // Randomly place a piece
+            var freeSpotsInGrid = GetSpaceInGrid();
+            PlaceRandomPiece(freeSpotsInGrid);
+        }
+
+        private void PlaceRandomPiece(int freeSpotsInGrid)
+        {
+            var random = new Random();
+            var randomSpot = random.Next(0, freeSpotsInGrid);
+            var counter = 0;
+            for (int i = GameState.GridStartRow; i < GameState.GridStartRow + Config.MovableGridSize; i++)
+            {
+                for (int j = GameState.GridStartCol; j < GameState.GridStartCol + Config.MovableGridSize; j++)
+                {
+                    if (GameState.Board[i, j] == '\0')
+                    {
+                        if (counter == randomSpot)
+                        {
+                            PlacePiece(i, j, GameState.MovingPlayer);
+                            return;
+                        }
+
+                        counter++;
+                    }
+                }
             }
         }
 
-        private bool TryMakeStrategicMove(char playerSymbol)
+        private bool TryToWin()
         {
+            for (int y = GameState.GridStartRow; y < GameState.GridStartRow + Config.MovableGridSize; y++)
+            {
+                for (int x = GameState.GridStartCol; x < GameState.GridStartCol + Config.MovableGridSize; x++)
+                {
+                    if (GameState.Board[x, y] == '\0')
+                    {
+                        GameState.Board[x, y] = GameState.MovingPlayer;
+                        bool isWinningMove = CheckWin(GameState.MovingPlayer);
+                        GameState.Board[x, y] = '\0';
+                        if (isWinningMove)
+                        {
+                            PlacePiece(x, y, GameState.MovingPlayer);
+                            return true;
+                        }
+                    }
+                }
+            }
+
             return false;
         }
 
         private void RandomlyMoveGrid()
         {
-            // Logic to count pieces in different grid regions and move to the less occupied one
+            List<string> directions = ["u", "d", "l", "r", "ul", "ur", "dl", "dr"];
+            var random = new Random();
+            var direction = directions[random.Next(0, directions.Count)];
+            MoveGrid(direction);
         }
 
         private void RandomlyMoveOwnPiece()
         {
-            // Logic to randomly select one of the bot's pieces and move it to a valid position
+            int freeSpotsInGrid = GetSpaceInGrid();
+
+            if (freeSpotsInGrid == 0)
+            {
+                RandomlyMoveGrid();
+            }
+            else
+            {
+                var random = new Random();
+                var botPieces = new List<(int row, int col)>();
+
+                for (int i = 0; i < GameState.Config.Width; i++)
+                {
+                    for (int j = 0; j < GameState.Config.Height; j++)
+                    {
+                        if (GameState.Board[i, j] == GameState.MovingPlayer)
+                        {
+                            botPieces.Add((i, j));
+                        }
+                    }
+                }
+
+                var pieceToMove = botPieces[random.Next(botPieces.Count)];
+
+                var emptyPlaces = new List<(int row, int col)>();
+                for (int i = GameState.GridStartRow; i < GameState.GridStartRow + Config.MovableGridSize; i++)
+                {
+                    for (int j = GameState.GridStartCol; j < GameState.GridStartCol + Config.MovableGridSize; j++)
+                    {
+                        if (GameState.Board[i, j] == '\0')
+                        {
+                            emptyPlaces.Add((i, j));
+                        }
+                    }
+                }
+
+                var newSpot = emptyPlaces[random.Next(emptyPlaces.Count)];
+                MovePiece(pieceToMove.row, pieceToMove.col, newSpot.row, newSpot.col);
+            }
+        }
+
+
+        private int GetSpaceInGrid()
+        {
+            var freeSpotsInGrid = 0;
+            for (int i = GameState.GridStartRow; i < GameState.GridStartRow + Config.MovableGridSize; i++)
+            {
+                for (int j = GameState.GridStartCol; j < GameState.GridStartCol + Config.MovableGridSize; j++)
+                {
+                    if (GameState.Board[i, j] == '\0')
+                    {
+                        freeSpotsInGrid++;
+                    }
+                }
+            }
+
+            return freeSpotsInGrid + 1;
         }
     }
 }

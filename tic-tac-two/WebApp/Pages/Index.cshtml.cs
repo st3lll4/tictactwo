@@ -30,7 +30,7 @@ public class IndexModel : PageModel
             {
                 return RedirectToPage("./Username", new { gamemode = GameMode });
             }
-            return RedirectToPage("./StartGame", new { username = "Bot1", gamemode = GameMode });
+            return RedirectToPage("./Config", new { username = "Bot1", gamemode = GameMode });
         }
         
         return Page();

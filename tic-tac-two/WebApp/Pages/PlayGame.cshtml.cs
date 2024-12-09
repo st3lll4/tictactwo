@@ -25,11 +25,11 @@ public class PlayGame : PageModel
 
     public char[,] Board { get; set; } = default!;
     public string MovingPlayer { get; set; }
-    
+
     [BindProperty(SupportsGet = true)] public bool ShowSweetAlert { get; set; }
 
     [BindProperty(SupportsGet = true)] public string SweetAlertMessage { get; set; }
-    
+
     [BindProperty(SupportsGet = true)] public bool IsGameReady { get; set; } = false;
 
 
@@ -57,7 +57,7 @@ public class PlayGame : PageModel
             Player1Name = game.Player1Name,
             Player2Name = game.Player2Name
         };
-        
+
         Board = GameState.Board;
         Brain = new GameBrain(GameState);
 
@@ -90,8 +90,8 @@ public class PlayGame : PageModel
 
             return RedirectToPage(new
             {
-                user1 = GameState.Player1Name, 
-                user2 = GameState.Player2Name, 
+                user1 = GameState.Player1Name,
+                user2 = GameState.Player2Name,
                 gamemode = GameMode,
                 gameName = GameName,
                 message = Message,
@@ -108,21 +108,34 @@ public class PlayGame : PageModel
 
         if (GameMode == "Bots")
         {
-            GameState.Player1Name = "Bot1";
-            GameState.Player2Name = "Bot1";
+            GameState.Player1Name = "Bot1"; 
+            GameState.Player2Name = "Bot2";
         }
 
         IsGameReady = true;
 
         if (MovingPlayer == "Bot1" || MovingPlayer == "Bot2")
         {
+            if (GameState.Player1PiecesPlaced == 0 && GameState.Player2PiecesPlaced == 0)
+            {
+                Brain.MakeBotMove();
+                Brain.SwitchPlayer();
+                return Page();
+            }
+            Thread.Sleep(2000); // 2-second delay (2000 milliseconds)
             Brain.MakeBotMove();
-            Brain.SwitchPlayer();
+            CheckGameOver();
+            if (!GameState.IsGameOver)
+            {
+                Brain.SwitchPlayer();
+            }
+
             _gameRepository.UpdateGame(GameState, game.Config.ConfigName, GameName, GameState.Player1Name,
                 GameState.Player2Name);
+            
             return RedirectToPage(new
             {
-                user1 = GameState.Player1Name, 
+                user1 = GameState.Player1Name,
                 user2 = GameState.Player2Name,
                 gamemode = GameMode,
                 gameName = GameName,
@@ -142,15 +155,19 @@ public class PlayGame : PageModel
             else
             {
                 CheckGameOver();
-                Brain.SwitchPlayer();
+                if (!GameState.IsGameOver)
+                {
+                    Brain.SwitchPlayer();
+                }
             }
 
             _gameRepository.UpdateGame(GameState, game.Config.ConfigName, GameName, GameState.Player1Name,
                 GameState.Player2Name);
+            
             return RedirectToPage(new
             {
-                user1 = GameState.Player1Name, 
-                user2 = GameState.Player2Name, 
+                user1 = GameState.Player1Name,
+                user2 = GameState.Player2Name,
                 gamemode = GameMode,
                 gameName = GameName,
                 message = Message,
@@ -228,16 +245,10 @@ public class PlayGame : PageModel
             Message = "Game over bros!";
         }
     }
-    
-    public IActionResult OnPost()
-    {
-        SaveGameState();
 
-        return RedirectToPage("/Index");
-    }
-
-    private void SaveGameState()
+    public void OnPost()
     {
-        _gameRepository.UpdateGame(GameState, GameState.Config.ConfigName, GameName, GameState.Player1Name, GameState.Player2Name);
+        _gameRepository.UpdateGame(GameState, GameState.Config.ConfigName, GameName, GameState.Player1Name,
+            GameState.Player2Name);
     }
 }
