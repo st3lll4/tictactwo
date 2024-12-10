@@ -5,28 +5,27 @@ namespace tic_tac_two
 {
     public class GameController
     {
-
         private static GameConfiguration _currentConfig = default!;
         private static GameBrain _brain = default!;
-        private static IGameRepository _gameRepository = default!;
-        
+        private IGameRepository _gameRepository;
+
         private static string _userName = default!;
-        
-        private static bool _quit = false; // todo: can use gamestates isgameover
-        
-        public GameController(string userName)
+
+        private static bool _quit = false;
+
+        public GameController(string userName, IGameRepository gameRepository)
         {
             _userName = userName;
             _currentConfig = ConfigurationManager.CurrentConfiguration;
             _brain = new GameBrain(new GameState(_currentConfig));
-            _gameRepository = new GameRepositoryJson(); // change here between json and db
+            _gameRepository = gameRepository;
         }
 
         public string MainLoop()
         {
-            var gameState = _brain.GameState; // miskiprst null
-            
-            GameIntro(); 
+            var gameState = _brain.GameState; 
+
+            GameIntro();
 
             do
             {
@@ -76,7 +75,7 @@ namespace tic_tac_two
 
             return "";
         }
-        
+
 
         private void ResetGame()
         {
@@ -90,8 +89,9 @@ namespace tic_tac_two
             while (!validMoveMade)
             {
                 Console.WriteLine("Enter the number for your next action:");
-                
-                if (_brain.GetMovingPlayerPiecesPlaced() != 0) {
+
+                if (_brain.GetMovingPlayerPiecesPlaced() != 0)
+                {
                     Console.WriteLine("1. Move your existing piece");
                 }
 
@@ -99,7 +99,7 @@ namespace tic_tac_two
                 {
                     Console.WriteLine("2. Place a piece");
                 }
-                
+
 
                 Console.WriteLine("X. Save and quit");
 
@@ -143,6 +143,7 @@ namespace tic_tac_two
             {
                 input = DateTime.Now.ToString("dd-MMMM-yyyy_HH-mm-ss");
             }
+
             _gameRepository.SaveGame(_brain.GameState, _currentConfig.ConfigName, input, _userName, null);
             Console.WriteLine("Game saved. Press enter to run away to main menu..");
             Console.ReadLine();
@@ -204,7 +205,7 @@ namespace tic_tac_two
         private bool MovePiece()
         {
             int oldX, oldY;
-            
+
             while (true)
             {
                 Console.WriteLine("Enter the coordinates of the piece you want to move in the form of x,y: ");
@@ -346,12 +347,11 @@ namespace tic_tac_two
                 Console.WriteLine($"you can place the total of {_currentConfig.MaxPieces} pieces, " +
                                   $"you can move the grid after {_currentConfig.InitialMoves} moves, ");
             }
-            
+
             Console.WriteLine($"and you must win by aligning {_currentConfig.WinningCondition} pieces.");
             Console.WriteLine("Type X at any point to save the game and return to main menu.");
             Console.WriteLine("Good luck nerds!");
             Console.WriteLine();
-            
         }
 
         private void DrawBoard(GameState gameState)
@@ -384,7 +384,6 @@ namespace tic_tac_two
 
         public string LoadGames()
         {
-
             var games = _gameRepository.GetGamesByUser(_userName);
 
             if (games.Count == 0)
@@ -402,7 +401,7 @@ namespace tic_tac_two
             }
 
             var input = Console.ReadLine();
-            
+
             if (int.TryParse(input, out var gameIndex))
             {
                 var chosenGame = games[gameIndex - 1];
@@ -411,6 +410,7 @@ namespace tic_tac_two
                     Console.WriteLine("Nope! Try again.");
                     return "";
                 }
+
                 var gameState = _gameRepository.GetGameByName(chosenGame);
                 _brain.SetGameState(gameState);
                 Console.WriteLine($"Enjoy playing your loaded game '{chosenGame}'!");
@@ -423,7 +423,5 @@ namespace tic_tac_two
 
             return "";
         }
-
-     
     }
 }

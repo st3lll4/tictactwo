@@ -6,24 +6,23 @@ namespace tic_tac_two
 {
     public class ConfigurationManager
     {
-        //private readonly ConfigRepositoryJson _configRepository; // change here between json and db
-
         private static string _userName = default!;
 
-        private ConfigRepositoryDb _configRepository = new ConfigRepositoryDb(); // change here between json and db
+        private IConfigRepository ConfigRepository { get; set; } 
         public static GameConfiguration CurrentConfiguration { get; private set; } = default!;
 
-        public ConfigurationManager(string username)
+        public ConfigurationManager(string username, IConfigRepository configRepository)
         {
             CurrentConfiguration = DefaultConfigurations.DefaultConfiguration;
             _userName = username;
+            ConfigRepository = configRepository;
         }
 
 
         public string SelectConfiguration()
         {
             var configMenuItems = new List<MenuItem>();
-            var configNames = _configRepository.GetConfigsByUser(_userName);
+            var configNames = ConfigRepository.GetConfigsByUser(_userName);
 
             for (int i = 0; i < configNames.Count; i++)
             {
@@ -54,11 +53,11 @@ namespace tic_tac_two
             Console.ReadLine();
             return selectedValue;
         }
-        
+
 
         public string SeeConfigurations()
         {
-            var savedConfigs = _configRepository.GetConfigsByUser(_userName);
+            var savedConfigs = ConfigRepository.GetConfigsByUser(_userName);
 
             while (true)
             {
@@ -82,8 +81,8 @@ namespace tic_tac_two
                 if (int.TryParse(input, out var choice) && choice >= 1 && choice <= savedConfigs.Count)
                 {
                     var selectedConfig = savedConfigs[choice - 1];
-                    
-                    DisplayConfigurationDetails(_configRepository.GetConfigurationByName(selectedConfig));
+
+                    DisplayConfigurationDetails(ConfigRepository.GetConfigurationByName(selectedConfig));
                     Console.ReadLine();
                 }
                 else
@@ -116,7 +115,7 @@ namespace tic_tac_two
 
         private void SetCurrentConfiguration(string configName)
         {
-            var config = _configRepository.GetConfigurationByName(configName);
+            var config = ConfigRepository.GetConfigurationByName(configName);
             CurrentConfiguration = config;
         }
 
@@ -124,7 +123,7 @@ namespace tic_tac_two
         {
             var newConfig = CreateConfiguration();
 
-            _configRepository.SaveConfiguration(newConfig, _userName);
+            ConfigRepository.SaveConfiguration(newConfig, _userName);
 
             Console.WriteLine($"Configuration '{newConfig.ConfigName}' has been created and saved.");
             Console.ReadLine();
@@ -143,8 +142,9 @@ namespace tic_tac_two
             var name = Console.ReadLine();
             if (string.IsNullOrWhiteSpace(name))
             {
-                name = $"{_userName}'s config nr {_configRepository.GetConfigsByUser(_userName).Count + 1}";
+                name = $"{_userName}'s config nr {ConfigRepository.GetConfigsByUser(_userName).Count + 1}";
             }
+
             config.ConfigName = name;
 
             const int min = 3;
@@ -178,10 +178,11 @@ namespace tic_tac_two
             var boardCapacity = config.Width * config.Height;
 
             config.MovableGridSize = GetValidInput(
-                "Enter the size of the movable grid (always square):", min, config.Height > config.Width ? config.Width : config.Height);
-            
+                "Enter the size of the movable grid (always square):", min,
+                config.Height > config.Width ? config.Width : config.Height);
+
             var maxWinningCondition = Convert.ToInt32(config.MovableGridSize * Math.Sqrt(2));
-            
+
             config.WinningCondition = GetValidInput(
                 "Enter the winning condition of the game (more than 3):", min, maxWinningCondition);
 
@@ -190,13 +191,13 @@ namespace tic_tac_two
 
             config.MaxPieces = GetValidInput(
                 "Enter the number of pieces every player has:", config.WinningCondition, boardCapacity);
-            
+
             return config;
         }
 
         public string DeleteConfiguration()
         {
-            var configNames = _configRepository.GetConfigsByUser(_userName);
+            var configNames = ConfigRepository.GetConfigsByUser(_userName);
 
             Console.WriteLine("Saved Configurations:");
             for (int i = 0; i < configNames.Count; i++)
@@ -210,7 +211,7 @@ namespace tic_tac_two
                 configIndex > configNames.Count)
             {
                 Console.WriteLine();
-                Console.WriteLine("Invalid selection. No configuration deleted. Enter to return...."); 
+                Console.WriteLine("Invalid selection. No configuration deleted. Enter to return....");
                 // todo: test if you see the messages, test if maybe needs to ask again
                 Console.ReadLine();
                 return ""; // i know this is not good but....
@@ -220,11 +221,12 @@ namespace tic_tac_two
 
             if (string.IsNullOrEmpty(selectedConfig)) return "";
 
-            if (_configRepository.DeleteConfiguration(selectedConfig))
+            if (ConfigRepository.DeleteConfiguration(selectedConfig))
             {
                 Console.WriteLine($"Configuration '{selectedConfig}' has been deleted.");
                 Console.ReadLine();
             }
+
             Console.WriteLine("error while deleting :(");
             return "";
         }

@@ -7,37 +7,37 @@ namespace DAL;
 
 public class GameRepositoryDb : IGameRepository
 {
-    private readonly AppDbContext _context = new (_contextOptions);
-    private static string _connectionString = $"Data Source={FileHelper.BasePath}app.db"; //todo: change
+    private readonly AppDbContext _context;
 
-    private static DbContextOptions<AppDbContext> _contextOptions = new DbContextOptionsBuilder<AppDbContext>()
-        .UseSqlite(_connectionString)
-        .EnableDetailedErrors()
-        .EnableSensitiveDataLogging()
-        .Options;
+    public GameRepositoryDb(AppDbContext context)
+    {
+        _context = context;
+    }
 
-    public void SaveGame(GameState gameState, string gameConfigName, string saveName, string user1Name, string? user2Name)
+    public void SaveGame(GameState gameState, string gameConfigName, string saveName, string user1Name,
+        string? user2Name)
     {
         var user1 = _context.Users.FirstOrDefault(u => u.UserName == user1Name) ?? new User { UserName = user1Name };
         User? user2 = null;
-        if (user2Name != null) {
+        if (user2Name != null)
+        {
             user2 = _context.Users.FirstOrDefault(u => u.UserName == user2Name) ??
-                        new User { UserName = user2Name };
+                    new User { UserName = user2Name };
         }
-        
+
         var config = _context.Configurations.FirstOrDefault(c => c.ConfigName == gameConfigName);
 
-        var game = ConvertToGame(gameState, saveName, user1, config, user2); 
-        
+        var game = ConvertToGame(gameState, saveName, user1, config, user2);
+
         _context.Games.Add(game);
         _context.SaveChanges();
     }
-    
+
     private Game ConvertToGame(GameState gameState, string gameName, User user1, Configuration? config, User? user2)
     {
         var configString = JsonSerializer.Serialize(gameState.Config);
         var boardDataJson = JsonSerializer.Serialize(gameState.BoardData);
-        
+
         return new Game
         {
             GameName = gameName,
@@ -49,7 +49,7 @@ public class GameRepositoryDb : IGameRepository
             ConfigurationId = config?.Id ?? 0,
             BoardData = boardDataJson,
             MovingPlayer = gameState.MovingPlayer,
-            Config = configString, 
+            Config = configString,
             Player1PiecesPlaced = gameState.Player1PiecesPlaced,
             Player2PiecesPlaced = gameState.Player2PiecesPlaced,
             GridStartRow = gameState.GridStartRow,
@@ -65,7 +65,7 @@ public class GameRepositoryDb : IGameRepository
         GameConfiguration? configObject = null;
         List<List<char>>? boardData = null;
 
-        try 
+        try
         {
             configObject = JsonSerializer.Deserialize<GameConfiguration>(game.Config);
             boardData = JsonSerializer.Deserialize<List<List<char>>>(game.BoardData);
@@ -74,10 +74,10 @@ public class GameRepositoryDb : IGameRepository
         {
             throw new InvalidOperationException("Failed to deserialize game data", ex);
         }
-        
+
         User? user1 = _context.Users.FirstOrDefault(u => u.Id == game.User1Id);
-        User? user2 = game.User2Id == null? null : _context.Users.FirstOrDefault(u => u.Id == game.User2Id);
-        
+        User? user2 = game.User2Id == null ? null : _context.Users.FirstOrDefault(u => u.Id == game.User2Id);
+
         return new GameState(configObject!)
         {
             BoardData = boardData!,
@@ -123,7 +123,7 @@ public class GameRepositoryDb : IGameRepository
         game.GridCenterRow = gameState.GridCenterRow;
         game.GridCenterCol = gameState.GridCenterCol;
         game.IsGameOver = gameState.IsGameOver;
-        
+
 
         if (game.User1!.UserName != userName)
         {
@@ -134,7 +134,8 @@ public class GameRepositoryDb : IGameRepository
 
         if (user2Name != null && (game.User2 == null || game.User2.UserName != user2Name))
         {
-            var user2 = _context.Users.FirstOrDefault(u => u.UserName == user2Name) ?? new User { UserName = user2Name };
+            var user2 = _context.Users.FirstOrDefault(u => u.UserName == user2Name) ??
+                        new User { UserName = user2Name };
             game.User2 = user2;
             game.User2Id = user2.Id;
         }
@@ -154,14 +155,14 @@ public class GameRepositoryDb : IGameRepository
         return game!.User2Id == null && !game.IsGameOver; // returns false if game is not joinable
     }
 
-    public void JoinMultiplayerGame(string gameName, string player1Name ,string player2Name)
+    public void JoinMultiplayerGame(string gameName, string player1Name, string player2Name)
     {
-            var game = GetGameByName(gameName);
-            if (string.IsNullOrEmpty(game.Player2Name))
-            {
-                game.Player2Name = player2Name;
-                UpdateGame(game, game.Config.ConfigName, gameName, player1Name, player2Name);
-            }
+        var game = GetGameByName(gameName);
+        if (string.IsNullOrEmpty(game.Player2Name))
+        {
+            game.Player2Name = player2Name;
+            UpdateGame(game, game.Config.ConfigName, gameName, player1Name, player2Name);
+        }
     }
 
     public void DeleteGame(string name)
@@ -179,8 +180,8 @@ public class GameRepositoryDb : IGameRepository
     public List<string> GetGamesByUser(string user)
     {
         return _context.Games.Where(
-                g => g.User1 != null && (g.User1.UserName == user || 
+                g => g.User1 != null && (g.User1.UserName == user ||
                                          (g.User2 != null && g.User2.UserName == user)))
-            .Select(g => g.GameName).ToList();    
+            .Select(g => g.GameName).ToList();
     }
 }

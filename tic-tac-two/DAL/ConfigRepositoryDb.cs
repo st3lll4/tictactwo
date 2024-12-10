@@ -7,28 +7,22 @@ namespace DAL;
 
 public class ConfigRepositoryDb : IConfigRepository
 {
-    private readonly AppDbContext _context = new AppDbContext(_contextOptions);
-    private static string _connectionString = $"Data Source={FileHelper.BasePath}app.db";
+    private readonly AppDbContext _context;
 
-    private static DbContextOptions<AppDbContext> _contextOptions = new DbContextOptionsBuilder<AppDbContext>()
-        .UseSqlite(_connectionString)
-        .EnableDetailedErrors()
-        .EnableSensitiveDataLogging()
-        .Options; // todo: this is WRONG, have to open and close connection ?
-
-    public GameConfiguration DefaultConfiguration { get; set; }
-    public GameConfiguration DefaultConfiguration2 { get; set; }
-    public GameConfiguration DefaultConfiguration3 { get; set; }
-
-
-    public ConfigRepositoryDb()
+    public ConfigRepositoryDb(AppDbContext context)
     {
+        _context = context;
         DefaultConfiguration = DefaultConfigurations.DefaultConfiguration;
         DefaultConfiguration2 = DefaultConfigurations.DefaultConfiguration2;
         DefaultConfiguration3 = DefaultConfigurations.DefaultConfiguration3;
 
         CheckAndCreateInitialDirectory();
     }
+
+    public GameConfiguration DefaultConfiguration { get; set; }
+    public GameConfiguration DefaultConfiguration2 { get; set; }
+    public GameConfiguration DefaultConfiguration3 { get; set; }
+
 
     private void InitializeDefaultConfigurations()
     {

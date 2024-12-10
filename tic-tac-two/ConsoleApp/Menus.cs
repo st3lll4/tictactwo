@@ -11,12 +11,17 @@ namespace tic_tac_two
         // Instance properties for menus
         public Menu ConfigurationsMenu { get; set; }
         public Menu MainMenu { get; set; }
+
+        public IConfigRepository ConfigRepository { get; set; } = default!;
+        public IGameRepository GameRepository { get; set; } = default!;
         
 
-        public Menus(string user)
+        public Menus(string user, IGameRepository gameRepository, IConfigRepository configRepository)
         {
+            GameRepository = gameRepository;
+            ConfigRepository = configRepository;
             _userName = user;
-            var configManager = new ConfigurationManager(_userName);
+            var configManager = new ConfigurationManager(_userName, ConfigRepository);
 
             ConfigurationsMenu = new Menu(
                 EMenuLevel.Secondary,
@@ -51,8 +56,8 @@ namespace tic_tac_two
                     }
                 ]
             );
-            
-            
+
+
             MainMenu = new Menu(
                 EMenuLevel.Main,
                 "TIC-TAC-TWOOOOO",
@@ -61,14 +66,14 @@ namespace tic_tac_two
                     {
                         Shortcut = "N",
                         Title = "New game",
-                        MenuItemAction = () => new GameController(_userName).MainLoop(),
+                        MenuItemAction = () => new GameController(_userName, GameRepository).MainLoop(),
                     },
 
                     new MenuItem
                     {
                         Shortcut = "L",
                         Title = "Load game",
-                        MenuItemAction = () => new GameController(_userName).LoadGames(),
+                        MenuItemAction = () => new GameController(_userName, GameRepository).LoadGames(),
                     },
 
                     new MenuItem
