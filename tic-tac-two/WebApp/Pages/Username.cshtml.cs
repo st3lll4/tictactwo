@@ -50,7 +50,7 @@ public class Username : PageModel
             }
             if (GameMode != null)
             {
-                return RedirectToPage("./StartGame", new { userName = UserName, gamemode = GameMode });
+                return RedirectToPage("./StartGame", new { userName = UserName, gameMode = GameMode });
             }
 
             return RedirectToPage("./ConfigManager", new { userName = UserName });

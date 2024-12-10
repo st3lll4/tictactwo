@@ -47,39 +47,13 @@
     </div>
 </div>
 
-<!--- <div class="info-container">
-    <div class="row">
-        <div class="col-4">
-            <h5>@Model.GameState.Player1Name</h5>
-            <p><strong>@Model.GameState.Config.Player1Symbol</strong> |
-                Pieces: <strong>@(Model.GameState.Config.MaxPieces - Model.GameState.Player1PiecesPlaced)</strong></p>
-        </div>
-
-        @if (Model.GameMode != "Single player")
-        {
-            <div class="col-4">
-                <h5>Moving</h5>
-                <p><strong>@Model.GameState.MovingPlayer</strong></p>
-            </div>
-        }
-
-        <div class="col-4">
-            <h5>@Model.GameState.Player2Name</h5>
-            <p><strong>@Model.GameState.Config.Player2Symbol</strong> |
-                Pieces: <strong>@(Model.GameState.Config.MaxPieces - Model.GameState.Player2PiecesPlaced)</strong></p>
-        </div>
-    </div>
-</div> --->
-
-
-
 <div class="wrapper">
     <div class="sidebar">
         <div class="menuitem">
             @if (Model.GameMode != "Bots")
             {
                 <a asp-page="/StartGame"
-                   asp-route-username="@Model.GameState.Player1Name"
+                   asp-route-username="@Model.User1"
                    asp-route-gamemode="@Model.GameMode">Quit
                 </a>
             }

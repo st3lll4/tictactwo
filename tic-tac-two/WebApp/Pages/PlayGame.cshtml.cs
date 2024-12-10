@@ -12,6 +12,8 @@ public class PlayGame : PageModel
     [BindProperty(SupportsGet = true)] public string GameName { get; set; } = default!;
 
     [BindProperty] public GameState GameState { get; set; } = default!;
+    
+    [BindProperty(SupportsGet = true)] public string? UserName { get; set; } = default!;
 
     [BindProperty(SupportsGet = true)] public string User1 { get; set; } = default!;
     [BindProperty(SupportsGet = true)] public string User2 { get; set; } = default!;
@@ -89,9 +91,13 @@ public class PlayGame : PageModel
             });
         }
 
-        if (GameMode == "Single player")
+        if (GameMode == "Single player" && 
+            GameState is { Player1PiecesPlaced: 0, Player2PiecesPlaced: 0 })
         {
+            GameState.Player1Name = UserName ?? GameState.Player1Name;
             GameState.Player2Name = "Bot1";
+            _gameRepository.UpdateGame(GameState, game.Config.ConfigName, GameName, GameState.Player1Name,
+                GameState.Player2Name);
         }
 
         if (GameMode == "Bots")
@@ -99,8 +105,6 @@ public class PlayGame : PageModel
             GameState.Player1Name = "Bot1";
             GameState.Player2Name = "Bot2";
         }
-        
-        Console.WriteLine(GameState.MovingPlayer);
         
         IsGameReady = true;
 
