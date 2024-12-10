@@ -1,8 +1,8 @@
 :root {
     --lightest-pink: #ffc8dd;
     --lavender: #cdb4db;
-    --darker-pink: #ffafcc;
-    --darkest-pink: #ffa6c6;
+    --darkest-pink: #ffafcc;
+    --dark-pink: #ffa6c6;
     --darker-blue: #bde0fe;
     --lighter-blue: #a2d2ff;
     --red: #a80043
@@ -21,7 +21,7 @@ html {
 #header {
     background: linear-gradient(90deg, rgba(255, 197, 222, 1) 0%, rgba(218, 189, 254, 1) 100%);
     border-radius: 1rem;
-    margin-bottom: 2rem;
+    margin-bottom: 1rem;
     height: 12rem;
     box-shadow: rgba(0, 0, 0, 0.1) 0px 4px 6px -1px, rgba(0, 0, 0, 0.06) 0px 2px 4px -1px;
 }
@@ -68,7 +68,7 @@ footer {
 .menuitem {
     margin: 1rem;
     border-radius: 0.3rem;
-    background-color: var(--darker-pink);
+    background-color: var(--darkest-pink);
     padding: 1rem;
     min-width: 9rem;
     color: white;
@@ -141,7 +141,7 @@ footer {
     height: 4rem;
     border: 1px solid;
     border-radius: 0.7rem;
-    background: var(--darkest-pink);
+    background: var(--dark-pink);
     display: grid;
     color: white;
     cursor: pointer;
@@ -176,7 +176,7 @@ footer {
 }
 
 .text-in-small-square:hover {
-    color: var(--darker-pink);
+    color: var(--darkest-pink);
     transition: ease-in-out 0.1s;
 }
 
@@ -243,7 +243,7 @@ footer {
 }
 
 .submit-button:hover {
-    background-color: var(--darker-pink);
+    background-color: var(--darkest-pink);
     transition: ease-in-out 0.1s;
 }
 
@@ -264,12 +264,44 @@ footer {
 }
 
 .btn-light {
-    border: 1px solid var(--darker-pink);
-    color: var(--darker-pink);
+    border: 1px solid var(--darkest-pink);
+    color: var(--darkest-pink);
 }
 
 .btn-light:hover {
     background-color: var(--lightest-pink);
     transition: ease-in-out 0.1s;
     color: white;
+}
+
+.info-container {
+    background: #faf2fc;
+    border-radius: 15px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    padding: 0.5rem;
+    margin: 1rem auto;
+    max-width: 900px;
+    text-align: center;
+}
+
+.info-container h5 {
+    color: #80113d;
+    font-weight: bold;
+}
+
+.info-container p {
+    margin: 3px 0;
+    font-size: 1rem;
+    color: #5c0b2c;
+}
+
+.row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.row .col-4 {
+    flex: 1;
+    min-width: 10rem;
 }

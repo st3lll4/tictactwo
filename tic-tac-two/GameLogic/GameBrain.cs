@@ -323,6 +323,7 @@
 
         public bool MovePiece(int oldX, int oldY, int newX, int newY)
         {
+            var moving = GameState.MovingPlayer;
             if (GameState.Board[oldX, oldY] != GameState.MovingPlayer
                 || !IsInGrid(newY, newY)
                 || GameState.Board[newX, newY] != '\0')
@@ -345,29 +346,32 @@
             var piecesPlaced = GetMovingPlayerPiecesPlaced();
 
             var botSymbol = GameState.MovingPlayer;
-
-            // Check for a winning move
-            if (TryToWin()) return;
-
-            // Take the center if available
-            if (GameState.Board[GameState.GridCenterCol, GameState.GridCenterRow] == '\0')
-            {
-                PlacePiece(GameState.GridCenterCol, GameState.GridCenterRow, botSymbol);
-                return;
-            }
-
+            
             var rnd = new Random();
             var randomCorner = rnd.Next(0, 6);
-
-            // Choose from the corners
-            var leftUp = GameState.Board[GameState.GridStartRow, GameState.GridStartCol];
-            var rightUp = GameState.Board[GameState.GridStartRow, GameState.GridStartCol + Config.MovableGridSize - 1];
-            var leftDown = GameState.Board[GameState.GridStartRow + Config.MovableGridSize - 1, GameState.GridStartCol];
-            var rightDown = GameState.Board[GameState.GridStartRow + Config.MovableGridSize - 1,
-                GameState.GridStartCol + Config.MovableGridSize - 1];
-
+            
             if (piecesPlaced < Config.MaxPieces)
             {
+                // Check for a winning move
+                if (TryToWin()) return;
+
+                // Take the center if available
+                if (GameState.Board[GameState.GridCenterCol, GameState.GridCenterRow] == '\0')
+                {
+                    PlacePiece(GameState.GridCenterCol, GameState.GridCenterRow, botSymbol);
+                    return;
+                }
+
+
+                // Choose from the corners
+                var leftUp = GameState.Board[GameState.GridStartRow, GameState.GridStartCol];
+                var rightUp = GameState.Board[GameState.GridStartRow,
+                    GameState.GridStartCol + Config.MovableGridSize - 1];
+                var leftDown = GameState.Board[GameState.GridStartRow + Config.MovableGridSize - 1,
+                    GameState.GridStartCol];
+                var rightDown = GameState.Board[GameState.GridStartRow + Config.MovableGridSize - 1,
+                    GameState.GridStartCol + Config.MovableGridSize - 1];
+
                 if (leftUp == '\0' && randomCorner == 0)
                 {
                     PlacePiece(GameState.GridStartRow, GameState.GridStartCol, botSymbol);
@@ -399,19 +403,64 @@
             // Randomly move grid
             if (randomNumber == 2 && GetMovingPlayerPiecesPlaced() >= Config.InitialMoves)
             {
-                RandomlyMoveGrid();
-                return;
+                if (RandomlyMoveGrid())
+                {
+                    return;
+                }
             }
 
             // Randomly place a piece
-            if (piecesPlaced < Config.MaxPieces)
+            if (GetMovingPlayerPiecesPlaced() < Config.MaxPieces)
             {
                 var freeSpotsInGrid = GetSpaceInGrid();
                 PlaceRandomPiece(freeSpotsInGrid);
                 return;
             }
-            
-            RandomlyMoveOwnPiece();
+
+            if (!RandomlyMoveOwnPiece())
+            {
+                MoveFirstPieceToFirstFreePlace();
+            }
+        }
+
+        private void MoveFirstPieceToFirstFreePlace()
+        {
+            int oldX = 0;
+
+            int oldY = 0;
+
+            var removed = false;
+            for (int i = 0; i < GameState.Config.Height; i++)
+            {
+                for (int j = 0; j < GameState.Config.Width; j++)
+                {
+                    if (GameState.Board[i, j] == GameState.MovingPlayer)
+                    {
+                        GameState.Board[i, j] = '\0';
+                        oldX = i;
+                        oldY = j;
+                        removed = true;
+                        break;
+                    }
+                }
+
+                if (removed)
+                {
+                    break;
+                }
+            }
+
+            for (int i = 0; i < GameState.Config.Height; i++)
+            {
+                for (int j = 0; j < GameState.Config.Width; j++)
+                {
+                    if (GameState.Board[i, j] == '\0' && (i != oldX && j != oldY) && IsInGrid(i, j))
+                    {
+                        GameState.Board[i, j] = GameState.MovingPlayer;
+                        return;
+                    }
+                }
+            }
         }
 
         private void PlaceRandomPiece(int freeSpotsInGrid)
@@ -430,6 +479,7 @@
                             PlacePiece(i, j, GameState.MovingPlayer);
                             return;
                         }
+
                         counter++;
                     }
                 }
@@ -459,22 +509,24 @@
             return false;
         }
 
-        private void RandomlyMoveGrid()
+        private bool RandomlyMoveGrid()
         {
             List<string> directions = ["u", "d", "l", "r", "ul", "ur", "dl", "dr"];
             var random = new Random();
             var direction = directions[random.Next(0, directions.Count)];
-            MoveGrid(direction);
+            return MoveGrid(direction);
         }
 
-        private void RandomlyMoveOwnPiece()
+        private bool RandomlyMoveOwnPiece()
         {
             int freeSpotsInGrid = GetSpaceInGrid();
 
             if (freeSpotsInGrid == 0)
             {
-                RandomlyMoveGrid();
-                return;
+                if (RandomlyMoveGrid())
+                {
+                    return true;
+                }
             }
 
             var random = new Random();
@@ -516,12 +568,15 @@
             {
                 var selectedSpot = validMoves[random.Next(validMoves.Count)];
 
-                MovePiece(pieceToMove.row, pieceToMove.col, selectedSpot.row, selectedSpot.col); 
-                //todo: rows ja cols perses
-                // votab vabad kohad ka mingid x asjad mis pole gridi sees isegi ja ss failib movei 
+                if (MovePiece(pieceToMove.row, pieceToMove.col, selectedSpot.row, selectedSpot.col))
+                {
+                    return true;
+                }
             }
+
+            return false;
         }
-        
+
 
         private int GetSpaceInGrid()
         {

@@ -5,7 +5,7 @@
     ViewData["Title"] = "Play";
 }
 
-<div class="container-fluid p-5 bg-primary text-white text-center" id="header">
+<div class="container-fluid p-3 bg-primary text-white text-center" id="header">
     @if (@Model.Message == null)
     {
         <h1>PLAY!</h1>
@@ -14,29 +14,100 @@
     {
         <h1>@Model.Message</h1>
     }
+    <hr/>
+    <div class="row align-items-end">
+        <div class="col-4">
+            <h5>@Model.GameState.Player1Name</h5>
+            <p><strong>@Model.GameState.Config.Player1Symbol</strong> |
+                Pieces: <strong>@(Model.GameState.Config.MaxPieces - Model.GameState.Player1PiecesPlaced)</strong></p>
+        </div>
+
+        @if (Model.GameMode == "Multiplayer")
+        {
+            <div class="col-4">
+                <h6>next move:</h6>
+                <p><strong>@Model.GameState.MovingPlayer</strong></p>
+            </div>
+        }
+        else
+        {
+            if (Model.GameMode == "Bots")
+            {
+                <div class="col-4">
+                    <h6>use bot move button to make a move. next move:</h6>
+                    <p><strong>@Model.GameState.MovingPlayer</strong></p>
+                </div>
+            }
+        }
+        <div class="col-4">
+            <h5>@Model.GameState.Player2Name</h5>
+            <p><strong>@Model.GameState.Config.Player2Symbol</strong> |
+                Pieces: <strong>@(Model.GameState.Config.MaxPieces - Model.GameState.Player2PiecesPlaced)</strong></p>
+        </div>
+    </div>
 </div>
+
+<!--- <div class="info-container">
+    <div class="row">
+        <div class="col-4">
+            <h5>@Model.GameState.Player1Name</h5>
+            <p><strong>@Model.GameState.Config.Player1Symbol</strong> |
+                Pieces: <strong>@(Model.GameState.Config.MaxPieces - Model.GameState.Player1PiecesPlaced)</strong></p>
+        </div>
+
+        @if (Model.GameMode != "Single player")
+        {
+            <div class="col-4">
+                <h5>Moving</h5>
+                <p><strong>@Model.GameState.MovingPlayer</strong></p>
+            </div>
+        }
+
+        <div class="col-4">
+            <h5>@Model.GameState.Player2Name</h5>
+            <p><strong>@Model.GameState.Config.Player2Symbol</strong> |
+                Pieces: <strong>@(Model.GameState.Config.MaxPieces - Model.GameState.Player2PiecesPlaced)</strong></p>
+        </div>
+    </div>
+</div> --->
+
+
 
 <div class="wrapper">
     <div class="sidebar">
         <div class="menuitem">
-            <a asp-page="/StartGame"
-               asp-route-username="@Model.GameState.Player1Name"
-               asp-route-gamemode="@Model.GameMode">Quit
-            </a>
+            @if (Model.GameMode != "Bots")
+            {
+                <a asp-page="/StartGame"
+                   asp-route-username="@Model.GameState.Player1Name"
+                   asp-route-gamemode="@Model.GameMode">Quit
+                </a>
+            }
+            else
+            {
+                <a asp-page="/Config"
+                   asp-route-username="@Model.GameState.Player1Name"
+                   asp-route-gamemode="@Model.GameMode">Quit
+                </a>
+            }
         </div>
-        <div>
-            <div class="menuitem">
-                Make your move, @Model.MovingPlayer
-            </div>
-        </div>
-        @if (Model.GameMode == "Single player" || Model.GameMode == "Bots")
+        @if (Model.GameMode != "Single player")
         {
             <div>
-                <button id="refreshButton" class="menuitem" onclick="refreshPage()" asp-route-isbotmove=true>Bot move
+                <div class="menuitem">
+                    Make your move, @Model.GameState.MovingPlayer
+                </div>
+            </div>
+        }
+        @if (Model.GameMode == "Bots")
+        {
+            <div>
+                <button id="refreshButton" class="menuitem" onclick="refreshPage()">Bot move
                 </button>
             </div>
         }
     </div>
+
     <div class="board">
         @for (int y = 0; y < Model.Board.GetLength(1); y++)
         {
@@ -47,7 +118,8 @@
                     var cellClass = isInGrid ? "square-movable" : "square";
 
                     <div class="@cellClass">
-                        @if (!Model.GameState.IsGameOver || @Model.IsGameReady)
+                        @if ((!Model.GameState.IsGameOver || @Model.IsGameReady) &&
+                             Model.GameMode != "Bots")
                         {
                             @if (Model.Board[x, y] != '\0')
                             {

@@ -30,8 +30,7 @@ public class PlayGame : PageModel
     [BindProperty(SupportsGet = true)] public string SweetAlertMessage { get; set; }
 
     [BindProperty(SupportsGet = true)] public bool IsGameReady { get; set; } = false;
-
-
+    
     public PlayGame(IGameRepository gameRepository, AppDbContext context)
     {
         _gameRepository = gameRepository;
@@ -100,19 +99,14 @@ public class PlayGame : PageModel
             GameState.Player1Name = "Bot1";
             GameState.Player2Name = "Bot2";
         }
-
-        if (GameState.MovingPlayer == GameState.Config.Player1Symbol)
-        {
-            MovingPlayer = GameState.Player1Name;
-        }
-        else if (GameState.MovingPlayer == GameState.Config.Player2Symbol)
-        {
-            MovingPlayer = GameState.Player2Name;
-        }
-
+        
+        Console.WriteLine(GameState.MovingPlayer);
+        
         IsGameReady = true;
 
-        if (MovingPlayer is "Bot1" or "Bot2")
+        if ((GameState.MovingPlayer == GameState.Config.Player2Symbol && GameState.Player2Name == "Bot2") ||
+            GameState.MovingPlayer == GameState.Config.Player1Symbol && GameState.Player1Name == "Bot1" ||
+            GameState.MovingPlayer == GameState.Config.Player2Symbol && GameState.Player2Name == "Bot1")
         {
             if (GameState is { Player1PiecesPlaced: 0, Player2PiecesPlaced: 0 } && GameMode == "Bots")
             {
@@ -171,7 +165,7 @@ public class PlayGame : PageModel
         //placing piece part
         if (x.HasValue && y.HasValue && MovingPlayer != "Bot1" && MovingPlayer != "Bot2")
         {
-            if (!Brain.IsInGrid(x.Value, y.Value))
+            if (!Brain.IsInGrid(x.Value, y.Value) && Board[x.Value, y.Value] != GameState.MovingPlayer)
             {
                 Message = "move inside the grid!";
                 goto SkipToEnd;
@@ -183,7 +177,8 @@ public class PlayGame : PageModel
                 goto SkipToEnd;
             }
 
-            if (Brain.GetMovingPlayerPiecesPlaced() >= GameState.Config.MaxPieces)
+            if (Brain.GetMovingPlayerPiecesPlaced() >= GameState.Config.MaxPieces && 
+                Board[x.Value, y.Value] == '\0')
             {
                 Message = "you have already used all your pieces!";
                 goto SkipToEnd;
@@ -192,6 +187,13 @@ public class PlayGame : PageModel
             if (Board[x.Value, y.Value] == GameState.MovingPlayer)
             {
                 Board[x.Value, y.Value] = '\0';
+                if (GameState.MovingPlayer == GameState.Config.Player1Symbol)
+                {
+                    GameState.Player1PiecesPlaced--;
+                } else if (GameState.MovingPlayer == GameState.Config.Player2Symbol)
+                {
+                    GameState.Player2PiecesPlaced--;
+                }
                 goto SkipToEnd;
             }
 
