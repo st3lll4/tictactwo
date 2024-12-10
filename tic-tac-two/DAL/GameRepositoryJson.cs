@@ -124,7 +124,7 @@ public class GameRepositoryJson : IGameRepository
         }
     }
 
-    public void DeleteGame(string name) //todo: check if works 
+    public void DeleteGame(string name)
     {
         var searchPattern = $"*{name}*{FileHelper.GameExtension}";
         var matchingFiles = Directory.GetFiles(FileHelper.BasePath, searchPattern);

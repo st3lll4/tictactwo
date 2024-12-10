@@ -9,7 +9,7 @@ public class PlayGame : PageModel
 {
     private readonly IGameRepository _gameRepository;
 
-    [BindProperty(SupportsGet = true)] public string GameName { get; set; }
+    [BindProperty(SupportsGet = true)] public string GameName { get; set; } = default!;
 
     [BindProperty] public GameState GameState { get; set; } = default!;
 
@@ -23,11 +23,11 @@ public class PlayGame : PageModel
     [BindProperty(SupportsGet = true)] public string? Message { get; set; }
 
     public char[,] Board { get; set; } = default!;
-    public string MovingPlayer { get; set; }
+    public string MovingPlayer { get; set; } = default!;
 
     [BindProperty(SupportsGet = true)] public bool ShowSweetAlert { get; set; }
 
-    [BindProperty(SupportsGet = true)] public string SweetAlertMessage { get; set; }
+    [BindProperty(SupportsGet = true)] public string SweetAlertMessage { get; set; } = default!;
 
     [BindProperty(SupportsGet = true)] public bool IsGameReady { get; set; } = false;
     

@@ -14,7 +14,7 @@ public class JoinGame : PageModel
 
     [BindProperty] public required string GameName { get; set; }
     [BindProperty(SupportsGet = true)] public string? Error { get; set; }
-    public SelectList GameSelectList { get; set; }
+    public SelectList GameSelectList { get; set; } = default!;
     
     public JoinGame(IGameRepository gameRepository)
     {

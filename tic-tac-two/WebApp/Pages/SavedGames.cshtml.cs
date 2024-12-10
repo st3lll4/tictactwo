@@ -17,7 +17,7 @@ public class SavedGames : PageModel
 
     public SelectList GameSelectList { get; set; } = default!;
 
-    [BindProperty] public string SelectedGame { get; set; }
+    [BindProperty] public string SelectedGame { get; set; } = default!;
 
 
     public SavedGames(IGameRepository gameRepository)

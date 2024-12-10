@@ -26,7 +26,8 @@ html {
     box-shadow: rgba(0, 0, 0, 0.1) 0px 4px 6px -1px, rgba(0, 0, 0, 0.06) 0px 2px 4px -1px;
 }
 
-#header hgroup {
+#header h1, #header h2, #header h3, #header h4, #header h5, #header h6 {
+    line-height: 1.5;
     margin: 0 auto;
 }
 

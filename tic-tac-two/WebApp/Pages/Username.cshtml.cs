@@ -16,7 +16,8 @@ public class Username : PageModel
     [BindProperty(SupportsGet = true)] public string? GameMode { get; set; } = default!;
 
     private readonly AppDbContext _context;
-    [BindProperty(SupportsGet = true)]public string Error { get; set; }
+    
+    [BindProperty(SupportsGet = true)] public string? Error { get; set; }
 
 
     public Username(AppDbContext context)
@@ -26,7 +27,7 @@ public class Username : PageModel
 
     public IActionResult OnGet()
     {
-        ModelState.Clear(); 
+        ModelState.Clear();
         return Page();
     }
 
@@ -35,19 +36,18 @@ public class Username : PageModel
         if (UserName == "Bot1" || UserName == "Bot2")
         {
             Error = "Username cannot be same as bots' name!";
-            return Page(); 
+            return Page();
         }
-        
-        if (ModelState.IsValid) 
+
+        if (ModelState.IsValid)
         {
-            var userExists = _context.Users.Any(u => u.UserName == UserName); 
+            var userExists = _context.Users.Any(u => u.UserName == UserName);
 
             if (!userExists)
             {
                 _context.Users.Add(new User { UserName = UserName });
                 _context.SaveChanges();
             }
-
             if (GameMode != null)
             {
                 return RedirectToPage("./StartGame", new { userName = UserName, gamemode = GameMode });
