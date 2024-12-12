@@ -1,0 +1,58 @@
+@page
+@model WebApp.Pages.About
+
+@{
+    ViewData["Title"] = "About";
+}
+
+<div class="container-fluid p-5 bg-primary text-white text-center h-50"
+     id="header">
+    <h1>ABOUT</h1>
+</div>
+
+<div class="about-container">
+    <div class="col col-lg-2">
+    </div>
+    <div class="col-sm">
+        <h5>
+            History
+        </h5>
+        <p>Tic-Tac-Two is a variation of tic-tac-toe published by Chicago-based game seller Marbles: The Brain Store.
+            The objective of creating a three-in-a-row is the same, but players are also allowed to move the tic-tac-toe
+            grid and the markers.</p>
+        <h5>Rules</h5>
+        <img src="images/image.png" alt="board" class="image-right"/>
+        <p>Tic-Tac-Two is originally played on a five-row, five-column (25-cell) board with a movable tic-tac-toe
+            (three-column,
+            three-row) grid. At the start of the game, the tic-tac-toe grid is centered at the center cell of the board.
+            <br/>In this application, users can create their own configurations, where they can customize the size of
+            the
+            board
+            and
+            the grid, as well as choose how many pieces they have, how many pieces they need to get to win and how many
+            moves you
+            need to make before being able to move the grid, or your own pieces.
+            At the start of the game, each player takes turns placing one of their pieces on any empty cell contained
+            within the tic-tac-toe grid.
+
+            <br/>By original rules, when each player has placed at least two of their pieces, they may do one of three
+            things
+            on their turn:
+            <br/>(1) place one of their remaining pieces on an empty cell within the tic-tac-toe grid,
+            <br/>(2) move the tic-tac-toe grid such that it is centered at a cell one space horizontally, vertically, or diagonally away from the cell
+            it was originally centered at, or 
+            <br/>(3) move one of their pieces that is already on the board (regardless of
+            whether it is within the tic-tac-toe grid) to any empty cell within the grid.
+
+            The first player to create a horizontal, vertical, or diagonal line of their own pieces contained within the
+            tic-tac-toe grid wins. If in a single move the grid has been moved such that it contains both a
+            three-in-a-row of X pieces and a three-in-a-row of O pieces, then the game is a tie.</p>
+        <h5>Credits</h5>
+        <p>Author of this application is Stella Tukia, but orginal creators of the game are Stella Wan, Nala Chen and
+            Cameron Cheung.</p>
+        <a href="https://gamescrafters.berkeley.edu/games.php?game=tictactwo">Tic-Tac-Two's Gamescrafters page</a> & <a
+            href="https://www.linkedin.com/in/stella-tukia-9a37451b6/">Stella Tukia's Linkedin</a>
+    </div>
+    <div class="col col-lg-2">
+    </div>
+</div>

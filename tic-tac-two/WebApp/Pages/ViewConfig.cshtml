@@ -5,7 +5,7 @@
     ViewData["Title"] = "Config view";
 }
 
-<div class="container-fluid p-5 bg-primary text-white text-center"
+<div class="container-fluid p-5 bg-primary text-white text-center h-50"
      id="header">
     <h1>LOOK</h1>
     <h5>Configuration details</h5>
@@ -15,47 +15,47 @@
 
 <div class="container py-2">
     <div class="row justify-content-center">
-        <div class="col-md-6 shadow-sm rounded p-4" style="background-color: #fbedff;">
+        <div class="col-md-6 shadow-sm rounded p-4" id="config-container">
             <div class="text-center">
                 <div class="mb-3">
-                    <strong style="color: #343a40;">Configuration Name:</strong>
-                    <span style="color: #4a4a4a;">@Model.ConfigurationName</span>
+                    <strong>Configuration Name:</strong>
+                    <span>@Model.ConfigurationName</span>
                 </div>
                 <div class="mb-3">
-                    <strong style="color: #343a40;">Board Width:</strong>
-                    <span style="color: #4a4a4a;">@Model.Width</span>
+                    <strong>Board Width:</strong>
+                    <span>@Model.Width</span>
                 </div>
                 <div class="mb-3">
-                    <strong style="color: #343a40;">Board Height:</strong>
-                    <span style="color: #4a4a4a;">@Model.Height</span>
+                    <strong>Board Height:</strong>
+                    <span>@Model.Height</span>
                 </div>
                 <div class="mb-3">
-                    <strong style="color: #343a40;">Player 1 Symbol:</strong>
-                    <span style="color: #4a4a4a;">@Model.Player1Symbol</span>
+                    <strong>Player 1 Symbol:</strong>
+                    <span>@Model.Player1Symbol</span>
                 </div>
                 <div class="mb-3">
-                    <strong style="color: #343a40;">Player 2 Symbol:</strong>
-                    <span style="color: #4a4a4a;">@Model.Player2Symbol</span>
+                    <strong>Player 2 Symbol:</strong>
+                    <span>@Model.Player2Symbol</span>
                 </div>
                 <div class="mb-3">
-                    <strong style="color: #343a40;">Starting Player:</strong>
-                    <span style="color: #4a4a4a;">Player @Model.StartingPlayer</span>
+                    <strong>Starting Player:</strong>
+                    <span>Player @Model.StartingPlayer</span>
                 </div>
                 <div class="mb-3">
-                    <strong style="color: #343a40;">Movable Grid Size:</strong>
-                    <span style="color: #4a4a4a;">@Model.MovableGridSize x @Model.MovableGridSize</span>
+                    <strong>Movable Grid Size:</strong>
+                    <span>@Model.MovableGridSize x @Model.MovableGridSize</span>
                 </div>
                 <div class="mb-3">
-                    <strong style="color: #343a40;">Winning Condition:</strong>
-                    <span style="color: #4a4a4a;">@Model.WinningCondition</span>
+                    <strong>Winning Condition:</strong>
+                    <span>@Model.WinningCondition</span>
                 </div>
                 <div class="mb-3">
-                    <strong style="color: #343a40;">Initial Moves:</strong>
-                    <span style="color: #4a4a4a;">@Model.InitialMoves</span>
+                    <strong>Initial Moves:</strong>
+                    <span>@Model.InitialMoves</span>
                 </div>
                 <div class="mb-3">
-                    <strong style="color: #343a40;">Player Pieces:</strong>
-                    <span style="color: #4a4a4a;">@Model.MaxPieces</span>
+                    <strong>Player Pieces:</strong>
+                    <span>@Model.MaxPieces</span>
                 </div>
             </div>
         </div>

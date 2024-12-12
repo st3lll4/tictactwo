@@ -26,9 +26,13 @@
                         <a class="nav-link" asp-area="" asp-page="/Index">start</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" asp-area="" asp-route-username="@Context.Request.Query["userName"]" 
-                           asp-page="/ConfigManager">config manager</a> <!--- votab toorelt kaasa username kui see on olemas query stringis --->
-                        </li>
+                        <a class="nav-link" asp-area="" asp-route-username="@Context.Request.Query["userName"]"
+                           asp-page="/ConfigManager">config manager</a>
+                        <!--- votab toorelt kaasa username kui see on olemas query stringis --->
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" asp-area="" asp-page="/About">about</a>
+                    </li>
                 </ul>
             </div>
         </div>
@@ -42,7 +46,7 @@
 
 <footer class="border-top footer text-muted">
     <div class="container">
-        &copy; 2024 - some ratchet ass tictactwo app that made me cry several times
+        &copy; 2024 - some ratchet tictactwo app that made me cry several times
     </div>
 </footer>
 

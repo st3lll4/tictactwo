@@ -47,7 +47,7 @@ body {
     background: linear-gradient(180deg, rgba(255, 240, 246, 1) 0%, rgba(236, 221, 255, 1) 100%) fixed;
     font-size: 1rem;
     font-family: "Gill Sans MT", sans-serif;
-    min-height:100%
+    min-height: 100%
 }
 
 main {
@@ -108,12 +108,12 @@ footer {
 
 .create-config-form {
     grid-row-gap: 1rem;
-    
+
 }
 
 .form-control {
     width: 14rem;
-    box-sizing: border-box; 
+    box-sizing: border-box;
 }
 
 .wrapper form div {
@@ -275,25 +275,22 @@ footer {
     color: white;
 }
 
-.info-container {
-    background: #faf2fc;
-    border-radius: 15px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-    padding: 0.5rem;
-    margin: 1rem auto;
-    max-width: 900px;
-    text-align: center;
+
+#config-container {
+    background-color: #fbedff;
+    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+    border-radius: 1rem;
+    padding: 2rem;
 }
 
-.info-container h5 {
-    color: #80113d;
+#config-container strong {
+    color: #a62157; /*dark dark dark pink*/
     font-weight: bold;
 }
 
-.info-container p {
-    margin: 3px 0;
-    font-size: 1rem;
-    color: #5c0b2c;
+#config-container span {
+    color: #f7609d; /*dark dark pink*/
+    font-weight: 500;
 }
 
 .row {
@@ -305,4 +302,62 @@ footer {
 .row .col-4 {
     flex: 1;
     min-width: 10rem;
+}
+
+.about-container {
+    background: #faf2fc;
+    border-radius: 1rem;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    padding: 2rem;
+    margin: 1rem auto;
+    max-width: 1200px;
+    color: #5c0b2c;
+    font-size: 1rem;
+    line-height: 1.6;
+}
+
+.about-container h5 {
+    color: #80113d;
+    font-weight: bold;
+    text-align: left;
+    margin-bottom: 1rem;
+    border-bottom: 2px solid #ffc8dd;
+    padding-bottom: 0.5rem;
+}
+
+.about-container p {
+    margin: 0.5rem 0;
+}
+
+.about-container ul {
+    list-style: none;
+    padding: 0;
+    margin: 1rem 0;
+}
+
+.about-container ul li::before {
+    content: "• ";
+    color: #80113d;
+    font-weight: bold;
+}
+
+.about-container ul li {
+    margin: 0.5rem 0;
+}
+
+.about-container a {
+    color: #a80043;
+    text-decoration: none;
+}
+
+.about-container a:hover {
+    color: #ffafcc;
+    transition: color 0.2s ease-in-out;
+}
+
+.image-right {
+    float: right;
+    margin-left: 1.5rem;
+    margin-bottom: 1rem;
+    max-width: 30%;
 }
