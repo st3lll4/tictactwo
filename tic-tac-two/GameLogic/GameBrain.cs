@@ -1,6 +1,6 @@
 ﻿namespace GameLogic
 {
-    public class GameBrain
+    public class GameBrain // braini peal voiks olla wrapper
     {
         public GameState GameState { get; set; }
         private GameConfiguration Config => GameState.Config;
@@ -346,23 +346,22 @@
             var piecesPlaced = GetMovingPlayerPiecesPlaced();
 
             var botSymbol = GameState.MovingPlayer;
-            
+
             var rnd = new Random();
             var randomCorner = rnd.Next(0, 6);
             
+            // Check for a winning move
+            if (TryToWin()) return;
+            
             if (piecesPlaced < Config.MaxPieces)
             {
-                // Check for a winning move
-                if (TryToWin()) return;
-
                 // Take the center if available
                 if (GameState.Board[GameState.GridCenterCol, GameState.GridCenterRow] == '\0')
                 {
                     PlacePiece(GameState.GridCenterCol, GameState.GridCenterRow, botSymbol);
                     return;
                 }
-
-
+                
                 // Choose from the corners
                 var leftUp = GameState.Board[GameState.GridStartRow, GameState.GridStartCol];
                 var rightUp = GameState.Board[GameState.GridStartRow,

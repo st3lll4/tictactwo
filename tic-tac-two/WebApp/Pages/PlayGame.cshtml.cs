@@ -33,7 +33,7 @@ public class PlayGame : PageModel
 
     [BindProperty(SupportsGet = true)] public bool IsGameReady { get; set; } = false;
     
-    public PlayGame(IGameRepository gameRepository, AppDbContext context)
+    public PlayGame(IGameRepository gameRepository)
     {
         _gameRepository = gameRepository;
     }
@@ -198,7 +198,7 @@ public class PlayGame : PageModel
                 {
                     GameState.Player2PiecesPlaced--;
                 }
-                goto SkipToEnd;
+                goto SkipToEnd; // pigem halb
             }
 
             if (Board[x.Value, y.Value] == '\0')
@@ -213,7 +213,7 @@ public class PlayGame : PageModel
 
             SkipToEnd:
             _gameRepository.UpdateGame(GameState, game.Config.ConfigName, GameName, GameState.Player1Name,
-                GameState.Player2Name);
+                GameState.Player2Name); // update ui sees weird, parem repo-mootor-ui
             return RedirectToPage(new
             {
                 user1 = GameState.Player1Name,

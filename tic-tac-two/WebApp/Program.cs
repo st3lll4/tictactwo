@@ -23,8 +23,6 @@ builder.Services.AddDbContext<AppDbContext>(options =>
 builder.Services.AddScoped<IConfigRepository, ConfigRepositoryDb>();
 builder.Services.AddScoped<IGameRepository, GameRepositoryDb>();
 
-
-
 builder.Services.AddDatabaseDeveloperPageExceptionFilter();
 
 builder.Services.AddRazorPages();

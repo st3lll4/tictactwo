@@ -83,7 +83,7 @@ namespace tic_tac_two
         }
 
 
-        private void TicTacToeMove(GameState gameState) // todo: test
+        private void TicTacToeMove(GameState gameState)
         {
             var validMoveMade = false;
             while (!validMoveMade)
@@ -182,7 +182,7 @@ namespace tic_tac_two
                         if (_brain.GetMovingPlayerPiecesPlaced() < _currentConfig.MaxPieces)
                         {
                             SimpleMove(gameState);
-                            validMoveMade = true; // ?????
+                            validMoveMade = true;
                         }
                         else
                         {

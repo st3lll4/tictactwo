@@ -12,10 +12,10 @@ optionsBuilder.UseSqlite(connectionString);
 
 using var db = new AppDbContext(optionsBuilder.Options);
 
-//var configRepository = new ConfigRepositoryDb(db);
-//var gameRepository = new GameRepositoryDb(db);
-var gameRepository = new GameRepositoryJson();
-var configRepository = new ConfigRepositoryJson();
+var configRepository = new ConfigRepositoryDb(db);
+var gameRepository = new GameRepositoryDb(db);
+//var gameRepository = new GameRepositoryJson();
+//var configRepository = new ConfigRepositoryJson();
 
 var menus = new Menus(user, gameRepository, configRepository);
 menus.MainMenu.Run();

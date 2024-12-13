@@ -28,7 +28,7 @@ else
             <select asp-for="ConfigurationName" class="form-select" asp-items="Model.ConfigSelectList"></select>
         </div>
         <div class="form-group">
-            <input type="text" asp-for="SaveName" class="form-control"/>
+            <input type="text" asp-for="SaveName" class="form-control" placeholder="Name"/>
             <span asp-validation-for="SaveName" class="text-danger"></span>
         </div>
         <div class="form-group">
