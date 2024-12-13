@@ -1,7 +1,6 @@
-# icd0008-24f
 
 hi! <br />
-full name: Stella Tukia <br />
-student code: 233202IADB <br />
-school email: sttuki@taltech.ee <br />
-uni id: sttuki
+this is a tictactwo app for a c# course! <br/>
+my first webapp, css is messy and code is very long but im proud! <br/>
+
+-stella tukia
